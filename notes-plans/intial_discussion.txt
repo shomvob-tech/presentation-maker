@@ -1,0 +1,241 @@
+=================================================================
+INITIAL DISCUSSION NOTES - 300 Ltd HR Presentation (Shomvob HR)
+Cross-checked against: "Building a Smarter HR Ecosystem for 300 Ltd.pdf"
+                        hr_meeting_requirements.txt
+=================================================================
+
+1. PROJECT CONTEXT
+-----------------------------------------------------------------
+- Presenter (in real life): me, representing Shomvob (the HR software vendor).
+- Actual presenter IN the deck: 300 Ltd's own HR team, presenting UPWARD to
+  300 Ltd's management, to convince management to adopt Shomvob's HR system.
+  => Tone should read as "here is the solution WE (300 Ltd HR) found for
+     OUR problems", not a vendor sales pitch. Shomvob is the enabler, not
+     the star of the story. 300 Ltd's pain points are the star.
+- 300 Ltd's HR team already knows/likes Shomvob and supplied the
+  requirements list (hr_meeting_requirements.txt) - everything on that
+  list is confirmed possible in Shomvob's system.
+- End goal of THIS project: a Next.js (this project's special/breaking-
+  change version - see AGENTS.md, must read node_modules/next/dist/docs/
+  before coding) web build where each section = one full viewport
+  (100vh/100vw) "slide". At the end, the whole thing gets exported
+  page-by-page into a PDF (one viewport = one PDF page). So every section
+  must be designed to a fixed frame (treat like a slide, not a
+  scrolling webpage).
+- Build order agreed: (1) lock content/structure notes [this file],
+  (2) build the visual TEMPLATE/system first (empty-ish placeholder
+  slides with final look & feel), (3) pour in refined content after,
+  which will still be discussed/refined slide by slide.
+
+2. BRAND / VISUAL DIRECTION
+-----------------------------------------------------------------
+- Brand colors: green #28a143 and gold/yellow #edb713 (from existing
+  deck: dark green gradient backgrounds + gold/green icon accents on
+  feature cards - matches these hex values closely already).
+- Not strictly limited to only these 2 colors, but overall theme must
+  stay on the GREEN side (dark green as the dominant/anchor tone).
+- Reference for "the standard we want": current PDF page 3 ("About
+  Shomvob" - dark near-black bg, clean stat cards: 4+ Years, 1,500+
+  Clients, 30,000+ Placed, 98%+ Availability, 100% Payroll, + client
+  logo strip). This slide was pulled in from a different deck; its
+  DESIGN LANGUAGE (card structure, spacing, restrained color use,
+  confident typography) is the quality bar for the whole new deck,
+  not necessarily its exact dark/black color.
+- The "good info, bad design" module slides (pages 6,7,8,9,10,12) use a
+  repeatable pattern we should keep and elevate:
+    Title (module name) + one-line description
+    "FEATURE HIGHLIGHTS" label
+    2x2 grid of dark rounded cards, each with: icon (circle, green or
+    gold), bold feature name, 1-2 line description
+  This card-grid pattern is the CORE reusable template for the deck.
+
+3. PAGE-BY-PAGE STATUS (from current PDF, 24 pages total)
+-----------------------------------------------------------------
+NOTE: page numbers below = actual PDF page numbers, confirmed by
+rendering every page to an image (not just text extraction, which is
+unreliable on this design-heavy deck).
+
+ p1  Title slide (dark green gradient + phone login mockup)
+     -> KEEP CONCEPT, restyle only.
+ p2  "Shomvob Technologies" intro + partner/social-impact logos
+     -> KEEP CONCEPT, restyle only.
+ p3  "About Shomvob" stat/credibility slide (dark theme, from another deck)
+     -> THIS IS THE DESIGN STANDARD to emulate deck-wide. Content
+        (years, clients, placements, client logos) stays relevant here.
+ p4  "HR Challenges of 300LTD" - 6 icon+label pain points, green bg
+     -> Content good, needs restyle to match new system (currently
+        clip-art style icons, a bit inconsistent with rest of deck).
+ p5  "Employee Journey with Shomvob" - winding ROAD graphic with 6
+     numbered pin-stops (Onboard -> Attendance -> Leave -> Approval ->
+     Report -> Dashboard)
+     -> KEEP the roadway graphic concept, restyle to brand colors
+        (currently cream/red, off-brand). This is explicitly requested
+        to be preserved.
+ p6  Employee Login (module card-grid pattern) - KEEP, this is the
+     template reference.
+ p7  Attendance Management (module card-grid pattern) - KEEP, template ref.
+ p8  Leave Management #1: Centralized / Automated / Bulk approve /
+     Holiday calendar - KEEP, template ref.
+ p9  Leave Management #2: self-service (Apply in minutes, Real-time
+     balance) + phone screenshot mockups - KEEP, template ref (slightly
+     different sub-layout w/ phone mockups on right).
+ p10 Payroll Management (Late deduction / Leave deduction / Payroll
+     generation / Tax certificate) - KEEP, template ref.
+ p11 Employee Login AGAIN (near-duplicate of p6, darker/black bg
+     variant) -> DECISION: CUT ENTIRELY. Redundant with p6/p12.
+ p12 Employee Login journey - numbered steps (Download app -> Credentials
+     -> Login -> Ready to Work) + phone mockups - KEEP, template ref
+     (this is the other pattern explicitly called out as "good design"
+     alongside 6-10).
+ p13 Smart Roster & Shift Organization #1 (How it works: create time
+     slot, pattern, customize) - plain white bg, bullet list + raw app
+     screenshots -> RESTYLE into module card-grid pattern (like p6-10).
+ p14 Smart Roster & Shift Organization #2 (assign individually / bulk /
+     reassign) -> RESTYLE, same treatment as p13.
+ p15 Smart Roster & Shift Organization #3 (drag & drop weekly view)
+     -> RESTYLE, same treatment.
+ p16 Probation tracking (Automated tracking / Confirmation alerts /
+     Centralized status / Performance-based confirmation / One-click
+     promotion) -> RESTYLE into module card-grid pattern.
+ p17 Job cut and Offboarding #1 (Streamlined exit / Resignation &
+     Termination tracking / Employment history / Exportable reports)
+     -> RESTYLE.
+ p18 Job cut and Offboarding #2 (admin panel screenshot, offboarding
+     employee list) -> RESTYLE / likely merge with p17 content.
+ p19 Dashboard views ("How 300 Ltd dashboard would look with 600
+     employee data") -> RESTYLE into module pattern; keep dashboard
+     screenshot as the visual anchor.
+ p20 Our Technology Stack (Next.js, Supabase, Node, AWS, Flutter, NestJS
+     logos) -> DECISION: CUT ENTIRELY. Not needed in the deck.
+ p21 Platform Availability for Our App (mobile app screenshots,
+     Android & iOS) -> DECISION: CUT ENTIRELY. Not needed in the deck.
+ p22 COLLABORATION (Swisscontact/Astha, Gates Foundation, UNICEF - social
+     impact partners) -> DECISION: CUT ENTIRELY. Not needed in the deck.
+ p23 Some Of Our Clients (client logo wall) -> DECISION: KEEP THE CLIENT
+     LOGOS/CONTENT, but current visual style is out - needs a fresh
+     design treatment (not the old light-bg card style). Exact
+     treatment still to be decided (see open questions).
+ p24 Thank You (photo bg + contact info) -> DECISION: KEEP, restyle to
+     match the new theme.
+
+4. THE CORE CONTENT MODEL (per user point 9 - important)
+-----------------------------------------------------------------
+The OLD deck's slides 13-19 were organized around SHOMVOB'S MODULES
+(Roster, Probation, Offboarding, Dashboard...) shown for their own sake.
+The NEW approach for slides 13-23 flips this: every module/feature slide
+must explicitly connect to a NAMED PAIN POINT of 300 Ltd, the same way
+p8 (Leave Management) already does it:
+    Module: "Leave Management"
+    Feature: "Bulk approve leaves"
+    -> Solves 300 Ltd's concern: "HR needs to select/approve multiple
+       leave requests at once" (from hr_meeting_requirements.txt)
+So each feature-highlight card in the redesigned slides should be
+traceable back to one line in hr_meeting_requirements.txt. This is the
+throughline that makes the "template" reusable for slides 13-23 once
+finalized content is dropped in.
+
+5. REQUIREMENTS COVERAGE CROSS-CHECK
+-----------------------------------------------------------------
+Checked each line of hr_meeting_requirements.txt against the existing
+24-page deck:
+
+  [COVERED] Mobile app localization (Bangla-first blue-collar app)
+      -> p6/p11/p12, "Bangla & English Mobile Experience"
+
+  [GAP] Employee Requisition journey
+      -> Only mentioned in passing as one word inside "Single Access
+         Point" bullet (p6/p11: "...requisitions, payslips..."). No
+         dedicated module slide exists yet. Needs new content.
+
+  [PARTIAL] Role based access to employee & department
+      -> "Role-Based Access" bullet exists (p6/p11) but only says
+         "employees only see features relevant to their role" - doesn't
+         explicitly show department-scoped access for managers/HR.
+
+  [PARTIAL/GAP] App permission department wise
+      -> Related to above; admin sidebar screenshot (p18) shows "Manage
+         Line Managers / Manage Branch Managers" which hints at this,
+         but there's no explicit feature slide about department-wise
+         permissioning.
+
+  [COVERED] Probation tracking notification
+      -> p16, "Upcoming Confirmation Alerts"
+
+  [PARTIAL] Employee resignation apply through app
+      -> p17 shows "Resignation & Termination Tracking" but this reads
+         as HR/admin-side tracking, not clearly an employee-initiated
+         self-service resignation request from the mobile app.
+
+  [COVERED] HR gets access to select multiple leave while reviewing
+      -> p8, "Bulk approve leaves"
+
+  [PARTIAL] Dashboard customization (employee requisition, increment)
+      -> p19 dashboard screenshot shows a "Customize" button (so the
+         capability exists) but shown widgets are leave/attendance
+         only - no requisition/increment widgets depicted.
+
+  [GAP] Employment increment journey
+      -> No slide/content anywhere in current deck covers salary/role
+         increment workflow.
+
+  [COVERED] Tax certificate create
+      -> p10, "Tax Certificate" under Payroll Management
+
+Summary: 3 of 10 fully covered, 4 partially covered (need sharper
+feature framing), 3 real content gaps (Employee Requisition journey,
+Employment Increment journey, and explicit Department-wise permissions)
+that will need net-new module slides/content in the 13-23 rebuild.
+
+6. OPEN QUESTIONS - RESOLVED / REMAINING
+-----------------------------------------------------------------
+RESOLVED (confirmed by user):
+ - p11 (duplicate Employee Login): CUT entirely.
+ - p22 (Collaboration/social impact): CUT entirely, not needed.
+ - p20 (Tech Stack) & p21 (Platform Availability): CUT entirely, not
+   needed.
+ - p24 (Thank You): KEEP, restyle to match new theme.
+ - p23 (Clients): KEEP the client logo content, but current light-card
+   style is rejected - needs a new design treatment.
+ - _pdf_preview/ folder of rendered page images: KEEP for reference
+   during build.
+
+STILL OPEN:
+ Q1. p23 (Client logos) - what's the new visual treatment? Options to
+     consider later: a simple logo marquee/grid on the dark green
+     theme, or folded into the p3-style stat/credibility slide instead
+     of being its own slide.
+ Q2. New content needed for the 3 gaps (Employee Requisition journey,
+     Employment Increment journey, Department-wise permissions) - to be
+     drafted together in a later session per point 8.
+ Q3. Exact final slide order/count for 13-23 once gaps are filled and
+     p20/21/22 are dropped (deck will be shorter than 24 pages now -
+     current running count: 24 original - 4 cut (p11,20,21,22) + net-new
+     slides for the 3 content gaps = final count TBD once content is
+     drafted).
+
+REMINDER:
+ - Add a CASE STUDY slide/section. This was missing from the previous
+   presentation (forgot to include it last time) - do not forget it
+   again this time. Needs its own slot in the deck; details of which
+   case study and its content TBD, to be discussed later along with
+   the other content gaps (Q2 above).
+
+7. TECHNICAL NOTES FOR BUILD PHASE
+-----------------------------------------------------------------
+- Framework: Next.js - but this repo's Next.js version has BREAKING
+  CHANGES vs standard/training-data knowledge. Must read
+  node_modules/next/dist/docs/ before writing any Next.js code, per
+  AGENTS.md / CLAUDE.md.
+- Each "slide" = one full-viewport section (100vh x 100vw, fixed aspect
+  ratio behavior needs deciding - likely 16:9 to match PDF export
+  cleanly). Print/export-to-PDF-per-page is the end goal, so avoid
+  designs that rely on scroll/hover-only interactions within a slide.
+- Plan to build a shared "Slide" wrapper/layout + a reusable
+  "ModuleFeatureGrid" (title, subtitle, 2x2/variable feature cards)
+  component first, since it's the backbone template for the majority
+  of slides (6-10, 12, and the future 13-23 rebuild).
+
+=================================================================
+END OF NOTES - next step: review/amend this file together, then start
+scaffolding the Next.js project + slide template system.
+=================================================================

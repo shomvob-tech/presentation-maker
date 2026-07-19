@@ -1,0 +1,326 @@
+=================================================================
+FINAL STRUCTURE - Module Showcase Slides (Slide 6 onward)
+Builds on: intial_discussion.txt, structure_suggestion.txt,
+           hr_meeting_requirements.txt, _pdf_preview/page_06-10.png
+=================================================================
+
+VALIDATION OF structure_suggestion.txt - IS IT OKAY?
+-----------------------------------------------------------------
+Yes, the structure holds up. Checked every line of
+hr_meeting_requirements.txt against it: all 10 requirements land on
+exactly one slide each, nothing missed, nothing double-booked. See the
+coverage matrix at the bottom of this file.
+
+One thing to flag, not a structure problem but a labeling overlap:
+- Slide 6 (Employee Login) has a "Role-Based Access" card meaning
+  "employees only see features relevant to their role" (self-service
+  app UI scoping).
+- Slide 12 (Employee Management) is credited with requirement #3
+  ("Role based access to employee & department") which is really about
+  HR/managers being scoped to their own department/branch on the
+  ADMIN side.
+  These are two different things that happen to share the phrase
+  "role-based access." Recommend keeping both, but make sure slide 12's
+  card is worded distinctly (e.g. "Department-Scoped Management
+  Access") so management doesn't think it's a repeat of slide 6.
+  Already reflected in the draft text below.
+
+Already built in app/page.tsx (slides 1-5) - not covered again here:
+  1. Title
+  2. Shomvob Introduction
+  3. About Shomvob
+  4. HR Challenges
+  5. Employee Journey Roadmap
+
+=================================================================
+SLIDE ORDER (from here on)
+=================================================================
+ 6.  Employee Login & Mobile App          [FINAL TEXT - from PDF p6]
+ 7.  Attendance Management                [FINAL TEXT - from PDF p7]
+ 8.  Leave Management - Part A            [FINAL TEXT - from PDF p8]
+ 9.  Leave Management - Part B            [FINAL TEXT - from PDF p9]
+ 10. Payroll Management                   [FINAL TEXT - from PDF p10]
+ 11. Schedule & Roster                    [DRAFT - needs your review]
+ 12. Employee Management                  [DRAFT - needs your review]
+ 13. Employee Request Workflows           [DRAFT - needs your review]
+ 14. Management Dashboard                 [DRAFT - needs your review]
+ 15. Case Study                           [PLACEHOLDER - no content yet]
+ 16. Why Shomvob for 300 Ltd              [OUT OF SCOPE for this note -
+                                            see intial_discussion.txt Q1]
+ 17. Thank You                            [OUT OF SCOPE for this note]
+
+Slides 6-10 are confirmed final (pulled verbatim from the PDF, as you
+said). Slides 11-14 are new - drafted from structure_suggestion.txt's
+outline + the old deck's raw content (pages 13-19) + the leftover
+hr_meeting_requirements.txt items that had no home in the old deck.
+These need your review before we build them, since some of this is
+new product copy that was never in the original deck.
+
+=================================================================
+SLIDE 6 - EMPLOYEE LOGIN & MOBILE APP  [FINAL]
+=================================================================
+Title: Employee Login
+Subtitle: Real-time attendance tracking with configurable policies and
+          seamless payroll integration.
+  >> FLAG: this subtitle is actually the Attendance Management
+     description (it's identical to slide 7's subtitle word-for-word).
+     Looks like a copy-paste leftover in the source PDF, not something
+     you'd intentionally reuse. Suggest replacing with something that
+     actually describes Login, e.g.: "A Bangla-first mobile experience
+     that gets every employee logged in and self-serving from day one."
+     Flagging only - not changing it without your confirmation.
+
+FEATURE HIGHLIGHTS:
+ 1. Bangla & English Mobile Experience
+    Easy language switching for better accessibility.
+ 2. Simple & Secure Login
+    Quick login with a user-friendly experience.
+ 3. Role-Based Access
+    Employees only see features relevant to their role.
+ 4. Single Access Point
+    Attendance, leave, requisitions, payslips, and HR services from
+    one app.
+
+Requirements covered: Mobile app localization (req #1)
+
+=================================================================
+SLIDE 7 - ATTENDANCE MANAGEMENT  [FINAL]
+=================================================================
+Title: Attendance Management
+Subtitle: Real-time attendance tracking with configurable policies and
+          seamless payroll integration.
+
+FEATURE HIGHLIGHTS:
+ 1. One-tap Check-In & Check-Out
+    Fast, simple attendance from any location.
+ 2. GPS-enabled Attendance
+    Location-verified attendance for greater accuracy.
+ 3. Real-Time Attendance Recording
+    Instant workforce visibility across the organization.
+ 4. Automated Payroll Integration
+    Attendance seamlessly drives payroll calculations.
+
+Requirements covered: none directly on the 10-item list, but this is
+the slide structure_suggestion.txt calls "probably their biggest pain
+point" - directly answers the "No Real Time Attendance Visibility" and
+"Attendance & Payroll Are Closely Connected" pain points already named
+on the HR Challenges slide (slide 4).
+
+=================================================================
+SLIDE 8 - LEAVE MANAGEMENT (Part A)  [FINAL]
+=================================================================
+Title: Leave Management
+Subtitle: Flexible leave policies with automated tracking and
+          centralized administration.
+
+FEATURE HIGHLIGHTS:
+ 1. Centralized Leave Management
+    Manage all leave policies, requests, and approvals from one place.
+ 2. Automated Leave Tracking
+    Automatically monitor balances, accruals, and leave usage.
+ 3. Bulk approve leaves
+    Review and approve multiple leave requests at once.
+ 4. Integrated Holiday Calendar
+    Built-in public holidays for accurate leave planning.
+
+Requirements covered: HR will get access to select multiple leave
+while reviewing leave (req #7, via "Bulk approve leaves")
+
+=================================================================
+SLIDE 9 - LEAVE MANAGEMENT (Part B)  [FINAL]
+=================================================================
+Title: Leave Management
+Subtitle: A simple self-service leave experience for every employee.
+
+FEATURE HIGHLIGHTS (2 cards + phone mockups, per original layout):
+ 1. Apply for Leave in Minutes
+    Submit leave requests anytime with a few simple steps.
+ 2. Real-Time Leave Balance
+    View available leave and request history instantly.
+
+Requirements covered: supports employee self-service leave (same
+theme as slide 8, no separate new requirement).
+
+=================================================================
+SLIDE 10 - PAYROLL MANAGEMENT  [FINAL]
+=================================================================
+Title: Payroll Management
+Subtitle: Flexible leave policies with automated tracking and
+          centralized administration.
+  >> FLAG: same copy-paste issue as slide 6 - this subtitle is
+     actually slide 8's Leave Management description, word-for-word.
+     Suggest a Payroll-specific line instead, e.g.: "Attendance and
+     leave data flow straight into payroll - accurate, automatic, and
+     audit-ready." Flagging only, not changing without your OK.
+
+FEATURE HIGHLIGHTS:
+ 1. Late Deduction
+    Automatically calculate salary deductions for late arrivals
+ 2. Leave Deduction
+    Apply leave-based deductions according to company policies
+ 3. Payroll Generation
+    Generate accurate payroll with attendance and leave data
+ 4. Tax Certificate
+    Generate employee tax certificates with a single click
+
+Requirements covered: Tax certificate create (req #10)
+
+=================================================================
+SLIDE 11 - SCHEDULE & ROSTER  [DRAFT]
+=================================================================
+Basis: old deck pages 13-15 (Smart Roster & Shift Organization),
+condensed from 3 slides into 1 to match the new card-grid template.
+Kept because 300 Ltd's brands (referenced in structure_suggestion.txt -
+Khana's, Jay's Craft, Tehari Khan) run rotating/shift-based blue-collar
+teams - ties back to the "Blue Collar Workforce" pain point on slide 4.
+
+Title: Schedule & Roster
+Subtitle (draft): Build shift patterns once and roll them out across
+                   branches in a few clicks.
+
+FEATURE HIGHLIGHTS (draft):
+ 1. Flexible Shift Creation
+    Define shift timings and combine them into reusable weekly or
+    rotating patterns.
+ 2. Branch & Department Customization
+    Configure different schedules for departments, branches, or
+    employee groups.
+ 3. Bulk & Individual Assignment
+    Assign one employee or hundreds to a schedule in a few clicks.
+ 4. Drag-and-Drop Rescheduling
+    See the full week at a glance and reassign anyone, anytime, with a
+    simple drag and drop.
+
+Requirements covered: none of the 10 named requirements directly - this
+slide exists to address the "Blue Collar Workforce" / shift-based
+context flagged in structure_suggestion.txt, not a specific line item.
+OPEN QUESTION: keep it in, or cut for time since it's not tied to a
+named requirement? (structure_suggestion.txt marked it lowest priority
+of the group, ⭐⭐ vs ⭐⭐⭐ for others.)
+
+=================================================================
+SLIDE 12 - EMPLOYEE MANAGEMENT  [DRAFT]
+=================================================================
+Basis: old deck page 16 (Probation tracking) for cards 1-2, plus
+brand-new copy for cards 3-4 (department access + increment journey
+never existed in the old deck - real content gaps per
+intial_discussion.txt).
+
+Title: Employee Management
+Subtitle (draft): One connected view of every employee's status,
+                   access, and growth - scoped to the right people.
+
+FEATURE HIGHLIGHTS (draft):
+ 1. Automated Probation Tracking & Alerts
+    The system tracks every probation timeline automatically and
+    sends upcoming confirmation alerts - no employee falls through
+    the cracks.
+ 2. One-Click Confirmation
+    Promote an employee from probation to permanent in a single
+    click, backed by performance-based confirmation.
+ 3. Department-Scoped Management Access
+    HR and line/branch managers only see and manage employees within
+    their own department or branch.
+ 4. Employment Increment Journey
+    Raise, review, and approve salary or role increments through one
+    structured, logged workflow.
+
+Requirements covered:
+  - Probation tracking notification (req #5)
+  - Role based access to employee & department (req #3)
+  - App permission department wise (req #4)
+  - Employment increment journey (req #9)
+
+
+=================================================================
+SLIDE 13 - EMPLOYEE REQUEST WORKFLOWS  [DRAFT]
+=================================================================
+Basis: old deck pages 17-18 (Job cut and Offboarding) for the
+resignation-side cards; requisition-side cards are net-new copy (real
+content gap per intial_discussion.txt - requisition was only ever
+mentioned in passing inside slide 6's "Single Access Point" bullet).
+
+Title: Employee Request Workflows
+Subtitle (draft): Every requisition and resignation follows one clear,
+                   trackable path - from request to final decision.
+
+FEATURE HIGHLIGHTS (draft):
+ 1. Employee Requisition in a Few Clicks
+    Line/branch managers raise a request for a new hire directly in
+    the system, routed straight to HR for approval.
+ 2. Resignation, Self-Service
+    Employees submit resignation requests directly from the mobile
+    app - no paper forms required.
+ 3. Built-In Approval Workflow
+    Every request moves through a clear, auditable chain of approvals.
+ 4. Complete Request History
+    HR keeps a full, searchable record of every requisition and
+    resignation, from request to final decision.
+
+Requirements covered:
+  - Employee Requisition journey (req #2)
+  - Employee resignation apply through app (req #6)
+NOTE: card 1 (requisition) is net-new product copy - please confirm
+before we lock it in, same caveat as slide 12.
+
+=================================================================
+SLIDE 14 - MANAGEMENT DASHBOARD  [DRAFT]
+=================================================================
+Basis: old deck page 19 (Dashboard views) for cards 2-3; card 1 (the
+customization angle) and card 4 (requisition/increment widgets) are
+drafted specifically to close requirement #8, which explicitly asks for
+"Dashboard customization (employee requisition, increment)."
+
+Title: Management Dashboard
+Subtitle (draft): Stay on top of workforce health and every key HR
+                   workflow, in one customizable view.
+
+FEATURE HIGHLIGHTS (draft):
+ 1. Customizable Widgets
+    HR and management choose exactly which metrics to track -
+    attendance, leave, probation, increments, requests, and more.
+ 2. Real-Time Attendance & Leave Overview
+    A live view of who's in, who's on leave, and workforce trends
+    across every branch.
+ 3. Requisition & Increment Tracking at a Glance
+    See open hiring requests and pending increment approvals without
+    digging through separate reports.
+ 4. Built for 300 Ltd's Scale
+    A purpose-fit view for a 600+ employee, multi-brand workforce.
+
+Requirements covered: Dashboard customization - employee requisition,
+increment (req #8)
+
+=================================================================
+SLIDE 15 - CASE STUDY  [PLACEHOLDER - NO CONTENT YET]
+=================================================================
+Per the reminder logged in intial_discussion.txt: a case study was
+missing from the last presentation and must not be forgotten again.
+Placing it right after the module showcase (slide 14), before the
+closing "Why Shomvob" slide, so it acts as proof-of-results right
+after the feature pitch. Content, which case study, and its
+metrics/story are still TBD - to be discussed separately.
+
+=================================================================
+REQUIREMENT COVERAGE MATRIX (all 10, confirmed 1-to-1)
+=================================================================
+ Requirement (hr_meeting_requirements.txt)         -> Slide
+ -----------------------------------------------------------
+ 1. Mobile app localization                        -> 6. Employee Login
+ 2. Employee Requisition journey                    -> 13. Employee Request Workflows
+ 3. Role based access to employee & department       -> 12. Employee Management
+ 4. App permission department wise                   -> 12. Employee Management
+ 5. Probation tracking notification                  -> 12. Employee Management
+ 6. Employee resignation apply through app           -> 13. Employee Request Workflows
+ 7. HR multi-select leave while reviewing            -> 8. Leave Management (Part A)
+ 8. Dashboard customization (requisition, increment) -> 14. Management Dashboard
+ 9. Employment increment journey                     -> 12. Employee Management
+ 10. Tax certificate create                          -> 10. Payroll Management
+
+Every requirement is covered exactly once - no gaps, no duplicates.
+
+=================================================================
+END OF FILE - next step: review the two [FLAG]s on slides 6 & 10, and
+the [DRAFT] content on slides 11-14, then we lock text and start
+building these slides.
+=================================================================

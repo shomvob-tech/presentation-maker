@@ -1,0 +1,153 @@
+1. Employee Login & Mobile App ⭐
+
+Requirements covered
+
+Mobile app localization
+Role-based employee access
+
+No need to revisit localization later.
+
+2. Attendance Management ⭐⭐⭐
+
+This is probably their biggest pain point.
+
+Covers:
+
+Mobile attendance
+Real-time sync
+Employee experience
+Management visibility
+3. Leave Management ⭐⭐⭐
+
+Combine everything leave-related into 2 slides maximum.
+
+Slide A
+
+Employee leave application
+Leave balance
+Approval journey
+
+Slide B
+
+Leave policies
+Bulk approval
+Payroll integration
+
+Requirements covered:
+
+Multiple leave approval
+Leave policies
+
+No need for a separate "Approval Center."
+
+4. Payroll Management ⭐⭐⭐
+
+Combine:
+
+Late deduction
+Leave deduction
+Payroll generation
+Tax Certificate
+
+Requirements covered:
+
+Tax certificate
+Salary deduction
+Attendance integration
+5. Schedule & Roster ⭐⭐
+
+Keep only if they're shift-based (which they are).
+
+Good because Khana's, Jay's Craft, Tehari Khan all have rotating shifts.
+
+6. Employee Management ⭐⭐
+
+Don't make it about CRUD.
+
+Instead include:
+
+Probation tracking
+Increment journey
+Department access
+
+Requirements covered:
+
+✅ Probation notification
+
+✅ Increment journey
+
+✅ Role-based department access
+
+Three requirements in one slide.
+
+7. Employee Requests ⭐⭐
+
+One combined slide.
+
+Instead of
+
+Requisition
+Resignation
+
+make it
+
+Employee Request Workflows
+
+Contains
+
+Employee requisition
+Employee resignation
+Approval workflow
+
+Requirements covered:
+
+✅ Employee requisition
+
+✅ Resignation through app
+
+8. Dashboard ⭐⭐⭐
+
+Final feature slide.
+
+Include
+
+Dashboard customization
+Attendance
+Leave
+Probation
+Increment
+Employee requests
+
+Requirements covered:
+
+Dashboard customization.
+
+This reduces everything to
+Intro
+Why Shomvob
+Challenges at 300 Ltd
+Employee Journey
+Employee Login
+Attendance Management
+Leave Management
+Payroll Management
+Schedule & Roster
+Employee Management (probation + increment + roles)
+Employee Request Workflows (requisition + resignation)
+Management Dashboard
+Why Shomvob for 300 Ltd
+Thank You
+Requirement Coverage
+Requirement	Covered In
+Mobile app localization	Employee Login
+Employee requisition journey	Employee Request Workflows
+Role-based access	Employee Management
+Department permissions	Employee Management
+Probation notification	Employee Management
+Employee resignation	Employee Request Workflows
+HR multiple leave review	Leave Management
+Dashboard customization	Management Dashboard
+Increment journey	Employee Management
+Tax certificate	Payroll Management
+
+Every requirement is covered exactly once.

@@ -1,0 +1,11 @@
+Mobile app localization (blue collar workforce needs bangla first mobile app)
+Employee Requisition journey
+Role based access to employee & department
+App permission department wise
+Probation tracking notification
+Employee resignation apply through app
+HR will get access to select multiple leave while reviewing leave
+Dashboard customization (employee requisition, increment)
+Employment increment journey
+Tax certificate create
+

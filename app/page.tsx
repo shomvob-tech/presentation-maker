@@ -36,7 +36,7 @@ export default function Home() {
       <UnifiedLeaveManagementSlide />
       <PayrollManagementSlide />
       <ScheduleRosterSlide />
-      <Schedule2 />
+      {/* <Schedule2 /> */}
       <EmployeeRequestWorkflowsSlide />
       <ManagementDashboardSlide />
       <ThankYouSlide />

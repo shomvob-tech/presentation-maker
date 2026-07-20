@@ -88,14 +88,14 @@ export default function EmployeeManagement_1() {
         <div className="max-w-[72%]">
           <div className="flex items-center gap-3">
             <span className="rounded-full bg-[#0c3d20] px-3 py-1 text-[clamp(0.5rem,0.62vw,0.7rem)] font-black uppercase tracking-[0.2em] text-[#edb713]">
-              Employee Management
+              What it does
             </span>
             <span className="text-[clamp(0.5rem,0.62vw,0.7rem)] font-bold uppercase tracking-[0.18em] text-[#28a143]">
               Part 01 · For the company
             </span>
           </div>
           <h1 className="mt-4 text-[clamp(2.2rem,4.15vw,4.6rem)] font-bold leading-[0.95] tracking-tight">
-            What it does
+            Employee Management
           </h1>
           <p className="mt-4 max-w-[720px] text-[clamp(0.72rem,0.95vw,1.05rem)] leading-relaxed text-[#496454]">
             One connected view of every employee&apos;s status, access, and

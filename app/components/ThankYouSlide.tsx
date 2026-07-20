@@ -18,7 +18,7 @@ export default function ThankYouSlide() {
         aria-hidden="true"
         className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none text-[42rem] font-bold leading-none text-white/[0.035]"
       >
-        300
+        /+\
       </span>
 
       <div className="pointer-events-none absolute -right-24 -top-24 h-[420px] w-[420px] rounded-full bg-[#edb713] opacity-20 blur-[110px]" />
@@ -43,8 +43,7 @@ export default function ThankYouSlide() {
         <div className="h-[3px] w-16 rounded-full bg-[#edb713]" />
 
         <p className="max-w-xl text-lg leading-relaxed text-white/65">
-          A smarter, connected HR ecosystem for 300 Ltd &mdash; proposed by
-          your own HR team, powered by Shomvob.
+          A smarter, connected HR ecosystem for 300 Ltd, powered by Shomvob.
         </p>
 
         <span className="mt-2 inline-flex items-center gap-2 rounded-full bg-white/10 px-5 py-2 text-sm font-semibold text-white/80">
@@ -73,9 +72,6 @@ export default function ThankYouSlide() {
             className="h-8 w-auto"
           />
         </div>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
-          Prepared by 300 Ltd HR Team &middot; In partnership with Shomvob HR
-        </p>
       </div>
     </section>
   );

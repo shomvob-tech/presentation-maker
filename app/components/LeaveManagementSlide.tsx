@@ -147,11 +147,7 @@ export default function LeaveManagementSlide() {
                 {feature.number}
               </span>
             </div>
-            {feature.highlight && (
-              <span className="mb-2 inline-flex w-fit rounded-full bg-[#edb713]/15 px-2.5 py-0.5 text-[clamp(0.46rem,0.55vw,0.6rem)] font-bold uppercase tracking-[0.14em] text-[#a3780a]">
-                Requirement covered
-              </span>
-            )}
+            {feature.highlight}
             <h2 className="text-[clamp(0.82rem,1.05vw,1.2rem)] font-bold leading-tight">
               {feature.title}
             </h2>
@@ -164,9 +160,6 @@ export default function LeaveManagementSlide() {
 
       <div className="relative z-10 mt-[clamp(1.5rem,2.6vw,2.5rem)] flex items-center gap-3 px-[5.5%]">
         <div className="h-px flex-1 bg-[#0c3d20]/10" />
-        <span className="text-[clamp(0.5rem,0.62vw,0.7rem)] font-semibold uppercase tracking-[0.18em] text-[#7c8f83]">
-          Solves &middot; HR selects multiple leave requests while reviewing
-        </span>
         <div className="h-px flex-1 bg-[#0c3d20]/10" />
       </div>
     </section>

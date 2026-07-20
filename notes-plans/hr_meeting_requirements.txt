@@ -7,5 +7,5 @@ Employee resignation apply through app
 HR will get access to select multiple leave while reviewing leave
 Dashboard customization (employee requisition, increment)
 Employment increment journey
-Tax certificate create
+Tax certificate create (not possible with our system)
 

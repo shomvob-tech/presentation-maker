@@ -90,7 +90,7 @@ export default function EmployeeManagementSlide() {
       <header className="relative z-20 flex items-start justify-between px-[5.5%] pt-[5.5%]">
         <div className="max-w-[68%]">
           <span className="text-[clamp(0.55rem,0.7vw,0.78rem)] font-bold uppercase tracking-[0.25em] text-[#28a143]">
-            Module 07 &middot; Workforce Lifecycle
+            Module &middot; Workforce Lifecycle
           </span>
           <h1 className="mt-2 text-[clamp(2.15rem,3.8vw,4.3rem)] font-bold leading-none tracking-tight">
             Employee Management
@@ -178,11 +178,7 @@ export default function EmployeeManagementSlide() {
               <FeatureIcon type={feature.icon} />
             </div>
             <div className="relative">
-              {feature.highlight && (
-                <span className="mb-1.5 inline-flex w-fit rounded-full bg-[#edb713]/15 px-2.5 py-0.5 text-[clamp(0.46rem,0.55vw,0.6rem)] font-bold uppercase tracking-[0.14em] text-[#a3780a]">
-                  Requirement covered
-                </span>
-              )}
+              {feature.highlight}
               <h2 className="max-w-[92%] text-[clamp(0.85rem,1.12vw,1.28rem)] font-bold leading-tight">
                 {feature.title}
               </h2>

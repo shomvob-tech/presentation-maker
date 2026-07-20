@@ -161,11 +161,7 @@ export default function EmployeeRequestWorkflowsSlide() {
               <FeatureIcon type={feature.icon} />
             </div>
             <div className="relative">
-              {feature.highlight && (
-                <span className="mb-1.5 inline-flex w-fit rounded-full bg-[#edb713]/15 px-2.5 py-0.5 text-[clamp(0.44rem,0.52vw,0.58rem)] font-bold uppercase tracking-[0.14em] text-[#edb713]">
-                  Requirement covered
-                </span>
-              )}
+              {feature.highlight}
               <h2 className="max-w-[92%] text-[clamp(0.85rem,1.12vw,1.28rem)] font-bold leading-tight text-white">
                 {feature.title}
               </h2>

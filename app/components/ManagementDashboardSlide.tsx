@@ -30,8 +30,8 @@ const features = [
   },
   {
     number: "04",
-    title: "Built for 300 Ltd's Scale",
-    copy: "A purpose-fit view for a 600+ employee, multi-brand workforce.",
+    title: "Centralized Workforce Insights",
+    copy: "Monitor key HR metrics from a single, unified dashboard.",
     icon: "scale",
   },
 ];
@@ -205,11 +205,7 @@ export default function ManagementDashboardSlide() {
               <FeatureIcon type={feature.icon} />
             </div>
             <div className="relative">
-              {feature.highlight && (
-                <span className="mb-1.5 inline-flex w-fit rounded-full bg-[#edb713]/15 px-2.5 py-0.5 text-[clamp(0.44rem,0.52vw,0.58rem)] font-bold uppercase tracking-[0.14em] text-[#a3780a]">
-                  Requirement covered
-                </span>
-              )}
+              {feature.highlight}
               <h2 className="max-w-[92%] text-[clamp(0.82rem,1.08vw,1.22rem)] font-bold leading-tight">
                 {feature.title}
               </h2>

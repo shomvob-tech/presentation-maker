@@ -148,9 +148,7 @@ export default function EmployeeLoginSlide() {
                 Feature highlights
               </span>
             </div>
-            <div className="rounded-full border border-white/10 bg-white/[0.06] px-4 py-1.5 text-[clamp(0.5rem,0.62vw,0.68rem)] font-semibold uppercase tracking-[0.16em] text-white/50">
-              Requirement covered · Mobile app localization
-            </div>
+
           </div>
 
           <div className="grid min-h-0 flex-1 grid-cols-2 grid-rows-2 gap-[clamp(0.65rem,1.05vw,1.1rem)]">

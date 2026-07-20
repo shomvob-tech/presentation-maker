@@ -2,38 +2,42 @@ import Image from "next/image";
 
 const strengths = [
   {
-    label: "Workforce consulting experience",
-    copy: "Four-plus years helping companies solve hiring and manpower challenges across industries.",
+    number: "01",
+    label: "Workforce consulting",
+    copy: "Four-plus years solving hiring and manpower challenges across industries.",
     icon: "briefcase",
   },
   {
-    label: "Large-scale workforce operations",
-    copy: "Supporting organizations with staffing, bulk hiring, payroll, and resource augmentation.",
+    number: "02",
+    label: "Operations at scale",
+    copy: "Staffing, bulk hiring, payroll, and resource augmentation for growing teams.",
     icon: "people",
   },
   {
-    label: "Built from operational insight",
-    copy: "Experience from working with 1,500+ companies shaped the Shomvob workforce platform.",
+    number: "03",
+    label: "Insight turned into product",
+    copy: "Real experience with 1,500+ companies shaped the Shomvob platform.",
     icon: "insight",
   },
 ];
 
 const stats = [
   { value: "4+", label: "Years", detail: "Workforce experience" },
-  { value: "1,500+", label: "Clients", detail: "Across industries" },
   { value: "30,000+", label: "Placed", detail: "Job seekers connected" },
   { value: "98%+", label: "Availability", detail: "Reliable operations" },
   { value: "100%", label: "Payroll", detail: "Consistent execution" },
 ];
 
 const clients = [
-  "foodpanda",
-  "pandamart",
-  "SINGER",
-  "Aarong",
-  "Domino’s",
-  "ArtNature",
-  "ShopUp",
+  { name: "Aarong", src: "/resources/clients/aarong_logo.png" },
+  { name: "Artnature Bangladesh", src: "/resources/clients/artnature_logo.png" },
+  { name: "Chillox", src: "/resources/clients/chillox_logo.png" },
+  { name: "Domino’s Pizza", src: "/resources/clients/dominos_logo.png" },
+  { name: "foodpanda", src: "/resources/clients/foodpanda-logo.png" },
+  { name: "MH Global Group", src: "/resources/clients/mhglobal_logo.png" },
+  { name: "Pathao Food", src: "/resources/clients/pathao_food_logo.png" },
+  { name: "ShopUp", src: "/resources/clients/shopup_logo.png" },
+  { name: "Singer Bangladesh", src: "/resources/clients/singer_logo.png" },
 ];
 
 function StrengthIcon({ type }: { type: string }) {
@@ -73,24 +77,28 @@ function StrengthIcon({ type }: { type: string }) {
 
 export default function AboutShomvobSlide() {
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-[#03120b] text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(40,161,67,0.18),transparent_42%)]" />
+    <section className="relative h-screen w-full overflow-hidden bg-[#04150d] text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_43%,rgba(35,179,82,0.18),transparent_34%)]" />
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.055]"
+        className="pointer-events-none absolute inset-0 opacity-[0.045]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px)",
-          backgroundSize: "42px 42px",
+            "linear-gradient(rgba(255,255,255,.45) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.45) 1px, transparent 1px)",
+          backgroundSize: "52px 52px",
         }}
       />
-      <div className="pointer-events-none absolute left-0 top-0 h-2 w-[38%] bg-[#edb713]" />
+      <div className="pointer-events-none absolute -right-[7%] top-[5%] h-[63%] w-[52%] rotate-[-7deg] rounded-[5rem] border border-[#3cd865]/10 bg-[#0a2718]/60" />
+      <div className="pointer-events-none absolute right-[13%] top-[19%] aspect-square w-[31%] rounded-full border border-[#63ef86]/10" />
+      <div className="pointer-events-none absolute right-[17%] top-[25%] aspect-square w-[23%] rounded-full border border-dashed border-[#edb713]/25" />
+      <div className="pointer-events-none absolute left-0 top-0 h-full w-1.5 bg-[#edb713]" />
 
-      <header className="absolute inset-x-[5.5%] top-[5%] z-20 flex items-center justify-between">
+      <header className="absolute inset-x-[5.5%] top-[4.5%] z-20 flex items-center justify-between">
         <Image
           src="/resources/shomvob_hr_text.png"
           alt="Shomvob HR"
-          width={130}
-          height={31}
+          width={178}
+          height={43}
+          className="h-[clamp(2rem,3.2vw,2.8rem)] w-auto"
         />
         <Image
           src="/resources/300_ltd_logo.svg"
@@ -101,72 +109,112 @@ export default function AboutShomvobSlide() {
         />
       </header>
 
-      <div className="absolute inset-x-[5.5%] top-[14%] z-10 text-center">
-        <span className="text-[clamp(0.55rem,0.68vw,0.75rem)] font-bold uppercase tracking-[0.25em] text-[#edb713]">
-          Why Shomvob
-        </span>
-        <h1 className="mt-2 text-[clamp(2.2rem,3.8vw,4.25rem)] font-bold leading-none tracking-tight">
-          Built from real workforce operations.
-        </h1>
-        <p className="mt-3 text-[clamp(0.75rem,1vw,1.1rem)] text-[#77c98a]">
-          Not just software—practical experience translated into a stronger HR
-          system.
-        </p>
-      </div>
-
-      <div className="absolute inset-x-[5.5%] top-[31%] z-10 grid grid-cols-3 gap-4">
-        {strengths.map((strength) => (
-          <article
-            key={strength.label}
-            className="rounded-2xl border border-white/10 bg-white/[0.055] p-[clamp(0.9rem,1.35vw,1.5rem)] shadow-xl shadow-black/15 backdrop-blur-sm"
-          >
-            <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl border border-[#28a143]/30 bg-[#28a143]/15 text-[#45d66b]">
-              <StrengthIcon type={strength.icon} />
-            </div>
-            <h2 className="text-[clamp(0.82rem,1.05vw,1.2rem)] font-bold">
-              {strength.label}
-            </h2>
-            <p className="mt-2 text-[clamp(0.58rem,0.72vw,0.8rem)] leading-relaxed text-white/52">
-              {strength.copy}
-            </p>
-          </article>
-        ))}
-      </div>
-
-      <div className="absolute inset-x-[5.5%] top-[55%] z-10 grid grid-cols-5 gap-3">
-        {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="rounded-2xl border border-[#28a143]/20 bg-[#071f13] px-3 py-[clamp(0.7rem,1vw,1.1rem)] text-center"
-          >
-            <div className="text-[clamp(1.35rem,2vw,2.3rem)] font-black tracking-tight text-[#45d66b]">
-              {stat.value}
-            </div>
-            <div className="text-[clamp(0.65rem,0.82vw,0.9rem)] font-bold">
-              {stat.label}
-            </div>
-            <div className="mt-1 text-[clamp(0.48rem,0.58vw,0.65rem)] text-white/38">
-              {stat.detail}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="absolute inset-x-[5.5%] bottom-[8%] z-10">
-        <div className="mb-3 flex items-center gap-3">
-          <div className="h-px flex-1 bg-white/10" />
-          <span className="text-[clamp(0.5rem,0.62vw,0.7rem)] font-semibold uppercase tracking-[0.22em] text-white/35">
-            Trusted by leading teams across Bangladesh
+      <div className="absolute inset-x-[5.5%] top-[14%] bottom-[22%] z-10 grid grid-cols-[43%_57%]">
+        <div className="pr-[9%]">
+          <span className="inline-flex items-center gap-2 text-[clamp(0.52rem,0.64vw,0.72rem)] font-bold uppercase tracking-[0.27em] text-[#edb713]">
+            <span className="h-px w-7 bg-[#edb713]" />
+            About Shomvob
           </span>
-          <div className="h-px flex-1 bg-white/10" />
+          <h1 className="mt-[3%] max-w-[9ch] text-[clamp(2.5rem,4.2vw,4.8rem)] font-black leading-[0.94] tracking-[-0.055em]">
+            Built in the{" "}
+            <span className="text-[#45d66b]">real world.</span>
+          </h1>
+          <p className="mt-[4%] max-w-[38rem] text-[clamp(0.68rem,0.9vw,1rem)] leading-relaxed text-white/55">
+            Practical workforce experience, translated into a stronger HR
+            system—not software built in isolation.
+          </p>
+
+          <div className="mt-[6%] border-t border-white/10">
+            {strengths.map((strength) => (
+              <article
+                key={strength.label}
+                className="group grid grid-cols-[2.1rem_2.5rem_1fr] items-center gap-3 border-b border-white/10 py-[clamp(0.55rem,1.05vh,0.85rem)]"
+              >
+                <span className="text-[clamp(0.48rem,0.56vw,0.65rem)] font-bold tracking-[0.2em] text-[#edb713]/70">
+                  {strength.number}
+                </span>
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#1c6835]/35 text-[#52df74]">
+                  <span className="scale-75">
+                    <StrengthIcon type={strength.icon} />
+                  </span>
+                </span>
+                <div>
+                  <h2 className="text-[clamp(0.67rem,0.85vw,0.96rem)] font-bold">
+                    {strength.label}
+                  </h2>
+                  <p className="mt-0.5 text-[clamp(0.48rem,0.58vw,0.67rem)] leading-snug text-white/38">
+                    {strength.copy}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-7 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.96]">
+
+        <div className="relative">
+          <div className="absolute left-1/2 top-[43%] flex aspect-square w-[33%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-[#56df78]/30 bg-[#062114] text-center shadow-[0_0_80px_rgba(44,202,87,0.12)]">
+            <span className="text-[clamp(2.1rem,3.6vw,4.2rem)] font-black leading-none tracking-[-0.06em] text-[#45d66b]">
+              1,500+
+            </span>
+            <span className="mt-2 text-[clamp(0.55rem,0.68vw,0.78rem)] font-bold uppercase tracking-[0.22em] text-white/75">
+              Clients
+            </span>
+            <span className="mt-1 text-[clamp(0.43rem,0.5vw,0.58rem)] text-white/35">
+              across industries
+            </span>
+          </div>
+
+          {stats.map((stat, index) => {
+            const positions = [
+              "left-[4%] top-[5%] text-left",
+              "right-[1%] top-[7%] text-right",
+              "left-[3%] bottom-[3%] text-left",
+              "right-[2%] bottom-[2%] text-right",
+            ];
+
+            return (
+              <div
+                key={stat.label}
+                className={`absolute w-[31%] ${positions[index]}`}
+              >
+                <div className="mb-2 h-px w-full bg-gradient-to-r from-[#45d66b]/70 to-transparent" />
+                <div className="text-[clamp(1.45rem,2.45vw,2.85rem)] font-black leading-none tracking-[-0.045em] text-white">
+                  {stat.value}
+                </div>
+                <div className="mt-1 text-[clamp(0.57rem,0.69vw,0.8rem)] font-bold uppercase tracking-[0.13em] text-[#edb713]">
+                  {stat.label}
+                </div>
+                <div className="mt-1 text-[clamp(0.43rem,0.5vw,0.58rem)] text-white/35">
+                  {stat.detail}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="absolute inset-x-[3.8%] bottom-[3.8%] z-20">
+        <div className="mb-2.5 flex items-end justify-between px-[1.7%]">
+          <span className="text-[clamp(0.5rem,0.62vw,0.7rem)] font-semibold uppercase tracking-[0.22em] text-white/40">
+            Trusted across Bangladesh
+          </span>
+          <span className="text-[clamp(0.43rem,0.5vw,0.58rem)] italic text-[#66c47c]/65">
+            Real partnerships. Real operating experience.
+          </span>
+        </div>
+        <div className="grid h-[clamp(5.4rem,10.5vh,7.8rem)] grid-cols-9 overflow-hidden rounded-[1.1rem] border border-[#bdd0bb]/35 bg-[#dfe9dc] shadow-2xl shadow-black/30">
           {clients.map((client) => (
             <div
-              key={client}
-              className="flex h-[clamp(3.5rem,5vw,5.4rem)] items-center justify-center border-r border-[#0c3d20]/10 px-3 text-center text-[clamp(0.65rem,0.9vw,1rem)] font-black tracking-tight text-[#16472a] last:border-r-0"
+              key={client.name}
+              className="relative border-r border-[#12351f]/15 bg-[#dfe9dc] last:border-r-0"
             >
-              {client}
+              <Image
+                src={client.src}
+                alt={`${client.name} logo`}
+                fill
+                sizes="11vw"
+                className="object-contain p-[5%]"
+              />
             </div>
           ))}
         </div>

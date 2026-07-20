@@ -128,9 +128,7 @@ export default function AttendanceManagementSlide() {
           Feature highlights
         </span>
         <div className="h-px flex-1 bg-white/10" />
-        <span className="rounded-full border border-white/10 bg-white/[0.06] px-4 py-1.5 text-[clamp(0.5rem,0.62vw,0.68rem)] font-semibold uppercase tracking-[0.14em] text-white/50">
-          Answers: No real-time visibility &middot; Attendance-payroll link
-        </span>
+        
       </div>
 
       <div className="relative z-10 mt-[clamp(1.25rem,2.2vw,2rem)] grid grid-cols-2 grid-rows-2 gap-[clamp(0.75rem,1.2vw,1.35rem)] px-[5.5%] pb-[6%]">

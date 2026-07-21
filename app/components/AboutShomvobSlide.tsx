@@ -77,7 +77,10 @@ function StrengthIcon({ type }: { type: string }) {
 
 export default function AboutShomvobSlide() {
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-[#04150d] text-white">
+    <section
+      data-slide="about"
+      className="relative h-screen w-full overflow-hidden bg-[#04150d] text-white"
+    >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_43%,rgba(35,179,82,0.18),transparent_34%)]" />
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.045]"

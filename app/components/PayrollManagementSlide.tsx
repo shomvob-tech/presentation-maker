@@ -122,7 +122,10 @@ function FeatureIcon({ type }: { type: string }) {
 
 export default function PayrollManagementSlide() {
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-[#f3f0e5] text-[#092d19]">
+    <section
+      data-module="payroll"
+      className="relative h-screen w-full overflow-hidden bg-[#f3f0e5] text-[#092d19]"
+    >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[32%] bg-[#0c3d20]" />
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-[32%] opacity-[0.08]"

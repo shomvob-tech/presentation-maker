@@ -1,0 +1,407 @@
+{
+    "version": "1.0.0",
+    "product": {
+      "name": "Shomvob HRM",
+      "company": "Shomvob Technologies"
+    },
+    "presentationDefaults": {
+      "defaultTheme": "default",
+      "availableThemes": [
+        "default",
+        "modern",
+        "executive"
+      ]
+    },
+    "modules": [
+      {
+        "id": "employee-management",
+        "name": "Employee Management",
+        "slideType": "module",
+        "description": "Manage every employee from onboarding to offboarding in one centralized system.",
+        "businessProblems": [
+          "Employee records are scattered",
+          "Manual employee information updates",
+          "Difficulty tracking employment status"
+        ],
+        "features": [
+          "Central employee database",
+          "Employee profiles",
+          "Document management",
+          "Department & designation assignment"
+        ],
+        "benefits": [
+          "Single source of truth",
+          "Reduced manual work",
+          "Faster employee lookup"
+        ],
+        "keywords": [
+          "employee",
+          "employee management",
+          "profile",
+          "staff",
+          "onboarding",
+          "offboarding"
+        ],
+        "screenshots": [
+          "employee_list",
+          "employee_profile"
+        ],
+        "workflowAvailable": true,
+        "relatedModules": [
+          "departments",
+          "designations",
+          "attendance"
+        ]
+      },
+      {
+        "id": "attendance",
+        "name": "Attendance Management",
+        "slideType": "module",
+        "description": "Track attendance accurately using mobile and web with real-time visibility.",
+        "businessProblems": [
+          "Manual attendance",
+          "Attendance disputes",
+          "Late payroll processing"
+        ],
+        "features": [
+          "GPS attendance",
+          "One-tap check in/out",
+          "Real-time attendance",
+          "Attendance reports"
+        ],
+        "benefits": [
+          "Accurate attendance",
+          "Reduced payroll errors",
+          "Live workforce visibility"
+        ],
+        "keywords": [
+          "attendance",
+          "check in",
+          "check out",
+          "gps",
+          "late",
+          "presence"
+        ],
+        "screenshots": [
+          "attendance_dashboard",
+          "attendance_mobile"
+        ],
+        "workflowAvailable": true,
+        "relatedModules": [
+          "schedule",
+          "payroll",
+          "leave"
+        ]
+      },
+      {
+        "id": "leave",
+        "name": "Leave Management",
+        "slideType": "module",
+        "description": "Digitize leave requests and approvals with complete visibility.",
+        "businessProblems": [
+          "Paper leave forms",
+          "Approval delays",
+          "Leave balance confusion"
+        ],
+        "features": [
+          "Leave application",
+          "Bulk approvals",
+          "Leave balance",
+          "Holiday calendar"
+        ],
+        "benefits": [
+          "Faster approvals",
+          "Transparent leave tracking",
+          "Reduced paperwork"
+        ],
+        "keywords": [
+          "leave",
+          "vacation",
+          "holiday",
+          "absence",
+          "leave approval"
+        ],
+        "screenshots": [
+          "leave_dashboard",
+          "leave_application"
+        ],
+        "workflowAvailable": true,
+        "relatedModules": [
+          "attendance",
+          "payroll"
+        ]
+      },
+      {
+        "id": "payroll",
+        "name": "Payroll Management",
+        "slideType": "module",
+        "description": "Automate payroll with attendance, leave and deductions integrated.",
+        "businessProblems": [
+          "Manual salary calculation",
+          "Payroll mistakes",
+          "Tax document preparation"
+        ],
+        "features": [
+          "Payroll generation",
+          "Late deductions",
+          "Leave deductions",
+          "Tax certificates"
+        ],
+        "benefits": [
+          "Accurate payroll",
+          "Time savings",
+          "Compliance support"
+        ],
+        "keywords": [
+          "salary",
+          "payroll",
+          "tax",
+          "deduction",
+          "payslip"
+        ],
+        "screenshots": [
+          "payroll_dashboard",
+          "payroll_summary"
+        ],
+        "workflowAvailable": true,
+        "relatedModules": [
+          "attendance",
+          "leave"
+        ]
+      },
+      {
+        "id": "schedule",
+        "name": "Schedule & Roster Management",
+        "slideType": "module",
+        "description": "Create flexible schedules and assign employees with ease.",
+        "businessProblems": [
+          "Manual roster planning",
+          "Shift conflicts",
+          "Large workforce scheduling"
+        ],
+        "features": [
+          "Time slots",
+          "Pattern creation",
+          "Bulk assignment",
+          "Drag & drop scheduling"
+        ],
+        "benefits": [
+          "Simplified scheduling",
+          "Reduced conflicts",
+          "Better workforce planning"
+        ],
+        "keywords": [
+          "schedule",
+          "roster",
+          "shift",
+          "pattern",
+          "time slot"
+        ],
+        "screenshots": [
+          "schedule_calendar",
+          "shift_assignment"
+        ],
+        "workflowAvailable": true,
+        "relatedModules": [
+          "attendance"
+        ]
+      },
+      {
+        "id": "departments",
+        "name": "Departments",
+        "slideType": "module",
+        "description": "Organize employees into departments and business units.",
+        "businessProblems": [
+          "Poor organizational structure",
+          "Department reporting"
+        ],
+        "features": [
+          "Department management",
+          "Hierarchy",
+          "Department permissions"
+        ],
+        "benefits": [
+          "Better organization",
+          "Improved reporting"
+        ],
+        "keywords": [
+          "department",
+          "team",
+          "organization"
+        ],
+        "screenshots": [
+          "departments"
+        ],
+        "workflowAvailable": false,
+        "relatedModules": [
+          "employee-management"
+        ]
+      },
+      {
+        "id": "designations",
+        "name": "Designations",
+        "slideType": "module",
+        "description": "Maintain company positions and reporting hierarchy.",
+        "businessProblems": [
+          "Inconsistent job titles",
+          "Reporting confusion"
+        ],
+        "features": [
+          "Designation management",
+          "Hierarchy",
+          "Role mapping"
+        ],
+        "benefits": [
+          "Standardized positions",
+          "Improved reporting"
+        ],
+        "keywords": [
+          "designation",
+          "role",
+          "job title"
+        ],
+        "screenshots": [
+          "designations"
+        ],
+        "workflowAvailable": false,
+        "relatedModules": [
+          "employee-management"
+        ]
+      },
+      {
+        "id": "probation",
+        "name": "Probation Tracking",
+        "slideType": "module",
+        "description": "Track probation periods and notify HR before completion.",
+        "businessProblems": [
+          "Missed probation deadlines",
+          "Manual follow-up"
+        ],
+        "features": [
+          "Probation tracking",
+          "Automatic reminders",
+          "Confirmation notifications"
+        ],
+        "benefits": [
+          "Never miss confirmations",
+          "Improved HR efficiency"
+        ],
+        "keywords": [
+          "probation",
+          "confirmation",
+          "notification"
+        ],
+        "screenshots": [
+          "probation_dashboard"
+        ],
+        "workflowAvailable": true,
+        "relatedModules": [
+          "employee-management"
+        ]
+      },
+      {
+        "id": "recruitment",
+        "name": "Employee Requisition",
+        "slideType": "module",
+        "description": "Manage hiring requests and recruitment approvals.",
+        "businessProblems": [
+          "Manual hiring requests",
+          "Approval delays"
+        ],
+        "features": [
+          "Requisition workflow",
+          "Approval flow",
+          "Vacancy tracking"
+        ],
+        "benefits": [
+          "Faster hiring",
+          "Transparent approvals"
+        ],
+        "keywords": [
+          "recruitment",
+          "hiring",
+          "vacancy",
+          "requisition"
+        ],
+        "screenshots": [
+          "requisition_dashboard"
+        ],
+        "workflowAvailable": true,
+        "relatedModules": [
+          "employee-management"
+        ]
+      },
+      {
+        "id": "increment",
+        "name": "Employee Increment",
+        "slideType": "module",
+        "description": "Digitize salary increment requests and approvals.",
+        "businessProblems": [
+          "Manual increment process",
+          "Approval bottlenecks"
+        ],
+        "features": [
+          "Increment workflow",
+          "Approval tracking",
+          "History"
+        ],
+        "benefits": [
+          "Transparent salary reviews",
+          "Faster approvals"
+        ],
+        "keywords": [
+          "increment",
+          "salary increase",
+          "promotion"
+        ],
+        "screenshots": [
+          "increment_dashboard"
+        ],
+        "workflowAvailable": true,
+        "relatedModules": [
+          "payroll"
+        ]
+      },
+      {
+        "id": "dashboard",
+        "name": "Management Dashboard",
+        "slideType": "module",
+        "description": "Real-time dashboards for HR and management with customizable widgets.",
+        "businessProblems": [
+          "Lack of visibility",
+          "Slow reporting",
+          "No centralized metrics"
+        ],
+        "features": [
+          "Custom widgets",
+          "Attendance overview",
+          "Leave overview",
+          "Increment tracking",
+          "Requisition tracking"
+        ],
+        "benefits": [
+          "Data-driven decisions",
+          "Executive visibility",
+          "Real-time insights"
+        ],
+        "keywords": [
+          "dashboard",
+          "analytics",
+          "report",
+          "management",
+          "overview"
+        ],
+        "screenshots": [
+          "dashboard_home",
+          "dashboard_widgets"
+        ],
+        "workflowAvailable": false,
+        "relatedModules": [
+          "attendance",
+          "leave",
+          "payroll",
+          "increment"
+        ]
+      }
+    ]
+  }

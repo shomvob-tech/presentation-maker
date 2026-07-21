@@ -1,0 +1,402 @@
+AI Presentation Generator - Technical Design Report (MVP)
+Project Goal
+
+Transform the current Next.js presentation into an AI-assisted presentation generation platform.
+
+The AI is not responsible for designing presentations. Instead, it generates content for predefined slide templates using a structured knowledge base and client requirements.
+
+The presentation itself remains deterministic and fully controlled by the React application.
+
+Business Workflow
+
+Demo Call Ends
+        │
+        ▼
+Sales Team Discusses Requirements
+        │
+        ▼
+Create New Presentation
+        │
+        ▼
+Enter:
+- Client Name
+- Client Email
+- Logo
+- Requirements
+- Notes
+- Optional Images
+        │
+        ▼
+AI Recommends:
+- Modules
+- Theme
+- Optional Slides
+        │
+        ▼
+Human Reviews Recommendations
+        │
+        ▼
+Generate Slide Content
+        │
+        ▼
+Populate Existing React Templates
+        │
+        ▼
+Preview
+        │
+        ▼
+Generate PDF
+        │
+        ▼
+Email Client
+
+Estimated turnaround:
+20–30 minutes after the demo call.
+
+
+Philosophy
+
+The project is not an AI Presentation Maker.
+
+It is a
+
+Presentation Content Generator
+
+Presentation layouts, branding, colors, typography, animations, and slide ordering remain under developer control.
+
+The AI only fills predefined placeholders.
+
+Overall Architecture
+
+                  Next.js App
+
+Presentation Wizard
+Theme Selection
+Module Selection
+Preview
+PDF Export
+Email
+
+        │
+ REST API
+        │
+
+        ▼
+
+        Python AI Service
+
+Requirement Analysis
+
+↓
+
+Recommendation Engine
+
+↓
+
+Content Generation
+
+↓
+
+JSON Response
+
+        ▲
+
+Knowledge Base
+(JSON)
+
+
+
+Responsibilities
+Next.js
+
+Responsible for:
+
+UI
+Authentication
+Presentation Wizard
+Theme Selection
+Module Selection
+Preview
+PDF Generation
+Email
+Rendering Slide Components
+
+Never asks AI about layouts.
+
+Python Service
+
+Responsible for:
+
+Requirement understanding
+Module recommendation
+Content generation
+JSON formatting
+
+Never knows anything about React.
+
+Knowledge Base
+
+Initially:
+
+No database.
+
+One structured JSON file.
+
+Example structure
+{
+  "attendance": {
+    "title": "...",
+    "description": "...",
+    "features": [],
+    "benefits": [],
+    "painPoints": [],
+    "screenshots": [],
+    "workflow": []
+  }
+}
+
+Benefits
+
+Single source of truth
+Used by Next.js
+Used by Python
+Easy to edit
+Database can come later
+
+
+AI Workflow
+
+Two separate stages.
+
+Stage 1
+
+Recommendation
+
+Input
+
+Requirements
+Client info
+Industry (optional)
+
+Output
+
+Recommended Modules
+Suggested Theme
+Suggested Optional Slides
+Reasons
+
+
+Human Review
+
+Instead of trusting AI.
+
+The user confirms.
+
+Example
+✓ Attendance
+
+✓ Leave
+
+✓ Payroll
+
+☐ Recruitment
+
+Stage 2
+
+Content Generation
+
+Input
+
+Confirmed modules
+Theme
+Requirements
+Relevant knowledge base
+
+Output
+
+Structured JSON
+
+Example
+{
+  "module": "attendance",
+  "title": "...",
+  "points": [
+    "...",
+    "...",
+    "..."
+  ]
+}
+
+AI Does NOT Return
+HTML
+React
+JSX
+Markdown slides
+CSS
+
+Only structured data.
+
+Presentation Configuration Screen
+
+Rather than many questions.
+
+One configuration page.
+
+Example
+Presentation Setup
+
+Theme
+
+○ Default
+○ Modern
+○ Executive
+
+Modules
+
+☑ Attendance
+☑ Leave
+☐ Payroll
+
+Slides
+
+☑ Workflow
+☑ Screenshots
+☑ Benefits
+☑ Challenges
+☑ Closing
+
+Output
+
+☑ PDF
+
+Everything AI recommends should already be selected.
+
+User only reviews.
+
+
+Slide Strategy
+
+Static slides
+
+Intro
+About Company
+Thank You
+
+Dynamic slides
+
+Challenges
+Module Explanations
+Benefits
+Workflow
+Screenshots
+
+Only dynamic slides need AI.
+
+
+Presentation Rendering
+
+Slides already exist.
+
+Example
+
+AttendanceSlide.tsx
+
+LeaveSlide.tsx
+
+PayrollSlide.tsx
+
+Each accepts props.
+
+Example
+
+<AttendanceSlide
+
+title=""
+
+points={[]}
+
+images={[]}
+
+/>
+
+
+Suggested API
+
+POST
+
+/recommend
+
+Returns
+
+modules
+
+theme
+
+optional slides
+
+reasons
+
+POST
+
+/generate
+
+Returns
+
+slide json
+
+Simple.
+
+Easy to debug.
+
+
+
+
+Prompt Strategy
+
+Don't hardcode prompts.
+
+Use
+
+prompts/
+
+recommend.txt
+
+generate.txt
+
+system.txt
+
+
+
+
+Validation
+
+Never trust AI output.
+
+Validate
+
+module exists
+point count
+text length
+image ids
+slide types
+
+before rendering.
+
+
+
+
+
+
+
+
+Final Technical Principles
+1. AI generates content, not presentations.
+2. React owns all layouts and templates.
+3. Knowledge lives in one structured JSON file.
+4. Separate recommendation from content generation.
+5. Humans approve recommendations before generation.
+6. AI communicates only through structured JSON.
+7. Use local models (Ollama + Qwen) for MVP to avoid API costs.
+8. Keep the Python service lightweight—plain FastAPI functions instead of agent frameworks.
+9. Treat the AI service as replaceable; switching from Ollama to Gemini or another provider should require minimal changes.
+10. Build the end-to-end workflow first, then improve the intelligence incrementally.

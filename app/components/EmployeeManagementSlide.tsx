@@ -74,7 +74,10 @@ function FeatureIcon({ type }: { type: string }) {
 
 export default function EmployeeManagementSlide() {
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-[#f3f0e5] text-[#092d19]">
+    <section
+      data-module="employee-management"
+      className="relative h-screen w-full overflow-hidden bg-[#f3f0e5] text-[#092d19]"
+    >
       <div
         className="pointer-events-none absolute inset-0 bg-[#28a143]/8"
         style={{ clipPath: "polygon(0 0, 26% 0, 8% 100%, 0 100%)" }}

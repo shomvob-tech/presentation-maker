@@ -116,7 +116,10 @@ function FeatureIcon({ type }: { type: string }) {
 
 export default function ManagementDashboardSlide() {
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-[#f3f0e5] text-[#092d19]">
+    <section
+      data-module="dashboard"
+      className="relative h-screen w-full overflow-hidden bg-[#f3f0e5] text-[#092d19]"
+    >
       <div className="pointer-events-none absolute -right-24 -top-24 h-[360px] w-[360px] rounded-full border-[70px] border-[#28a143]/10" />
       <span
         aria-hidden="true"

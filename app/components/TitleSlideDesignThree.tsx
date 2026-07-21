@@ -8,7 +8,10 @@ import Image from "next/image";
  */
 export default function TitleSlideDesignThree() {
   return (
-    <section className="relative flex h-screen w-full flex-col overflow-hidden bg-[#0c3d20] text-white">
+    <section
+      data-slide="title"
+      className="relative flex h-screen w-full flex-col overflow-hidden bg-[#0c3d20] text-white"
+    >
       {/* diagonal color-block backdrop */}
       <div
         className="pointer-events-none absolute inset-0 bg-[#062b16]"

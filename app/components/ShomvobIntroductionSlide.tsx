@@ -51,7 +51,10 @@ const impactPartners = [
 
 export default function ShomvobIntroductionSlide() {
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-[#f1f0e8] text-[#082b18]">
+    <section
+      data-slide="intro"
+      className="relative h-screen w-full overflow-hidden bg-[#f1f0e8] text-[#082b18]"
+    >
       <div className="pointer-events-none absolute inset-y-0 right-0 w-[29%] bg-[#0c3d20]" />
       <div
         className="pointer-events-none absolute inset-0 bg-[#28a143]"

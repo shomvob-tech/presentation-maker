@@ -68,7 +68,10 @@ function FeatureIcon({ type }: { type: string }) {
 
 export default function AttendanceManagementSlide() {
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-[#0c3d20] text-white">
+    <section
+      data-module="attendance"
+      className="relative h-screen w-full overflow-hidden bg-[#0c3d20] text-white"
+    >
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.08]"
         style={{

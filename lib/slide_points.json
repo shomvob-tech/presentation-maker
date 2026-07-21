@@ -1,0 +1,648 @@
+[
+  {
+    "moduleId": "employee-management",
+    "moduleName": "Employee Management",
+    "headline": "Manage every employee's record, access, and lifecycle from one connected system.",
+    "subheadline": "From onboarding to confirmation and growth, keep employee data structured and scoped to the right people.",
+    "defaultSlideTitle": "Employee Management",
+    "maxPointsPerSlide": 4,
+    "pointLibrary": [
+      {
+        "id": "central_employee_database",
+        "priority": 10,
+        "title": "Central Employee Database",
+        "description": "Maintain a single, centralized profile for every employee containing employment details, documents, and history.",
+        "businessBenefit": "Creates a single source of truth and eliminates scattered employee records.",
+        "keywords": ["employee", "database", "profile", "records", "central"]
+      },
+      {
+        "id": "company_structure_setup",
+        "priority": 9,
+        "title": "Configurable Company Structure",
+        "description": "Set up branches, departments, designations, and employment types before onboarding begins.",
+        "businessBenefit": "Keeps the organization structured and reporting accurate from day one.",
+        "keywords": ["structure", "department", "designation", "branch", "setup"]
+      },
+      {
+        "id": "bulk_employee_import",
+        "priority": 7,
+        "title": "Bulk Employee Import",
+        "description": "Import employee records in bulk using a standard template or existing HR data.",
+        "businessBenefit": "Speeds up rollout for large or already-established workforces.",
+        "keywords": ["import", "bulk", "migration", "onboarding"]
+      },
+      {
+        "id": "role_based_access",
+        "priority": 9,
+        "title": "Role & Department-Scoped Access",
+        "description": "Grant system access based on department, designation, and responsibilities, so HR and managers only see relevant employees.",
+        "businessBenefit": "Improves data security and keeps management scoped to the right teams.",
+        "keywords": ["access", "permission", "role", "department", "security"]
+      },
+      {
+        "id": "probation_tracking",
+        "priority": 8,
+        "title": "Automated Probation Tracking",
+        "description": "Probation timelines are tracked automatically, with alerts before confirmation dates.",
+        "businessBenefit": "Ensures no employee's confirmation date is missed.",
+        "keywords": ["probation", "alert", "confirmation", "tracking"]
+      },
+      {
+        "id": "one_click_confirmation",
+        "priority": 7,
+        "title": "One-Click Confirmation",
+        "description": "Move employees from probation to permanent status in a single action.",
+        "businessBenefit": "Reduces administrative steps in the employee lifecycle.",
+        "keywords": ["confirmation", "promote", "probation", "lifecycle"]
+      },
+      {
+        "id": "increment_workflow",
+        "priority": 6,
+        "title": "Employment Increment Workflow",
+        "description": "Raise, review, and approve salary or role increments through one structured, logged process.",
+        "businessBenefit": "Brings transparency and accountability to compensation changes.",
+        "keywords": ["increment", "salary increase", "promotion", "approval"]
+      },
+      {
+        "id": "document_management",
+        "priority": 6,
+        "title": "Document Management",
+        "description": "Store and manage employee documents alongside each profile.",
+        "businessBenefit": "Eliminates paper-based recordkeeping and lost documents.",
+        "keywords": ["document", "files", "storage", "paperwork"]
+      }
+    ],
+    "generationRules": {
+      "minimumPoints": 3,
+      "maximumPoints": 4,
+      "preferHighestPriority": true,
+      "avoidDuplicateKeywords": true,
+      "rewriteTone": "professional",
+      "useBusinessBenefitsWhenRelevant": true
+    }
+  },
+  {
+    "moduleId": "attendance",
+    "moduleName": "Attendance Management",
+    "headline": "Track employee attendance accurately with real-time visibility and automated payroll integration.",
+    "subheadline": "Digitize attendance tracking across your organization while reducing manual work and payroll errors.",
+    "defaultSlideTitle": "Attendance Management",
+    "maxPointsPerSlide": 4,
+    "pointLibrary": [
+      {
+        "id": "one_tap_checkin",
+        "priority": 10,
+        "title": "One-Tap Check-In & Check-Out",
+        "description": "Employees can record attendance instantly using the mobile app with a simple tap.",
+        "businessBenefit": "Reduces manual attendance tracking and improves employee convenience.",
+        "keywords": ["check in", "check out", "mobile", "attendance", "employee app"]
+      },
+      {
+        "id": "gps_attendance",
+        "priority": 9,
+        "title": "GPS-Enabled Attendance",
+        "description": "Attendance can be recorded only from approved locations using GPS verification.",
+        "businessBenefit": "Prevents attendance fraud and ensures location-based accountability.",
+        "keywords": ["gps", "location", "field staff", "branches", "fraud"]
+      },
+      {
+        "id": "realtime_attendance",
+        "priority": 8,
+        "title": "Real-Time Attendance Monitoring",
+        "description": "Attendance updates instantly across the organization, giving HR immediate visibility.",
+        "businessBenefit": "Enables faster decision making and better workforce monitoring.",
+        "keywords": ["real time", "live", "dashboard", "monitoring", "overview"]
+      },
+      {
+        "id": "payroll_integration",
+        "priority": 8,
+        "title": "Automatic Payroll Integration",
+        "description": "Attendance data is automatically incorporated into payroll calculations.",
+        "businessBenefit": "Reduces payroll errors and eliminates repetitive manual calculations.",
+        "keywords": ["payroll", "salary", "late deduction", "leave deduction", "automation"]
+      },
+      {
+        "id": "attendance_reports",
+        "priority": 7,
+        "title": "Comprehensive Attendance Reports",
+        "description": "Generate detailed attendance reports for employees, departments, or branches.",
+        "businessBenefit": "Provides valuable insights for HR analysis and management reporting.",
+        "keywords": ["reports", "analytics", "summary", "department", "branch"]
+      },
+      {
+        "id": "late_tracking",
+        "priority": 7,
+        "title": "Late Arrival Tracking",
+        "description": "Automatically identify late arrivals and calculate attendance statistics.",
+        "businessBenefit": "Encourages punctuality and supports company attendance policies.",
+        "keywords": ["late", "punctuality", "late deduction", "discipline"]
+      },
+      {
+        "id": "multi_branch",
+        "priority": 6,
+        "title": "Multi-Branch Attendance",
+        "description": "Monitor attendance across multiple offices or branches from a single dashboard.",
+        "businessBenefit": "Ideal for organizations operating from multiple locations.",
+        "keywords": ["multi branch", "branches", "multiple offices", "locations"]
+      },
+      {
+        "id": "attendance_dashboard",
+        "priority": 6,
+        "title": "Live Attendance Dashboard",
+        "description": "View who's present, absent, or on leave through an intuitive dashboard.",
+        "businessBenefit": "Provides management with an instant overview of workforce availability.",
+        "keywords": ["dashboard", "present", "absent", "overview", "management"]
+      }
+    ],
+    "generationRules": {
+      "minimumPoints": 3,
+      "maximumPoints": 4,
+      "preferHighestPriority": true,
+      "avoidDuplicateKeywords": true,
+      "rewriteTone": "professional",
+      "useBusinessBenefitsWhenRelevant": true
+    }
+  },
+  {
+    "moduleId": "leave",
+    "moduleName": "Leave Management",
+    "headline": "Digitize leave requests and approvals with complete visibility for employees and HR.",
+    "subheadline": "Flexible leave policies with automated tracking, self-service requests, and centralized administration.",
+    "defaultSlideTitle": "Leave Management",
+    "maxPointsPerSlide": 4,
+    "pointLibrary": [
+      {
+        "id": "centralized_leave_management",
+        "priority": 10,
+        "title": "Centralized Leave Management",
+        "description": "Manage all leave policies, requests, and approvals from one place.",
+        "businessBenefit": "Removes fragmented, manual leave tracking across teams.",
+        "keywords": ["leave", "policy", "centralized", "approval"]
+      },
+      {
+        "id": "automated_leave_tracking",
+        "priority": 9,
+        "title": "Automated Leave Balance Tracking",
+        "description": "Automatically monitor leave balances, accruals, and usage.",
+        "businessBenefit": "Gives employees and HR an accurate, up-to-date leave picture.",
+        "keywords": ["leave balance", "accrual", "tracking", "automated"]
+      },
+      {
+        "id": "bulk_leave_approval",
+        "priority": 8,
+        "title": "Bulk Leave Approval",
+        "description": "Review and approve multiple leave requests at once.",
+        "businessBenefit": "Saves HR time during high-volume approval periods.",
+        "keywords": ["bulk approval", "approve", "leave request"]
+      },
+      {
+        "id": "split_leave_by_type",
+        "priority": 6,
+        "title": "Split Leave Across Categories",
+        "description": "A single approved leave period can be split across multiple leave types, such as casual and another category.",
+        "businessBenefit": "Gives HR flexibility to apply leave policy accurately.",
+        "keywords": ["split leave", "leave type", "casual leave", "category"]
+      },
+      {
+        "id": "holiday_calendar",
+        "priority": 7,
+        "title": "Integrated Holiday Calendar",
+        "description": "Built-in public holidays are factored into leave planning automatically.",
+        "businessBenefit": "Prevents scheduling conflicts with official holidays.",
+        "keywords": ["holiday", "calendar", "public holiday", "planning"]
+      },
+      {
+        "id": "employee_self_service_leave",
+        "priority": 8,
+        "title": "Employee Self-Service Leave Application",
+        "description": "Employees can submit leave requests in a few simple steps from their phone.",
+        "businessBenefit": "Reduces paperwork and speeds up the request process.",
+        "keywords": ["self service", "apply leave", "mobile", "employee app"]
+      },
+      {
+        "id": "realtime_leave_balance",
+        "priority": 7,
+        "title": "Real-Time Leave Balance & History",
+        "description": "Employees can view their available leave and full request history instantly.",
+        "businessBenefit": "Increases transparency and reduces HR queries about balances.",
+        "keywords": ["real time", "balance", "history", "transparency"]
+      }
+    ],
+    "generationRules": {
+      "minimumPoints": 3,
+      "maximumPoints": 4,
+      "preferHighestPriority": true,
+      "avoidDuplicateKeywords": true,
+      "rewriteTone": "professional",
+      "useBusinessBenefitsWhenRelevant": true
+    }
+  },
+  {
+    "moduleId": "payroll",
+    "moduleName": "Payroll Management",
+    "headline": "Automate payroll with attendance, leave, and deductions fully integrated.",
+    "subheadline": "One connected pipeline from attendance and leave data to accurate, audit-ready payroll.",
+    "defaultSlideTitle": "Payroll Management",
+    "maxPointsPerSlide": 4,
+    "pointLibrary": [
+      {
+        "id": "late_deduction",
+        "priority": 8,
+        "title": "Automated Late Deduction",
+        "description": "Late penalties are calculated automatically from attendance records.",
+        "businessBenefit": "Removes manual penalty calculations and reduces disputes.",
+        "keywords": ["late deduction", "penalty", "attendance", "automated"]
+      },
+      {
+        "id": "leave_deduction",
+        "priority": 7,
+        "title": "Policy-Based Leave Deduction",
+        "description": "Deductions are applied automatically when paid leave is unavailable, based on company policy.",
+        "businessBenefit": "Ensures payroll reflects leave policy consistently.",
+        "keywords": ["leave deduction", "policy", "unpaid leave"]
+      },
+      {
+        "id": "absent_deduction",
+        "priority": 7,
+        "title": "Absence Deduction",
+        "description": "Unapproved absences are automatically converted into accurate payroll adjustments.",
+        "businessBenefit": "Keeps payroll aligned with actual attendance.",
+        "keywords": ["absent", "deduction", "unapproved", "attendance"]
+      },
+      {
+        "id": "flexible_deduction",
+        "priority": 6,
+        "title": "Flexible Deduction Rules",
+        "description": "Deduct from salary or leave balance based on configurable company policy.",
+        "businessBenefit": "Adapts to different organizational compensation rules.",
+        "keywords": ["flexible deduction", "policy", "configuration"]
+      },
+      {
+        "id": "flexible_pay_cycles",
+        "priority": 7,
+        "title": "Flexible Pay Cycles",
+        "description": "Run payroll on monthly, bi-weekly, fixed-date, or hourly cycles.",
+        "businessBenefit": "Supports diverse workforce pay structures.",
+        "keywords": ["pay cycle", "monthly", "biweekly", "hourly"]
+      },
+      {
+        "id": "flexible_pay_structure",
+        "priority": 6,
+        "title": "Flexible Pay Structure",
+        "description": "Calculate compensation by pay grade or individual salary.",
+        "businessBenefit": "Accommodates varied compensation models across the organization.",
+        "keywords": ["pay structure", "pay grade", "salary"]
+      },
+      {
+        "id": "bonus_management",
+        "priority": 6,
+        "title": "Bonus Management",
+        "description": "Add overtime, attendance, and custom bonuses in one place.",
+        "businessBenefit": "Consolidates all pay additions into a single payroll run.",
+        "keywords": ["bonus", "overtime", "incentive"]
+      },
+      {
+        "id": "automated_payroll_generation",
+        "priority": 10,
+        "title": "Automated Payroll Generation",
+        "description": "Generate final payroll directly from attendance, leave, and pay rules.",
+        "businessBenefit": "Eliminates manual handoffs between attendance sheets and salary runs.",
+        "keywords": ["payroll generation", "automation", "attendance integration"]
+      }
+    ],
+    "generationRules": {
+      "minimumPoints": 3,
+      "maximumPoints": 4,
+      "preferHighestPriority": true,
+      "avoidDuplicateKeywords": true,
+      "rewriteTone": "professional",
+      "useBusinessBenefitsWhenRelevant": true
+    }
+  },
+  {
+    "moduleId": "schedule",
+    "moduleName": "Schedule & Roster Management",
+    "headline": "Create flexible schedules and assign employees with ease across branches.",
+    "subheadline": "Build shift patterns once and roll them out across the organization in a few clicks.",
+    "defaultSlideTitle": "Schedule & Roster Management",
+    "maxPointsPerSlide": 4,
+    "pointLibrary": [
+      {
+        "id": "flexible_shift_creation",
+        "priority": 10,
+        "title": "Flexible Shift Creation",
+        "description": "Define shift timings and combine them into reusable weekly or rotating patterns.",
+        "businessBenefit": "Saves time building schedules from scratch each period.",
+        "keywords": ["shift", "pattern", "roster", "rotating"]
+      },
+      {
+        "id": "branch_department_scheduling",
+        "priority": 8,
+        "title": "Branch & Department Customization",
+        "description": "Configure different schedules for departments, branches, or employee groups.",
+        "businessBenefit": "Supports organizations with varied operating hours across locations.",
+        "keywords": ["branch", "department", "customization", "multi-location"]
+      },
+      {
+        "id": "bulk_individual_assignment",
+        "priority": 8,
+        "title": "Bulk & Individual Assignment",
+        "description": "Assign one employee or hundreds to a schedule in a few clicks.",
+        "businessBenefit": "Makes large-scale scheduling fast and manageable.",
+        "keywords": ["bulk assignment", "individual", "schedule assignment"]
+      },
+      {
+        "id": "drag_drop_rescheduling",
+        "priority": 9,
+        "title": "Drag-and-Drop Rescheduling",
+        "description": "View the full week at a glance and reassign anyone, anytime.",
+        "businessBenefit": "Gives managers a fast, visual way to handle schedule changes.",
+        "keywords": ["drag and drop", "reschedule", "visual", "weekly view"]
+      }
+    ],
+    "generationRules": {
+      "minimumPoints": 3,
+      "maximumPoints": 4,
+      "preferHighestPriority": true,
+      "avoidDuplicateKeywords": true,
+      "rewriteTone": "professional",
+      "useBusinessBenefitsWhenRelevant": true
+    }
+  },
+  {
+    "moduleId": "departments",
+    "moduleName": "Departments",
+    "headline": "Organize employees into departments and business units that mirror your organization.",
+    "subheadline": "Bring structure, scoped access, and clearer reporting to every department.",
+    "defaultSlideTitle": "Departments",
+    "maxPointsPerSlide": 4,
+    "pointLibrary": [
+      {
+        "id": "department_structure",
+        "priority": 9,
+        "title": "Department Management",
+        "description": "Organize employees into departments and business units that mirror the real organizational structure.",
+        "businessBenefit": "Creates a clear, structured view of the company.",
+        "keywords": ["department", "structure", "organization"]
+      },
+      {
+        "id": "department_hierarchy",
+        "priority": 7,
+        "title": "Department Hierarchy",
+        "description": "Maintain reporting hierarchy across departments and business units.",
+        "businessBenefit": "Clarifies reporting lines for management and HR.",
+        "keywords": ["hierarchy", "reporting", "structure"]
+      },
+      {
+        "id": "department_permissions",
+        "priority": 8,
+        "title": "Department-Level Permissions",
+        "description": "Scope access and management rights to specific departments.",
+        "businessBenefit": "Keeps managers focused on their own teams and improves data security.",
+        "keywords": ["permission", "access", "department", "scope"]
+      },
+      {
+        "id": "department_reporting",
+        "priority": 6,
+        "title": "Department-Based Reporting",
+        "description": "Generate reports and insights segmented by department.",
+        "businessBenefit": "Improves visibility into performance and metrics at a team level.",
+        "keywords": ["reporting", "department", "insights", "segmentation"]
+      }
+    ],
+    "generationRules": {
+      "minimumPoints": 3,
+      "maximumPoints": 4,
+      "preferHighestPriority": true,
+      "avoidDuplicateKeywords": true,
+      "rewriteTone": "professional",
+      "useBusinessBenefitsWhenRelevant": true
+    }
+  },
+  {
+    "moduleId": "designations",
+    "moduleName": "Designations",
+    "headline": "Maintain company positions and reporting hierarchy consistently across the organization.",
+    "subheadline": "Standardize job titles and keep role-based access aligned with real responsibilities.",
+    "defaultSlideTitle": "Designations",
+    "maxPointsPerSlide": 3,
+    "pointLibrary": [
+      {
+        "id": "designation_management",
+        "priority": 9,
+        "title": "Designation Management",
+        "description": "Maintain a standardized list of company positions across the organization.",
+        "businessBenefit": "Keeps job titles consistent and easy to manage.",
+        "keywords": ["designation", "position", "job title"]
+      },
+      {
+        "id": "designation_hierarchy",
+        "priority": 7,
+        "title": "Reporting Hierarchy by Designation",
+        "description": "Define reporting relationships based on designation levels.",
+        "businessBenefit": "Removes confusion around who reports to whom.",
+        "keywords": ["hierarchy", "reporting", "designation"]
+      },
+      {
+        "id": "role_mapping",
+        "priority": 8,
+        "title": "Role Mapping",
+        "description": "Map designations to system roles and permissions.",
+        "businessBenefit": "Ensures access rights stay aligned with job responsibilities.",
+        "keywords": ["role mapping", "designation", "permission"]
+      }
+    ],
+    "generationRules": {
+      "minimumPoints": 3,
+      "maximumPoints": 3,
+      "preferHighestPriority": true,
+      "avoidDuplicateKeywords": true,
+      "rewriteTone": "professional",
+      "useBusinessBenefitsWhenRelevant": true
+    }
+  },
+  {
+    "moduleId": "probation",
+    "moduleName": "Probation Tracking",
+    "headline": "Track probation periods and notify HR automatically before completion.",
+    "subheadline": "Never miss a confirmation date with automated tracking and alerts.",
+    "defaultSlideTitle": "Probation Tracking",
+    "maxPointsPerSlide": 3,
+    "pointLibrary": [
+      {
+        "id": "automated_probation_tracking",
+        "priority": 10,
+        "title": "Automated Probation Tracking",
+        "description": "Every probation timeline is monitored automatically from the day an employee joins.",
+        "businessBenefit": "Ensures no probation deadline is missed.",
+        "keywords": ["probation", "tracking", "timeline"]
+      },
+      {
+        "id": "confirmation_alerts",
+        "priority": 9,
+        "title": "Confirmation Alerts",
+        "description": "Automatic reminders are sent to HR before a probation period ends.",
+        "businessBenefit": "Gives HR time to review performance before the confirmation date.",
+        "keywords": ["alert", "reminder", "confirmation", "notification"]
+      },
+      {
+        "id": "one_click_confirmation",
+        "priority": 8,
+        "title": "One-Click Confirmation",
+        "description": "Move an employee from probation to permanent status in a single action.",
+        "businessBenefit": "Simplifies a process that is otherwise manual and easy to overlook.",
+        "keywords": ["confirmation", "one click", "promote"]
+      }
+    ],
+    "generationRules": {
+      "minimumPoints": 3,
+      "maximumPoints": 3,
+      "preferHighestPriority": true,
+      "avoidDuplicateKeywords": true,
+      "rewriteTone": "professional",
+      "useBusinessBenefitsWhenRelevant": true
+    }
+  },
+  {
+    "moduleId": "recruitment",
+    "moduleName": "Employee Requisition",
+    "headline": "Manage hiring requests and recruitment approvals through one auditable workflow.",
+    "subheadline": "Every requisition follows a clear, trackable path from request to final decision.",
+    "defaultSlideTitle": "Employee Requisition",
+    "maxPointsPerSlide": 4,
+    "pointLibrary": [
+      {
+        "id": "requisition_workflow",
+        "priority": 10,
+        "title": "Employee Requisition in a Few Clicks",
+        "description": "Managers raise a request for a new hire directly in the system, routed straight to HR for approval.",
+        "businessBenefit": "Removes informal, untracked hiring requests.",
+        "keywords": ["requisition", "hiring", "new hire", "request"]
+      },
+      {
+        "id": "approval_workflow",
+        "priority": 8,
+        "title": "Built-In Approval Workflow",
+        "description": "Every requisition moves through a clear, auditable chain of approvals.",
+        "businessBenefit": "Adds accountability and transparency to the hiring process.",
+        "keywords": ["approval workflow", "audit", "hiring"]
+      },
+      {
+        "id": "vacancy_tracking",
+        "priority": 7,
+        "title": "Vacancy Tracking",
+        "description": "Track open positions and their approval status in one place.",
+        "businessBenefit": "Gives HR and management visibility into the hiring pipeline.",
+        "keywords": ["vacancy", "open position", "tracking"]
+      },
+      {
+        "id": "request_history",
+        "priority": 6,
+        "title": "Complete Request History",
+        "description": "Keep a full, searchable record of every requisition, from request to final decision.",
+        "businessBenefit": "Provides an audit trail for hiring decisions.",
+        "keywords": ["history", "record", "audit trail", "requisition"]
+      }
+    ],
+    "generationRules": {
+      "minimumPoints": 3,
+      "maximumPoints": 4,
+      "preferHighestPriority": true,
+      "avoidDuplicateKeywords": true,
+      "rewriteTone": "professional",
+      "useBusinessBenefitsWhenRelevant": true
+    }
+  },
+  {
+    "moduleId": "increment",
+    "moduleName": "Employee Increment",
+    "headline": "Digitize salary increment requests and approvals with a fully logged workflow.",
+    "subheadline": "Bring transparency and accountability to every compensation change.",
+    "defaultSlideTitle": "Employee Increment",
+    "maxPointsPerSlide": 3,
+    "pointLibrary": [
+      {
+        "id": "increment_workflow",
+        "priority": 10,
+        "title": "Digitized Increment Requests",
+        "description": "Raise, review, and approve salary or role increments through one structured workflow.",
+        "businessBenefit": "Replaces informal or paper-based increment processes.",
+        "keywords": ["increment", "salary increase", "workflow"]
+      },
+      {
+        "id": "increment_approval_tracking",
+        "priority": 8,
+        "title": "Increment Approval Tracking",
+        "description": "Track the status of every increment request from submission to final decision.",
+        "businessBenefit": "Prevents increment requests from stalling without visibility.",
+        "keywords": ["approval tracking", "increment", "status"]
+      },
+      {
+        "id": "increment_history",
+        "priority": 7,
+        "title": "Increment History",
+        "description": "Maintain a full history of salary and role changes for each employee.",
+        "businessBenefit": "Supports transparent compensation reviews over time.",
+        "keywords": ["history", "salary review", "increment record"]
+      }
+    ],
+    "generationRules": {
+      "minimumPoints": 3,
+      "maximumPoints": 3,
+      "preferHighestPriority": true,
+      "avoidDuplicateKeywords": true,
+      "rewriteTone": "professional",
+      "useBusinessBenefitsWhenRelevant": true
+    }
+  },
+  {
+    "moduleId": "dashboard",
+    "moduleName": "Management Dashboard",
+    "headline": "Real-time dashboards for HR and management with fully customizable widgets.",
+    "subheadline": "Stay on top of workforce health and every key HR workflow in one unified view.",
+    "defaultSlideTitle": "Management Dashboard",
+    "maxPointsPerSlide": 4,
+    "pointLibrary": [
+      {
+        "id": "customizable_widgets",
+        "priority": 10,
+        "title": "Customizable Widgets",
+        "description": "HR and management choose exactly which metrics to track \u2014 attendance, leave, probation, increments, requests, and more.",
+        "businessBenefit": "Tailors the dashboard to what matters most for each organization.",
+        "keywords": ["widgets", "customizable", "dashboard", "metrics"]
+      },
+      {
+        "id": "realtime_overview",
+        "priority": 9,
+        "title": "Real-Time Attendance & Leave Overview",
+        "description": "A live view of who's in, who's on leave, and workforce trends across every branch.",
+        "businessBenefit": "Gives management instant visibility without manual reports.",
+        "keywords": ["real time", "overview", "attendance", "leave"]
+      },
+      {
+        "id": "requisition_increment_tracking",
+        "priority": 8,
+        "title": "Requisition & Increment Tracking at a Glance",
+        "description": "See open hiring requests and pending increment approvals without digging through separate reports.",
+        "businessBenefit": "Consolidates HR workflows into a single view.",
+        "keywords": ["requisition", "increment", "tracking", "glance"]
+      },
+      {
+        "id": "centralized_insights",
+        "priority": 7,
+        "title": "Centralized Workforce Insights",
+        "description": "Monitor key HR metrics from a single, unified dashboard.",
+        "businessBenefit": "Supports faster, data-driven decision making.",
+        "keywords": ["centralized", "insights", "data-driven", "dashboard"]
+      }
+    ],
+    "generationRules": {
+      "minimumPoints": 3,
+      "maximumPoints": 4,
+      "preferHighestPriority": true,
+      "avoidDuplicateKeywords": true,
+      "rewriteTone": "professional",
+      "useBusinessBenefitsWhenRelevant": true
+    }
+  }
+]

@@ -90,7 +90,10 @@ function CapabilityIcon({ type }: { type: string }) {
 
 export default function UnifiedLeaveManagementSlide() {
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-[#f3f0e5] text-[#092d19]">
+    <section
+      data-module="leave"
+      className="relative h-screen w-full overflow-hidden bg-[#f3f0e5] text-[#092d19]"
+    >
       <div className="pointer-events-none absolute inset-y-0 right-0 w-[37%] bg-[#0c3d20]" />
       <div className="pointer-events-none absolute right-[37%] top-0 h-full w-[5%] bg-[#edb713]" style={{ clipPath: "polygon(100% 0, 100% 100%, 0 100%)" }} />
       <div className="pointer-events-none absolute -bottom-28 -left-28 h-[360px] w-[360px] rounded-full border-[70px] border-[#28a143]/10" />

@@ -2,7 +2,10 @@ import Image from "next/image";
 
 export default function ThankYouSlide() {
   return (
-    <section className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#04150c] text-white">
+    <section
+      data-slide="thank-you"
+      className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#04150c] text-white"
+    >
       {/* bookend diagonal color-blocks, echoing the title slide */}
       <div
         className="pointer-events-none absolute inset-0 bg-[#0c3d20]"

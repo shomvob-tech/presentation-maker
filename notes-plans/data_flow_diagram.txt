@@ -1,0 +1,28 @@
+Data flow summary
+Requirements
+        │
+        ▼
+ Module Recommendation
+        │
+        ▼
+ Human Confirmation
+        │
+        ▼
+ Content Selection
+        │
+        ▼
+ Presentation JSON
+        │
+        ▼
+ React Components
+        │
+        ▼
+ Browser Preview
+        │
+        ▼
+        PDF
+
+
+
+
+

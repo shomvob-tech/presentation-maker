@@ -1,0 +1,54 @@
+##product.json
+
+Purpose
+
+"What does our software do?"
+
+Contains:
+
+modules
+features
+benefits
+keywords
+screenshots
+workflows
+related modules
+knowledge/
+
+
+
+##slidePoints.json
+
+Purpose
+
+"How do we talk about our software?"
+
+Contains
+
+approved headlines
+reusable points
+descriptions
+business benefits
+priorities
+presentation wording
+
+The AI mainly selects from this instead of inventing new copy.
+
+
+
+
+##presentation.json
+
+Generated for every client.
+
+Contains
+
+client details
+selected modules
+selected point IDs
+theme
+slide order
+custom headlines
+optional notes
+
+This is the only file the renderer needs.

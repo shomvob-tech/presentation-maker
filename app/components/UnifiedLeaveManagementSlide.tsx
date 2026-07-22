@@ -131,7 +131,7 @@ export default function UnifiedLeaveManagementSlide() {
         </div>
       </header>
 
-      <div className="absolute bottom-[6%] left-[5.5%] right-[42%] top-[27%] z-10">
+      <div className="absolute bottom-[6%] left-[5.5%] right-[44%] top-[27%] z-10">
         <div className="grid h-full grid-cols-2 gap-[clamp(0.65rem,1vw,1.15rem)]">
           {capabilities.map((capability, index) => (
             <article
@@ -167,16 +167,16 @@ export default function UnifiedLeaveManagementSlide() {
         </div>
       </div>
 
-      <div className="absolute bottom-[3%] right-[2.5%] top-[18%] z-10 w-[35%]">
-        <div className="absolute left-1/2 top-[45%] h-[58%] w-[58%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#edb713]/20" />
-        <div className="absolute left-[3%] top-[13%] rotate-[-8deg] rounded-[2rem] bg-[#072b16] p-2 shadow-2xl shadow-black/45">
+      <div className="absolute bottom-[2%] right-[1.5%] top-[8%] z-10 w-[40%]">
+        <div className="absolute left-1/2 top-[38%] h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#edb713]/20" />
+        <div className="absolute left-[12%] top-[0%] rotate-[-8deg] rounded-[2rem] bg-[#072b16] p-2.5 shadow-2xl shadow-black/45">
           <div className="overflow-hidden rounded-[1.55rem]">
             <Image
               src="/resources/Leave_Application.png"
               alt="Employee leave application on mobile"
-              width={225}
-              height={509}
-              className="h-[clamp(20rem,49vh,34rem)] w-auto"
+              width={265}
+              height={600}
+              className="h-[clamp(24rem,62vh,42rem)] w-auto"
             />
           </div>
           <span className="absolute -left-5 top-[18%] rounded-full bg-[#edb713] px-3 py-1.5 text-[clamp(0.47rem,0.56vw,0.64rem)] font-bold uppercase tracking-[0.12em] text-[#0c3d20] shadow-lg">
@@ -184,14 +184,14 @@ export default function UnifiedLeaveManagementSlide() {
           </span>
         </div>
 
-        <div className="absolute right-[2%] top-[24%] rotate-[7deg] rounded-[2rem] bg-[#072b16] p-2 shadow-2xl shadow-black/55">
+        <div className="absolute right-[10%] top-[10%] rotate-[7deg] rounded-[2rem] bg-[#072b16] p-2.5 shadow-2xl shadow-black/55">
           <div className="overflow-hidden rounded-[1.55rem]">
             <Image
               src="/resources/Leave_Management.png"
               alt="Employee leave balance and history on mobile"
-              width={238}
-              height={560}
-              className="h-[clamp(22rem,54vh,37rem)] w-auto"
+              width={280}
+              height={658}
+              className="h-[clamp(26rem,68vh,46rem)] w-auto"
             />
           </div>
           <span className="absolute -right-4 bottom-[12%] rounded-full bg-[#45d66b] px-3 py-1.5 text-[clamp(0.47rem,0.56vw,0.64rem)] font-bold uppercase tracking-[0.12em] text-[#062b16] shadow-lg">

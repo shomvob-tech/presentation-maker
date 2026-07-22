@@ -83,11 +83,11 @@ export default function AttendanceManagementSlide() {
       <div className="pointer-events-none absolute -left-32 top-1/3 h-[380px] w-[380px] rounded-full bg-[#edb713] opacity-[0.12] blur-[110px]" />
       <div
         className="pointer-events-none absolute inset-0 bg-[#28a143]/15"
-        style={{ clipPath: "polygon(100% 0, 100% 38%, 78% 0)" }}
+        style={{ clipPath: "polygon(0 0, 22% 0, 0 38%)" }}
       />
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute right-[3%] top-[4%] select-none text-[clamp(5rem,10vw,11rem)] font-black leading-none text-white/[0.045]"
+        className="pointer-events-none absolute left-[3%] top-[4%] select-none text-[clamp(5rem,10vw,11rem)] font-black leading-none text-white/[0.045]"
       >
         07
       </span>
@@ -125,46 +125,88 @@ export default function AttendanceManagementSlide() {
         </div>
       </header>
 
-      <div className="relative z-10 mt-[clamp(1.5rem,2.6vw,2.5rem)] flex items-center gap-3 px-[5.5%]">
-        <span className="h-2 w-2 rounded-full bg-[#edb713]" />
-        <span className="text-[clamp(0.55rem,0.7vw,0.78rem)] font-bold uppercase tracking-[0.23em] text-[#edb713]">
-          Feature highlights
-        </span>
-        <div className="h-px flex-1 bg-white/10" />
-        
-      </div>
+      <div className="absolute inset-x-[5.5%] bottom-[6%] top-[29%] z-10 grid grid-cols-[45%_55%] gap-[clamp(1rem,2vw,2.2rem)]">
+        <div className="relative">
+          <div className="pointer-events-none absolute left-1/2 top-[46%] h-[76%] w-[76%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#edb713]/25" />
+          <div className="pointer-events-none absolute left-1/2 top-[46%] h-[86%] w-[86%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#edb713]/10 blur-2xl" />
 
-      <div className="relative z-10 mt-[clamp(1.25rem,2.2vw,2rem)] grid grid-cols-2 grid-rows-2 gap-[clamp(0.75rem,1.2vw,1.35rem)] px-[5.5%] pb-[6%]">
-        {features.map((feature, index) => (
-          <article
-            key={feature.number}
-            className="relative flex items-center gap-[clamp(0.9rem,1.4vw,1.5rem)] overflow-hidden rounded-2xl bg-white/95 p-[clamp(1rem,1.5vw,1.6rem)] text-[#092d19] shadow-xl shadow-black/15"
-          >
-            <span className="absolute right-4 top-2 text-[clamp(2.4rem,4vw,4.5rem)] font-black leading-none text-[#0c3d20]/[0.06]">
-              {feature.number}
+          <div className="absolute left-[3%] top-[9%] rotate-[-6deg] rounded-[1.8rem] bg-[#061a0f] p-2 shadow-2xl shadow-black/40">
+            <div className="overflow-hidden rounded-[1.4rem]">
+              <Image
+                src="/resources/home.png"
+                alt="Employee attendance check-in home screen"
+                width={768}
+                height={1024}
+                className="h-[clamp(20rem,48vh,31rem)] w-auto"
+              />
+            </div>
+            <span className="absolute -left-3 top-[15%] rounded-full bg-[#45d66b] px-3 py-1.5 text-[clamp(0.47rem,0.56vw,0.64rem)] font-bold uppercase tracking-[0.12em] text-[#062b16] shadow-lg">
+              Check in
             </span>
-            <div
-              className={`flex h-[clamp(3.3rem,4.7vw,5.2rem)] w-[clamp(3.3rem,4.7vw,5.2rem)] shrink-0 items-center justify-center rounded-2xl ${
-                index % 2 === 0
-                  ? "bg-[#0c3d20] text-[#edb713]"
-                  : "bg-[#edb713] text-[#0c3d20]"
-              }`}
-            >
-              <FeatureIcon type={feature.icon} />
+          </div>
+
+          <div className="absolute right-[4%] top-[3%] z-10 rotate-[5deg] rounded-[2rem] bg-[#061a0f] p-2.5 shadow-2xl shadow-black/55">
+            <div className="overflow-hidden rounded-[1.55rem]">
+              <Image
+                src="/resources/Attendance.png"
+                alt="Attendance records and history on mobile"
+                width={280}
+                height={620}
+                className="h-[clamp(22rem,55vh,35rem)] w-auto"
+              />
             </div>
-            <div className="relative">
-              <div className="mb-1.5 text-[clamp(0.48rem,0.58vw,0.65rem)] font-bold uppercase tracking-[0.18em] text-[#28a143]">
-                Feature {feature.number}
-              </div>
-              <h2 className="max-w-[92%] text-[clamp(0.88rem,1.18vw,1.35rem)] font-bold leading-tight">
-                {feature.title}
-              </h2>
-              <p className="mt-2 max-w-[90%] text-[clamp(0.58rem,0.72vw,0.82rem)] leading-relaxed text-[#4c5f53]">
-                {feature.copy}
-              </p>
-            </div>
-          </article>
-        ))}
+            <span className="absolute -right-4 top-[14%] rounded-full bg-[#edb713] px-3 py-1.5 text-[clamp(0.47rem,0.56vw,0.64rem)] font-bold uppercase tracking-[0.12em] text-[#0c3d20] shadow-lg">
+              Track
+            </span>
+          </div>
+
+          <p className="absolute bottom-[2%] left-1/2 -translate-x-1/2 whitespace-nowrap text-[clamp(0.48rem,0.58vw,0.66rem)] font-semibold uppercase tracking-[0.16em] text-white/45">
+            Check in &middot; Review &middot; Track
+          </p>
+        </div>
+
+        <div className="flex min-h-0 flex-col">
+          <div className="mb-[clamp(0.75rem,1.2vw,1.25rem)] flex items-center gap-3">
+            <span className="h-2 w-2 rounded-full bg-[#edb713]" />
+            <span className="text-[clamp(0.55rem,0.7vw,0.78rem)] font-bold uppercase tracking-[0.23em] text-[#edb713]">
+              Feature highlights
+            </span>
+            <div className="h-px flex-1 bg-white/10" />
+          </div>
+
+          <div className="grid min-h-0 flex-1 grid-cols-2 grid-rows-2 gap-[clamp(0.75rem,1.2vw,1.35rem)]">
+            {features.map((feature, index) => (
+              <article
+                key={feature.number}
+                className="relative flex items-center gap-[clamp(0.9rem,1.4vw,1.5rem)] overflow-hidden rounded-2xl bg-white/95 p-[clamp(1rem,1.5vw,1.6rem)] text-[#092d19] shadow-xl shadow-black/15"
+              >
+                <span className="absolute right-4 top-2 text-[clamp(2.4rem,4vw,4.5rem)] font-black leading-none text-[#0c3d20]/[0.06]">
+                  {feature.number}
+                </span>
+                <div
+                  className={`flex h-[clamp(3.3rem,4.7vw,5.2rem)] w-[clamp(3.3rem,4.7vw,5.2rem)] shrink-0 items-center justify-center rounded-2xl ${
+                    index % 2 === 0
+                      ? "bg-[#0c3d20] text-[#edb713]"
+                      : "bg-[#edb713] text-[#0c3d20]"
+                  }`}
+                >
+                  <FeatureIcon type={feature.icon} />
+                </div>
+                <div className="relative min-w-0">
+                  <div className="mb-1.5 text-[clamp(0.48rem,0.58vw,0.65rem)] font-bold uppercase tracking-[0.18em] text-[#28a143]">
+                    Feature {feature.number}
+                  </div>
+                  <h2 className="max-w-[92%] text-[clamp(0.88rem,1.18vw,1.35rem)] font-bold leading-tight">
+                    {feature.title}
+                  </h2>
+                  <p className="mt-2 max-w-[90%] text-[clamp(0.58rem,0.72vw,0.82rem)] leading-relaxed text-[#4c5f53]">
+                    {feature.copy}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

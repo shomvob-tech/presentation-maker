@@ -120,59 +120,63 @@ export default function EmployeeManagement_2() {
         />
       </header>
 
-      <div className="absolute inset-x-[5.5%] bottom-[7%] top-[39%] z-10">
-        <div className="absolute left-[7%] right-[7%] top-[22%] h-[3px] bg-white/10">
-          <div className="h-full w-full bg-gradient-to-r from-[#28a143] via-[#edb713] to-[#28a143]" />
+      <div className="absolute inset-x-[5.5%] bottom-[7%] top-[39%] z-10 flex flex-col">
+        <div className="relative h-[clamp(3.6rem,5vw,5.6rem)] shrink-0">
+          <div className="absolute inset-x-[7%] top-1/2 h-[3px] -translate-y-1/2 bg-white/10">
+            <div className="h-full w-full bg-gradient-to-r from-[#28a143] via-[#edb713] to-[#28a143]" />
+          </div>
+
+          <div className="relative grid h-full grid-cols-4 gap-[clamp(0.65rem,1.15vw,1.3rem)]">
+            {workflow.map((step, index) => (
+              <div key={step.number} className="relative flex items-center justify-center">
+                <div
+                  className={`relative z-10 flex h-[clamp(3.6rem,5vw,5.6rem)] w-[clamp(3.6rem,5vw,5.6rem)] shrink-0 items-center justify-center rounded-full border-[4px] border-[#0a2f1a] shadow-xl ${
+                    index === workflow.length - 1
+                      ? "bg-[#edb713] text-[#0c3d20]"
+                      : "bg-[#28a143] text-white"
+                  }`}
+                >
+                  <WorkflowIcon type={step.icon} />
+                  <span className="absolute -right-1 -top-1 flex h-7 min-w-7 items-center justify-center rounded-full bg-white px-1 text-[0.58rem] font-black text-[#0c3d20]">
+                    {step.number}
+                  </span>
+                </div>
+
+                {index < workflow.length - 1 && (
+                  <div className="absolute left-[calc(50%+2.8rem)] top-1/2 z-20 flex -translate-y-1/2 items-center text-[#edb713]">
+                    <span className="h-px w-[clamp(0.8rem,1.8vw,2.2rem)] bg-[#edb713]/70" />
+                    <svg
+                      viewBox="0 0 12 12"
+                      className="h-3 w-3"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      aria-hidden="true"
+                    >
+                      <path d="m3 2 4 4-4 4" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="relative grid h-full grid-cols-4 items-start gap-[clamp(0.65rem,1.15vw,1.3rem)]">
-          {workflow.map((step, index) => (
+        <div className="mt-[clamp(0.75rem,1.2vw,1.3rem)] grid flex-1 grid-cols-4 items-start gap-[clamp(0.65rem,1.15vw,1.3rem)]">
+          {workflow.map((step) => (
             <article
-              key={step.number}
-              className={`relative flex flex-col items-center text-center ${
-                index % 2 === 1 ? "mt-[6%]" : ""
-              }`}
+              key={`${step.number}-card`}
+              className="w-full rounded-[1.15rem] border border-white/10 bg-[#061a0f]/90 px-[clamp(0.75rem,1.1vw,1.2rem)] py-[clamp(0.7rem,1vw,1.05rem)] text-center shadow-xl shadow-black/20 backdrop-blur-sm"
             >
-              <div
-                className={`relative z-10 flex h-[clamp(3.6rem,5vw,5.6rem)] w-[clamp(3.6rem,5vw,5.6rem)] shrink-0 items-center justify-center rounded-full border-[4px] border-[#0a2f1a] shadow-xl ${
-                  index === workflow.length - 1
-                    ? "bg-[#edb713] text-[#0c3d20]"
-                    : "bg-[#28a143] text-white"
-                }`}
-              >
-                <WorkflowIcon type={step.icon} />
-                <span className="absolute -right-1 -top-1 flex h-7 min-w-7 items-center justify-center rounded-full bg-white px-1 text-[0.58rem] font-black text-[#0c3d20]">
-                  {step.number}
-                </span>
-              </div>
-
-              <div className="mt-[clamp(0.75rem,1.2vw,1.3rem)] w-full rounded-[1.15rem] border border-white/10 bg-[#061a0f]/90 px-[clamp(0.75rem,1.1vw,1.2rem)] py-[clamp(0.7rem,1vw,1.05rem)] shadow-xl shadow-black/20 backdrop-blur-sm">
-                <span className="text-[clamp(0.48rem,0.58vw,0.66rem)] font-bold uppercase tracking-[0.2em] text-[#edb713]">
-                  Step {step.number}
-                </span>
-                <h2 className="mt-1.5 text-[clamp(0.92rem,1.22vw,1.38rem)] font-bold leading-snug">
-                  {step.title}
-                </h2>
-                <p className="mx-auto mt-2 text-[clamp(0.68rem,0.88vw,1rem)] leading-snug text-white/60">
-                  {step.detail}
-                </p>
-              </div>
-
-              {index < workflow.length - 1 && (
-                <div className="absolute left-[calc(50%+2.8rem)] top-[clamp(1.65rem,2.4vw,2.7rem)] z-20 flex items-center text-[#edb713]">
-                  <span className="h-px w-[clamp(0.8rem,1.8vw,2.2rem)] bg-[#edb713]/70" />
-                  <svg
-                    viewBox="0 0 12 12"
-                    className="h-3 w-3"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden="true"
-                  >
-                    <path d="m3 2 4 4-4 4" />
-                  </svg>
-                </div>
-              )}
+              <span className="text-[clamp(0.48rem,0.58vw,0.66rem)] font-bold uppercase tracking-[0.2em] text-[#edb713]">
+                Step {step.number}
+              </span>
+              <h2 className="mt-1.5 text-[clamp(0.92rem,1.22vw,1.38rem)] font-bold leading-snug">
+                {step.title}
+              </h2>
+              <p className="mx-auto mt-2 text-[clamp(0.68rem,0.88vw,1rem)] leading-snug text-white/60">
+                {step.detail}
+              </p>
             </article>
           ))}
         </div>

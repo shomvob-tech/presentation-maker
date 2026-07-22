@@ -79,7 +79,7 @@ export default function EmployeeManagement_1() {
     <section className="relative h-screen w-full overflow-hidden bg-[#eef3ee] text-[#0a321d]">
       <div className="pointer-events-none absolute inset-y-0 left-0 w-[32%] bg-[#0c3d20]" />
       <div
-        className="pointer-events-none absolute inset-y-0 left-[24%] w-[14%] bg-[#28a143]"
+        className="pointer-events-none absolute inset-y-0 left-[22%] w-[14%] bg-[#28a143]"
         style={{ clipPath: "polygon(0 0, 100% 0, 30% 100%, 0 100%)" }}
       />
       <div className="pointer-events-none absolute -right-24 -top-24 h-[380px] w-[380px] rounded-full border-[72px] border-[#edb713]/12" />

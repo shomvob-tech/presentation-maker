@@ -1,0 +1,176 @@
+                                        USER
+                                          │
+                                          ▼
+                         ┌────────────────────────────────┐
+                         │ Next.js Presentation Builder   │
+                         │                                │
+                         │ New Presentation Wizard        │
+                         │ - Client Details               │
+                         │ - Requirements                 │
+                         │ - Logo                         │
+                         │ - Images                       │
+                         └───────────────┬────────────────┘
+                                         │
+                                         │ API Call #1
+                                         ▼
+                 ┌─────────────────────────────────────────────────┐
+                 │        Python AI Service (Cloud Run)            │
+                 │                                                 │
+                 │  Requirement Parser                             │
+                 │        │                                        │
+                 │        ▼                                        │
+                 │  Module Recommendation Engine                   │
+                 └───────────────┬─────────────────────────────────┘
+                                 │
+                                 │ Reads
+                                 ▼
+                 ┌─────────────────────────────────────────────────┐
+                 │ product.json                                    │
+                 │                                                 │
+                 │ Modules                                          │
+                 │ Features                                         │
+                 │ Benefits                                         │
+                 │ Keywords                                         │
+                 │ Business Problems                                │
+                 │ Related Modules                                  │
+                 └─────────────────────────────────────────────────┘
+
+                                 │
+                                 │ Returns
+                                 ▼
+
+                 Recommended Modules
+                 Recommended Theme
+                 Optional Slides
+                 Reasons
+
+                                 │
+                                 ▼
+
+                   Human Review / Adjustments
+
+      ✓ Attendance
+      ✓ Leave
+      ✓ Payroll
+      ✗ Recruitment
+
+      Theme = Modern
+      Workflow Slides = Yes
+
+                                 │
+                                 │ API Call #2
+                                 ▼
+
+                 ┌─────────────────────────────────────────────────┐
+                 │         Python AI Service                        │
+                 │                                                 │
+                 │ Content Generator                               │
+                 │                                                 │
+                 │ Receives only selected modules                  │
+                 └───────────────┬─────────────────────────────────┘
+                                 │
+                  Reads          │             Reads
+                                 ▼
+               ┌──────────────────────────┐
+               │ product.json             │
+               └──────────────────────────┘
+
+                                 +
+                                 ▼
+
+               ┌──────────────────────────┐
+               │ slidePoints.json         │
+               │                          │
+               │ Headlines                │
+               │ Point Library            │
+               │ Descriptions             │
+               │ Business Benefits        │
+               │ Priorities               │
+               └──────────────────────────┘
+
+                                 │
+                                 ▼
+
+                AI selects & customizes content
+
+                (does NOT create layouts)
+
+                                 │
+                                 ▼
+
+                    Presentation JSON
+
+{
+  "theme": "modern",
+  "client": {...},
+  "slides": [
+      {
+          "type":"cover"
+      },
+      {
+          "type":"attendance",
+          "headline":"...",
+          "points":[
+              "gps_attendance",
+              "payroll_integration",
+              "realtime_attendance"
+          ]
+      }
+  ]
+}
+
+                                 │
+                                 ▼
+
+        ┌────────────────────────────────────┐
+        │ Next.js Presentation Renderer      │
+        │                                    │
+        │ PresentationRenderer.tsx           │
+        │                                    │
+        │ Switch by slide.type               │
+        └───────────────┬────────────────────┘
+                        │
+        ┌───────────────┼────────────────────────────────────┐
+        ▼               ▼                 ▼                  ▼
+
+ Cover.tsx      Attendance.tsx      Leave.tsx        Closing.tsx
+
+                        │
+                        ▼
+
+                Preview in Browser
+
+                        │
+                        ▼
+
+         Headless Chromium (Playwright)
+
+                        │
+
+      Opens /presentation/{presentationId}
+
+                        │
+
+      Waits until presentation ready
+
+                        │
+
+      Captures every viewport-sized slide
+
+                        │
+
+                        ▼
+
+                  Final PDF
+
+                        │
+
+                        ▼
+
+                 Email Service
+
+                        │
+
+                        ▼
+
+                 Client Receives PDF

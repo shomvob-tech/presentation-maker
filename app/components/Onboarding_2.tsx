@@ -1,4 +1,4 @@
-import Image from "next/image";
+import ClientLogo from "./ClientLogo";
 
 const journey = [
   {
@@ -105,13 +105,7 @@ export default function Onboarding_2() {
           </p>
         </div>
 
-        <Image
-          src="/resources/300_ltd_logo.svg"
-          alt="300 Ltd"
-          width={108}
-          height={40}
-          className="h-10 w-auto"
-        />
+        <ClientLogo size="md" />
       </header>
 
       <div className="absolute inset-x-[5.5%] bottom-[7%] top-[39%] z-10 flex flex-col">

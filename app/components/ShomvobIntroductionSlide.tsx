@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ClientLogo from "./ClientLogo";
 
 const credibility = [
   {
@@ -71,13 +72,7 @@ export default function ShomvobIntroductionSlide() {
             height={31}
           />
         </div>
-        <Image
-          src="/resources/300_ltd_logo.svg"
-          alt="300 Ltd"
-          width={110}
-          height={40}
-          className="h-10 w-auto"
-        />
+        <ClientLogo size="md" />
       </header>
 
       <div className="absolute left-[5.5%] top-[18%] z-10 w-[67%]">

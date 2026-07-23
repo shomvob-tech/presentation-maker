@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ClientLogo from "./ClientLogo";
 
 const challenges = [
   {
@@ -112,13 +113,7 @@ export default function HrChallengesSlide() {
         />
 
         <div className="relative z-10 flex h-full flex-col">
-          <Image
-            src="/resources/300_ltd_logo.svg"
-            alt="300 Ltd"
-            width={132}
-            height={48}
-            className="h-12 w-auto self-start"
-          />
+          <ClientLogo size="lg" className="self-start" />
 
           <div className="my-auto">
             <span className="inline-flex rounded-full bg-[#edb713] px-4 py-1.5 text-[clamp(0.52rem,0.65vw,0.72rem)] font-bold uppercase tracking-[0.2em] text-[#0c3d20]">

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ClientLogo from "./ClientLogo";
 
 const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
@@ -120,13 +121,7 @@ export default function ScheduleRosterSlide() {
               height={28}
             />
           </div>
-          <Image
-            src="/resources/300_ltd_logo.svg"
-            alt="300 Ltd"
-            width={92}
-            height={33}
-            className="h-8 w-auto"
-          />
+          <ClientLogo size="sm" />
         </div>
       </header>
 

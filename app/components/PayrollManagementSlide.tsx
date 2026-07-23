@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ClientLogo from "./ClientLogo";
 
 const features = [
   {
@@ -151,13 +152,7 @@ export default function PayrollManagementSlide() {
             </div>
 
           </div>
-          <Image
-            src="/resources/300_ltd_logo.svg"
-            alt="300 Ltd"
-            width={115}
-            height={42}
-            className="h-10 w-auto"
-          />
+          <ClientLogo size="md" />
         </div>
 
         <div className="mt-[clamp(1rem,1.8vw,1.75rem)]">

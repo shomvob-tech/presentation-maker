@@ -1,4 +1,4 @@
-import Image from "next/image";
+import ClientLogo from "./ClientLogo";
 
 const capabilities = [
   {
@@ -105,13 +105,7 @@ export default function Onboarding_1() {
           </p>
         </div>
 
-        <Image
-          src="/resources/300_ltd_logo.svg"
-          alt="300 Ltd"
-          width={108}
-          height={40}
-          className="h-10 w-auto"
-        />
+        <ClientLogo size="md" />
       </header>
 
       <div className="absolute inset-x-[5.5%] bottom-[6%] top-[37%] z-10 grid grid-cols-2 gap-[clamp(0.65rem,1.05vw,1.1rem)] pr-[29%]">

@@ -9,6 +9,7 @@ import type { ClientDetailsInput } from "@/lib/module-recommendation";
 import {
   fileToDataUrl,
   savePresentationSession,
+  savePreviewLogo,
 } from "@/lib/presentation-session";
 
 type FormState = {
@@ -106,6 +107,7 @@ export default function ClientDetailsForm() {
         logoDataUrl,
         logoFileName: logo?.name,
       });
+      savePreviewLogo(logoDataUrl);
 
       router.push("/new/validate");
     } catch {

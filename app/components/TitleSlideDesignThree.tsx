@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ClientLogo from "./ClientLogo";
 
 /**
  * Design 3 — "Bold Geometric Card"
@@ -89,13 +90,7 @@ export default function TitleSlideDesignThree() {
       {/* bottom-left 300 Ltd mark */}
       <div className="relative z-10 flex flex-col gap-3 px-[6%] pb-10">
         <div className="h-px w-20 bg-[#edb713]/60" />
-        <Image
-          src="/resources/300_ltd_logo.svg"
-          alt="300 Ltd"
-          width={125}
-          height={45}
-          className="h-11 w-auto self-start"
-        />
+        <ClientLogo size="lg" className="self-start" />
       </div>
     </section>
   );

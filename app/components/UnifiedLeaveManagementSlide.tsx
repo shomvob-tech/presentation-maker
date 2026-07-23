@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ClientLogo from "./ClientLogo";
 
 const capabilities = [
   {
@@ -121,13 +122,7 @@ export default function UnifiedLeaveManagementSlide() {
             height={31}
           />
           <div className="h-7 w-px bg-white/25" />
-          <Image
-            src="/resources/300_ltd_logo.svg"
-            alt="300 Ltd"
-            width={102}
-            height={37}
-            className="h-9 w-auto"
-          />
+          <ClientLogo size="md" />
         </div>
       </header>
 

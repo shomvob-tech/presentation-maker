@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ClientLogo from "./ClientLogo";
 
 const features = [
   {
@@ -103,13 +104,7 @@ export default function Schedule2() {
             width={120}
             height={28}
           />
-          <Image
-            src="/resources/300_ltd_logo.svg"
-            alt="300 Ltd"
-            width={92}
-            height={33}
-            className="h-8 w-auto"
-          />
+          <ClientLogo size="sm" />
         </div>
       </header>
 

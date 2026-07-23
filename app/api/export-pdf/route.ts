@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { chromium } from "playwright";
+import { PRESENTATION_SESSION_KEY, PREVIEW_LOGO_KEY } from "@/lib/presentation-session";
 
 /**
  * Tries the same browser candidates as scripts/export-pdf.mjs: system Edge
@@ -37,10 +38,12 @@ async function launchBrowser() {
  */
 export async function POST(request: NextRequest) {
   let url: unknown;
+  let logoDataUrl: unknown;
 
   try {
     const body = await request.json();
     url = body?.url;
+    logoDataUrl = body?.logoDataUrl;
   } catch {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
@@ -58,7 +61,46 @@ export async function POST(request: NextRequest) {
     browser = await launchBrowser();
     const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
 
+    if (
+      typeof logoDataUrl === "string" &&
+      logoDataUrl.startsWith("data:image/")
+    ) {
+      await page.addInitScript(
+        ({ sessionKey, previewLogoKey, logo }) => {
+          sessionStorage.setItem(
+            sessionKey,
+            JSON.stringify({ logoDataUrl: logo }),
+          );
+          localStorage.setItem(previewLogoKey, logo);
+        },
+        {
+          sessionKey: PRESENTATION_SESSION_KEY,
+          previewLogoKey: PREVIEW_LOGO_KEY,
+          logo: logoDataUrl,
+        },
+      );
+    }
+
     await page.goto(url, { waitUntil: "load", timeout: 120_000 });
+
+    if (
+      typeof logoDataUrl === "string" &&
+      logoDataUrl.startsWith("data:image/")
+    ) {
+      await page.waitForFunction(
+        () => {
+          const logos = [...document.querySelectorAll<HTMLImageElement>(
+            "img[data-client-logo]",
+          )];
+          return (
+            logos.length > 0 &&
+            logos.every((logo) => logo.src.startsWith("data:image/"))
+          );
+        },
+        undefined,
+        { timeout: 15_000 },
+      );
+    }
 
     await page.evaluate(async () => {
       for (const section of document.querySelectorAll("section")) {

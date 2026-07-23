@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ClientLogo from "./ClientLogo";
 
 const steps = [
   {
@@ -145,13 +146,7 @@ export default function LeaveSelfServiceSlide() {
         </div>
       </div>
 
-      <Image
-        src="/resources/300_ltd_logo.svg"
-        alt="300 Ltd"
-        width={125}
-        height={45}
-        className="relative z-10 mb-10 ml-[5.5%] h-11 w-auto"
-      />
+      <ClientLogo size="lg" className="relative z-10 mb-10 ml-[5.5%]" />
     </section>
   );
 }

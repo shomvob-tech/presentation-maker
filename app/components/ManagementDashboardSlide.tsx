@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ClientLogo from "./ClientLogo";
 
 const stats = [
   { value: "600+", label: "Employees", icon: "people" },
@@ -152,13 +153,7 @@ export default function ManagementDashboardSlide() {
             />
           </div>
           <div className="rounded-xl bg-[#0c3d20] px-4 py-2 shadow-sm">
-            <Image
-              src="/resources/300_ltd_logo.svg"
-              alt="300 Ltd"
-              width={92}
-              height={33}
-              className="h-8 w-auto"
-            />
+            <ClientLogo size="sm" />
           </div>
         </div>
       </header>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ClientLogo from "./ClientLogo";
 
 type JourneyIcon =
   | "onboard"
@@ -240,12 +241,9 @@ export default function EmployeeJourneyRoadmap() {
         ))}
       </div>
 
-      <Image
-        src="/resources/300_ltd_logo.svg"
-        alt="300 Ltd"
-        width={115}
-        height={42}
-        className="absolute bottom-[3.5%] left-[5.5%] z-30 h-10 w-auto"
+      <ClientLogo
+        size="md"
+        className="absolute bottom-[3.5%] left-[5.5%] z-30"
       />
     </section>
   );

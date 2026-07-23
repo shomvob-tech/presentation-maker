@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { getAllModuleNames } from "@/lib/module-recommendation";
 import {
   loadPresentationSession,
+  savePreviewLogo,
   type PresentationWizardSession,
 } from "@/lib/presentation-session";
 import {
@@ -58,8 +59,11 @@ export default function ValidateOptionsForm() {
   }
 
   function handleGeneratePreview() {
+    if (!session) return;
+
     const moduleIds = moduleNamesToIds(selectedModules);
     const path = buildPreviewPath(moduleIds);
+    savePreviewLogo(session.logoDataUrl);
     setPreviewUrl(`${window.location.origin}${path}`);
     setPdfError(null);
   }
@@ -74,7 +78,10 @@ export default function ValidateOptionsForm() {
       const response = await fetch("/api/export-pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: previewUrl }),
+        body: JSON.stringify({
+          url: previewUrl,
+          logoDataUrl: session?.logoDataUrl,
+        }),
       });
 
       if (!response.ok) {

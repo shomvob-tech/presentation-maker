@@ -1,6 +1,22 @@
 import type { ClientDetailsInput, ModuleRecommendationResult } from "./module-recommendation";
 
 export const PRESENTATION_SESSION_KEY = "presentation-wizard-session";
+export const PREVIEW_LOGO_KEY = "presentation-preview-logo";
+
+export function savePreviewLogo(logoDataUrl: string | undefined) {
+  if (typeof window === "undefined") return;
+
+  if (logoDataUrl) {
+    localStorage.setItem(PREVIEW_LOGO_KEY, logoDataUrl);
+  } else {
+    localStorage.removeItem(PREVIEW_LOGO_KEY);
+  }
+}
+
+export function loadPreviewLogo(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(PREVIEW_LOGO_KEY);
+}
 
 export type PresentationWizardSession = {
   clientDetails: ClientDetailsInput;

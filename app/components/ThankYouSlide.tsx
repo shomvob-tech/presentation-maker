@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ClientLogo from "./ClientLogo";
 
 export default function ThankYouSlide() {
   return (
@@ -67,13 +68,7 @@ export default function ThankYouSlide() {
             />
           </div>
           <div className="h-6 w-px bg-white/20" />
-          <Image
-            src="/resources/300_ltd_logo.svg"
-            alt="300 Ltd"
-            width={100}
-            height={36}
-            className="h-8 w-auto"
-          />
+          <ClientLogo size="sm" />
         </div>
       </div>
     </section>

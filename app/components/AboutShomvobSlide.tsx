@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ClientLogo from "./ClientLogo";
 
 const strengths = [
   {
@@ -103,13 +104,7 @@ export default function AboutShomvobSlide() {
           height={43}
           className="h-[clamp(2rem,3.2vw,2.8rem)] w-auto"
         />
-        <Image
-          src="/resources/300_ltd_logo.svg"
-          alt="300 Ltd"
-          width={110}
-          height={40}
-          className="h-10 w-auto"
-        />
+        <ClientLogo size="md" />
       </header>
 
       <div className="absolute inset-x-[5.5%] top-[14%] bottom-[22%] z-10 grid grid-cols-[43%_57%]">

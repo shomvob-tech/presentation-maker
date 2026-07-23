@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import ClientLogo from "./ClientLogo";
+import { useModuleSlideContent } from "./usePresentationContent";
 
 const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
@@ -77,6 +80,13 @@ function FeatureIcon({ type }: { type: string }) {
 }
 
 export default function ScheduleRosterSlide() {
+  const moduleContent = useModuleSlideContent("schedule");
+  const renderedFeatures = features.map((feature, index) => ({
+    ...feature,
+    title: moduleContent?.points[index]?.title ?? feature.title,
+    copy: moduleContent?.points[index]?.description ?? feature.copy,
+  }));
+
   return (
     <section
       data-module="schedule"
@@ -142,7 +152,7 @@ export default function ScheduleRosterSlide() {
       </div>
 
       <div className="relative z-10 mt-[clamp(1.5rem,2.6vw,2.5rem)] grid grid-cols-4 gap-[clamp(0.75rem,1.2vw,1.35rem)] px-[5.5%] pb-[6%]">
-        {features.map((feature) => (
+        {renderedFeatures.map((feature) => (
           <article
             key={feature.number}
             className="relative flex flex-col overflow-hidden rounded-2xl bg-white/95 p-[clamp(1rem,1.5vw,1.5rem)] text-[#092d19] shadow-xl shadow-black/15"

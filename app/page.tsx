@@ -32,7 +32,7 @@ export default function Home() {
 
       <section className="relative z-10 flex flex-1 flex-col items-center justify-center px-8 pb-20 pt-8 text-center md:px-12">
         <p className="mb-4 inline-block rounded-full border border-[#edb713]/40 bg-[#edb713]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#edb713]">
-          Presentation Maker v1.5b
+          Presentation Maker v2.0beta
         </p>
 
         <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight md:text-6xl">

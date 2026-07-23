@@ -9,6 +9,7 @@ import type { ClientDetailsInput } from "@/lib/module-recommendation";
 import {
   fileToDataUrl,
   savePresentationSession,
+  savePreviewClientName,
   savePreviewLogo,
 } from "@/lib/presentation-session";
 
@@ -108,6 +109,7 @@ export default function ClientDetailsForm() {
         logoFileName: logo?.name,
       });
       savePreviewLogo(logoDataUrl);
+      savePreviewClientName(clientDetails.clientName);
 
       router.push("/new/validate");
     } catch {
@@ -191,7 +193,7 @@ export default function ClientDetailsForm() {
               Click to upload logo
             </span>
             <span className="mt-1 text-xs text-[#0c3d20]/60">
-              Recommended: square or wide logo on transparent background
+              Recommended: square or wide logo on transparent background. Make sure the logo does not have empty space around it.
             </span>
           </button>
 

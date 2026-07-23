@@ -7,9 +7,16 @@ import { useRouter } from "next/navigation";
 import { getAllModuleNames } from "@/lib/module-recommendation";
 import {
   loadPresentationSession,
+  savePreviewClientName,
   savePreviewLogo,
   type PresentationWizardSession,
 } from "@/lib/presentation-session";
+import {
+  clearPreviewPresentationContent,
+  loadPresentationContent,
+  savePreviewPresentationContent,
+} from "@/lib/presentation-content-storage";
+import { generatePresentationContent } from "@/lib/point-selection";
 import {
   buildPreviewPath,
   moduleNamesToIds,
@@ -56,6 +63,7 @@ export default function ValidateOptionsForm() {
     );
     setPreviewUrl(null);
     setPdfError(null);
+    clearPreviewPresentationContent();
   }
 
   function handleGeneratePreview() {
@@ -63,7 +71,20 @@ export default function ValidateOptionsForm() {
 
     const moduleIds = moduleNamesToIds(selectedModules);
     const path = buildPreviewPath(moduleIds);
+    const combinedNotes = [session.clientDetails.notes, aiNotes]
+      .map((value) => value.trim())
+      .filter(Boolean)
+      .join("\n");
+
+    const presentationContent = generatePresentationContent({
+      selectedModuleIds: moduleIds,
+      requirements: session.clientDetails.requirements,
+      notes: combinedNotes,
+    });
+
     savePreviewLogo(session.logoDataUrl);
+    savePreviewClientName(session.clientDetails.clientName);
+    savePreviewPresentationContent(presentationContent);
     setPreviewUrl(`${window.location.origin}${path}`);
     setPdfError(null);
   }
@@ -81,6 +102,8 @@ export default function ValidateOptionsForm() {
         body: JSON.stringify({
           url: previewUrl,
           logoDataUrl: session?.logoDataUrl,
+          clientName: session?.clientDetails.clientName,
+          presentationContent: loadPresentationContent(),
         }),
       });
 
@@ -236,7 +259,8 @@ export default function ValidateOptionsForm() {
           AI notes
         </label>
         <p className="mt-1 text-xs text-[#0c3d20]/60">
-          Reserved for future AI-generated guidance. Not used yet.
+          Optional guidance used when selecting slide points from the content
+          library.
         </p>
         <textarea
           id="aiNotes"
@@ -244,7 +268,7 @@ export default function ValidateOptionsForm() {
           rows={4}
           value={aiNotes}
           onChange={(event) => setAiNotes(event.target.value)}
-          placeholder="AI suggestions and content notes will appear here in a future step."
+          placeholder="Emphasize mobile self-service, factory workforce, or specific pain points..."
           className={`${inputClassName} mt-2 resize-y`}
         />
       </section>

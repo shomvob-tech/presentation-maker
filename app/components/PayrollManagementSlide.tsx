@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import ClientLogo from "./ClientLogo";
+import { useModuleSlideContent } from "./usePresentationContent";
 
 const features = [
   {
@@ -122,6 +125,13 @@ function FeatureIcon({ type }: { type: string }) {
 }
 
 export default function PayrollManagementSlide() {
+  const moduleContent = useModuleSlideContent("payroll");
+  const renderedFeatures = features.map((feature, index) => ({
+    ...feature,
+    title: moduleContent?.points[index]?.title ?? feature.title,
+    copy: moduleContent?.points[index]?.description ?? feature.copy,
+  }));
+
   return (
     <section
       data-module="payroll"
@@ -168,7 +178,7 @@ export default function PayrollManagementSlide() {
 
       <main className="absolute bottom-[5.5%] left-[5.5%] right-[5.5%] top-[28%] z-20 grid grid-cols-[minmax(0,1.75fr)_minmax(0,0.9fr)] gap-[clamp(1rem,1.6vw,1.75rem)]">
         <div className="grid min-h-0 grid-cols-2 grid-rows-4 gap-[clamp(0.55rem,0.8vw,0.85rem)]">
-          {features.map((feature) => (
+          {renderedFeatures.map((feature) => (
             <article
               key={feature.number}
               className={`relative flex min-h-0 items-center gap-[clamp(0.65rem,0.9vw,0.95rem)] overflow-hidden rounded-xl border p-[clamp(0.65rem,0.9vw,0.95rem)] shadow-sm ${

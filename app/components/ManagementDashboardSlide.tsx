@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import ClientLogo from "./ClientLogo";
+import { useModuleSlideContent } from "./usePresentationContent";
 
 const stats = [
   { value: "600+", label: "Employees", icon: "people" },
@@ -116,6 +119,13 @@ function FeatureIcon({ type }: { type: string }) {
 }
 
 export default function ManagementDashboardSlide() {
+  const moduleContent = useModuleSlideContent("dashboard");
+  const renderedFeatures = features.map((feature, index) => ({
+    ...feature,
+    title: moduleContent?.points[index]?.title ?? feature.title,
+    copy: moduleContent?.points[index]?.description ?? feature.copy,
+  }));
+
   return (
     <section
       data-module="dashboard"
@@ -181,7 +191,7 @@ export default function ManagementDashboardSlide() {
       </div>
 
       <div className="relative z-10 mt-[clamp(1.5rem,2.6vw,2.5rem)] grid grid-cols-2 grid-rows-2 gap-[clamp(0.75rem,1.2vw,1.35rem)] px-[5.5%] pb-[6%]">
-        {features.map((feature) => (
+        {renderedFeatures.map((feature) => (
           <article
             key={feature.number}
             className={`relative flex items-center gap-[clamp(0.9rem,1.4vw,1.5rem)] overflow-hidden rounded-2xl border p-[clamp(1rem,1.5vw,1.6rem)] shadow-sm ${

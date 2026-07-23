@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "pdf": "node scripts/export-pdf.mjs"
+    "pdf": "node scripts/export-pdf.mjs",
+    "test:points": "npx --yes tsx scripts/test-point-selection.mts"
   },
   "dependencies": {
     "next": "16.2.10",

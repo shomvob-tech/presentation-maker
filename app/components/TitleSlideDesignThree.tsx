@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import ClientLogo from "./ClientLogo";
+import { useClientName } from "./useClientName";
 
 /**
  * Design 3 — "Bold Geometric Card"
@@ -8,6 +11,8 @@ import ClientLogo from "./ClientLogo";
  * floating white device card overlapping a decorative circle.
  */
 export default function TitleSlideDesignThree() {
+  const clientName = useClientName();
+
   return (
     <section
       data-slide="title"
@@ -57,11 +62,11 @@ export default function TitleSlideDesignThree() {
               HR Ecosystem Proposal
             </span>
             <h1 className="text-5xl font-bold leading-[1.08] tracking-tight text-white lg:text-6xl">
-              Building a Smarter HR Ecosystem for 300 Ltd
+              Building a Smarter HR Ecosystem for {clientName}
             </h1>
             <div className="h-1.5 w-24 rounded-full bg-[#edb713]" />
             <p className="text-lg leading-relaxed text-white/70">
-              Mapping 300 Ltd&apos;s HR challenges to a single mobile-first
+              Mapping {clientName}&apos;s HR challenges to a single mobile-first
               platform &mdash; built for how the team already works.
             </p>
           </div>
@@ -87,7 +92,7 @@ export default function TitleSlideDesignThree() {
         </div>
       </div>
 
-      {/* bottom-left 300 Ltd mark */}
+      {/* bottom-left client mark */}
       <div className="relative z-10 flex flex-col gap-3 px-[6%] pb-10">
         <div className="h-px w-20 bg-[#edb713]/60" />
         <ClientLogo size="lg" className="self-start" />

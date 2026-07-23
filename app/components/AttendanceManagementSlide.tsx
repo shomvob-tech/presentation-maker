@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import ClientLogo from "./ClientLogo";
+import { useModuleSlideContent } from "./usePresentationContent";
 
 const features = [
   {
@@ -68,6 +71,13 @@ function FeatureIcon({ type }: { type: string }) {
 }
 
 export default function AttendanceManagementSlide() {
+  const moduleContent = useModuleSlideContent("attendance");
+  const renderedFeatures = features.map((feature, index) => ({
+    ...feature,
+    title: moduleContent?.points[index]?.title ?? feature.title,
+    copy: moduleContent?.points[index]?.description ?? feature.copy,
+  }));
+
   return (
     <section
       data-module="attendance"
@@ -170,7 +180,7 @@ export default function AttendanceManagementSlide() {
           </div>
 
           <div className="grid min-h-0 flex-1 grid-cols-2 grid-rows-2 gap-[clamp(0.75rem,1.2vw,1.35rem)]">
-            {features.map((feature, index) => (
+            {renderedFeatures.map((feature, index) => (
               <article
                 key={feature.number}
                 className="relative flex items-center gap-[clamp(0.9rem,1.4vw,1.5rem)] overflow-hidden rounded-2xl bg-white/95 p-[clamp(1rem,1.5vw,1.6rem)] text-[#092d19] shadow-xl shadow-black/15"

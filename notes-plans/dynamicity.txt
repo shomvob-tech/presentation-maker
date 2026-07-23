@@ -1,0 +1,26 @@
+1. Define the content contract (quick, no UI work): a small type 
+describing what a "generated slide" needs — e.g. { moduleId, 
+title, subheadline, points: { title, description, icon?, 
+highlight? }[] }. This takes the place of the hardcoded arrays 
+currently inside each slide component.
+
+2. Build the selection function against that contract: selectedModuleIds
+ + notes → content per module, using pointLibrary + generationRules 
+ (min/max points, preferHighestPriority, avoidDuplicateKeywords). 
+ This is pure logic — testable with console/unit tests, no dependency on slides being ready.
+
+3. Decide the transport ("sending logic"): since /preview is currently 
+a stateless server component driven only by a URL query string, a points 
+payload won't fit in the URL the way module ids do. Two realistic options, 
+matching patterns already in this codebase:
+    a. Client-side only: store the generated content in sessionStorage/localStorage 
+    (same pattern as ClientLogo/useClientName), and have the preview page's slides 
+    read it via a hook. The PDF route already knows how to inject storage values 
+    into the headless browser (page.addInitScript), so this reuses existing plumbing.
+    b. Real backend: POST to a generation endpoint (possibly the dormant 
+    presentation-api.ts target) that returns an id, and preview fetches by id.
+
+4. Only then adapt slides, one at a time, to accept/read this 
+content — falling back to today's hardcoded defaults when it's absent, 
+the same fallback pattern already used for the dynamic logo and client name. 
+That keeps the static /300ltd demo deck working throughout.

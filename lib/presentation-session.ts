@@ -2,6 +2,8 @@ import type { ClientDetailsInput, ModuleRecommendationResult } from "./module-re
 
 export const PRESENTATION_SESSION_KEY = "presentation-wizard-session";
 export const PREVIEW_LOGO_KEY = "presentation-preview-logo";
+export const PREVIEW_CLIENT_NAME_KEY = "presentation-preview-client-name";
+export const DEFAULT_CLIENT_NAME = "300 Ltd";
 
 export function savePreviewLogo(logoDataUrl: string | undefined) {
   if (typeof window === "undefined") return;
@@ -16,6 +18,36 @@ export function savePreviewLogo(logoDataUrl: string | undefined) {
 export function loadPreviewLogo(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem(PREVIEW_LOGO_KEY);
+}
+
+export function savePreviewClientName(clientName: string | undefined) {
+  if (typeof window === "undefined") return;
+
+  if (clientName?.trim()) {
+    localStorage.setItem(PREVIEW_CLIENT_NAME_KEY, clientName.trim());
+  } else {
+    localStorage.removeItem(PREVIEW_CLIENT_NAME_KEY);
+  }
+}
+
+export function loadClientName(): string {
+  if (typeof window === "undefined") return DEFAULT_CLIENT_NAME;
+
+  const rawSession = sessionStorage.getItem(PRESENTATION_SESSION_KEY);
+  if (rawSession) {
+    try {
+      const session = JSON.parse(rawSession) as PresentationWizardSession;
+      const name = session.clientDetails?.clientName?.trim();
+      if (name) return name;
+    } catch {
+      // Fall through to preview name or default.
+    }
+  }
+
+  const previewName = localStorage.getItem(PREVIEW_CLIENT_NAME_KEY)?.trim();
+  if (previewName) return previewName;
+
+  return DEFAULT_CLIENT_NAME;
 }
 
 export type PresentationWizardSession = {

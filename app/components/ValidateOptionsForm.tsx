@@ -17,6 +17,7 @@ import {
   savePreviewPresentationContent,
 } from "@/lib/presentation-content-storage";
 import { generatePresentationContent } from "@/lib/point-selection";
+import { buildClientMailtoUrl, buildSuggestedPdfFileName } from "@/lib/client-email-template";
 import {
   buildPreviewPath,
   moduleNamesToIds,
@@ -116,7 +117,9 @@ export default function ValidateOptionsForm() {
       const downloadUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = downloadUrl;
-      link.download = "presentation.pdf";
+      link.download = buildSuggestedPdfFileName(
+        session?.clientDetails.clientName ?? "Client",
+      );
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -138,6 +141,12 @@ export default function ValidateOptionsForm() {
 
   const recommendedModules = new Set(session.recommendation.modules);
   const { clientDetails } = session;
+  const clientMailtoUrl =
+    previewUrl &&
+    buildClientMailtoUrl({
+      clientName: clientDetails.clientName,
+      clientEmail: clientDetails.clientEmail,
+    });
 
   const labelClassName = "text-xs font-semibold uppercase tracking-wide text-[#0c3d20]/55";
   const valueClassName = "mt-1 text-sm text-[#0c3d20]";
@@ -279,8 +288,8 @@ export default function ValidateOptionsForm() {
             Presentation preview link
           </p>
           <p className="mt-1 text-xs text-[#0c3d20]/60">
-            This temporary link renders the selected slides. Open it to review,
-            or download it directly as a PDF.
+            Review the deck, download the PDF, then send it to your client with
+            a pre-filled email from your mail app.
           </p>
           <a
             href={previewUrl}
@@ -291,19 +300,33 @@ export default function ValidateOptionsForm() {
             {previewUrl}
           </a>
 
-          <div className="mt-4 flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={handleDownloadPdf}
-              disabled={isDownloadingPdf}
-              className="rounded-lg bg-[#0c3d20] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#0a331b] disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isDownloadingPdf ? "Generating PDF…" : "Download PDF"}
-            </button>
-            <span className="text-xs text-[#0c3d20]/55">
-              PDF generation opens the preview link in a headless browser and
-              captures every slide.
-            </span>
+          <div className="mt-4 flex flex-col gap-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={handleDownloadPdf}
+                disabled={isDownloadingPdf}
+                className="rounded-lg bg-[#0c3d20] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#0a331b] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isDownloadingPdf ? "Generating PDF…" : "Download PDF"}
+              </button>
+              {clientMailtoUrl ? (
+                <a
+                  href={clientMailtoUrl}
+                  className="rounded-lg bg-[#edb713] px-5 py-2.5 text-sm font-semibold text-[#0c3d20] shadow-sm transition hover:bg-[#f5c832]"
+                >
+                  Send mail to client
+                </a>
+              ) : null}
+            </div>
+            <p className="text-xs text-[#0c3d20]/55">
+              Download the PDF first, then use Send mail to open your email app
+              with a drafted message to{" "}
+              <span className="font-medium text-[#0c3d20]/70">
+                {clientDetails.clientEmail}
+              </span>
+              . Attach the PDF manually before sending.
+            </p>
           </div>
 
           {pdfError ? (

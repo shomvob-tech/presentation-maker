@@ -47,7 +47,7 @@ export default function ThankYouSlide() {
         <div className="h-[3px] w-16 rounded-full bg-[#edb713]" />
 
         <p className="max-w-xl text-lg leading-relaxed text-white/65">
-          A smarter, connected HR ecosystem for 300 Ltd, powered by Shomvob.
+          A smarter, connected HR ecosystem for you, powered by Shomvob.
         </p>
 
         <span className="mt-2 inline-flex items-center gap-2 rounded-full bg-white/10 px-5 py-2 text-sm font-semibold text-white/80">

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shomvob HR × Taza Hair Oil — Meeting Recap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest: #0B2A1B;
+    --forest-deep: #071C11;
+    --forest-card: #123420;
+    --paper: #FFFFFF;
+    --paper-tint: #F5FAF2;
+    --ink: #0C2016;
+    --muted: #5C7268;
+    --muted-dark: #9FC1AC;
+    --lime: #D4F034;
+    --lime-dim: #A8C232;
+    --leaf: #5FB33F;
+    --line: #E4EBE1;
+    --line-dark: #1D4229;
+
+    --font-display: 'Bricolage Grotesque', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{
+    scroll-snap-type: y proximity;
+    scroll-behavior: smooth;
+  }
+
+  body{
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: var(--paper);
+    overflow-x: hidden;
+  }
+
+  ::selection{ background: var(--lime); color: var(--forest-deep); }
+
+  section.slide{
+    scroll-snap-align: start;
+    min-height: 100svh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6.5vh 6vw;
+  }
+
+  .dark{ background: var(--forest); color: var(--paper); }
+  .tint{ background: var(--paper-tint); }
+
+  /* ---------- grain texture for dark sections ---------- */
+  .grain{ position:absolute; inset:0; pointer-events:none; opacity:.5; mix-blend-mode: overlay; }
+
+  /* ---------- fixed nav ---------- */
+  .topnav{
+    position: fixed; top:0; left:0; right:0; z-index: 50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 1.5rem 3vw;
+    font-family: var(--font-mono);
+    font-size: .7rem;
+    letter-spacing: .1em;
+    pointer-events:none;
+    transition: color .4s ease;
+    color: var(--paper);
+  }
+  body.theme-light .topnav{ color: var(--ink); }
+  .topnav .brand{ display:flex; align-items:center; }
+  .topnav img{ height: 17px; width:auto; display:block; }
+  .topnav .for{ opacity:.65; }
+
+  /* ---------- dot nav ---------- */
+  .dotnav{
+    position: fixed; right: 2.4vw; top:50%; transform: translateY(-50%);
+    z-index: 50; display:flex; flex-direction:column; gap:.6rem;
+  }
+  .dotnav button{
+    width:6px; height:6px; border-radius:50%;
+    background: rgba(12,32,22,.22);
+    border:none; cursor:pointer; padding:0; pointer-events:all;
+    transition: all .3s ease;
+  }
+  .dotnav button.active{ background: var(--ink); transform: scale(1.8); }
+  body.theme-dark .dotnav button{ background: rgba(255,255,255,.28); }
+  body.theme-dark .dotnav button.active{ background: var(--lime); }
+
+  /* ---------- eyebrow ---------- */
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size: clamp(.68rem, .9vw, .8rem);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--leaf);
+    display:flex; align-items:center; gap:.6em;
+    margin-bottom: 1.4em;
+  }
+  .dark .eyebrow{ color: var(--lime); }
+  .eyebrow::before{
+    content:''; width: 1.6em; height:1px; background: currentColor; display:inline-block;
+  }
+
+  h1,h2,h3{ font-family: var(--font-display); font-weight: 700; line-height: 1.02; letter-spacing: -0.01em; }
+
+  .hero-title{
+    font-size: clamp(3rem, 8vw, 6.6rem);
+    max-width: 14em;
+  }
+  .hero-title em{ font-style:normal; color: var(--lime); }
+
+  .hero-sub{
+    font-size: clamp(1rem, 1.3vw, 1.25rem);
+    color: var(--muted-dark);
+    max-width: 34em;
+    margin-top: 1.6rem;
+    line-height: 1.55;
+    font-weight: 400;
+  }
+
+  .hero-wave{
+    position:absolute; top:0; right:0; width:56vw; height:100%;
+    opacity:.9; overflow:visible;
+  }
+  .hero-wave .wv{
+    fill:none; stroke-width:1.4; stroke-linecap:round;
+  }
+  .hero-wave .wv1{ stroke: var(--lime); opacity:.55; }
+  .hero-wave .wv2{ stroke: var(--leaf); opacity:.4; }
+  .hero-wave .wv3{ stroke: var(--muted-dark); opacity:.25; }
+
+  .hero-badge{
+    margin-top: 3.2rem;
+    display:inline-flex; align-items:center; gap: .9rem;
+    padding: .55rem .9rem .55rem .7rem;
+    border: 1px solid var(--line-dark);
+    border-radius: 999px;
+    width: fit-content;
+    background: rgba(255,255,255,.03);
+  }
+  .hero-badge .badge-logo{ height: 15px; width:auto; }
+  .hero-badge .x{ color: var(--muted-dark); font-size:.85rem; }
+  .hero-badge .badge-taza{
+    font-family: var(--font-mono); font-size:.68rem; letter-spacing:.1em;
+    color: var(--muted-dark);
+  }
+
+  .scrollcue{
+    position:absolute; left: 6vw; bottom: 5vh;
+    display:flex; align-items:center; gap:.8rem;
+    font-family: var(--font-mono); font-size:.7rem; letter-spacing:.14em;
+    color: var(--muted-dark); text-transform:uppercase;
+  }
+  .scrollcue .line{ width:1px; height:32px; background: linear-gradient(var(--lime), transparent); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{opacity:.3} 50%{opacity:1} }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration: .001ms !important; animation-iteration-count:1 !important; }
+  }
+
+  /* ================= shared section bits ================= */
+  .section-head{ max-width: 46em; }
+  h2.section-title{
+    font-size: clamp(2.1rem, 4vw, 3.4rem);
+    margin-bottom: .5em;
+  }
+  .section-body{
+    font-size: clamp(1rem, 1.15vw, 1.15rem);
+    color: var(--muted);
+    max-width: 38em;
+    line-height: 1.6;
+  }
+  .dark .section-body{ color: var(--muted-dark); }
+  .slide-index{
+    position:absolute; bottom: 5vh; right:6vw;
+    font-family: var(--font-mono); font-size:.72rem; color: var(--muted);
+    letter-spacing:.08em;
+  }
+  .dark .slide-index{ color: var(--muted-dark); }
+
+  /* ================= about / stats ================= */
+  .about-grid{ display:grid; grid-template-columns: 1.1fr .9fr; gap: 5vw; margin-top: 3rem; align-items:start; }
+  .strengths{ list-style:none; display:flex; flex-direction:column; gap: 1.5rem; margin-top: 2.2rem; }
+  .strengths li{ display:flex; gap: 1rem; align-items:flex-start; }
+  .strengths .mark{
+    width: 1.5rem; height:1.5rem; border-radius: 50%; flex:none; margin-top: .2rem;
+    background: var(--paper-tint); border: 1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .strengths .mark svg{ width:.7rem; height:.7rem; stroke: var(--leaf); }
+  .strengths h4{ font-family: var(--font-body); font-weight:600; font-size:1.02rem; margin-bottom:.25rem; }
+  .strengths p{ color: var(--muted); font-size:.92rem; line-height:1.5; max-width: 30em; }
+
+  .stats-col{
+    background: var(--forest); border-radius: 1.1rem;
+    padding: 2.4rem 2.2rem;
+    display:flex; flex-direction:column; gap: 1.5rem;
+    position:relative; overflow:hidden;
+  }
+  .stat{ display:flex; align-items:baseline; justify-content:space-between; gap:1rem; border-bottom: 1px solid var(--line-dark); padding-bottom: 1.3rem; }
+  .stat:last-child{ border-bottom:none; padding-bottom:0; }
+  .stat .num{ font-family: var(--font-display); font-size: clamp(1.8rem,2.6vw,2.5rem); font-weight:700; color: var(--lime); white-space:nowrap; }
+  .stat .label{ font-family: var(--font-body); font-size:.82rem; color: var(--muted-dark); text-align:right; max-width:12em; }
+
+  /* ================= trust / marquee ================= */
+  .marquee{ width:100%; overflow:hidden; margin-top: 3.4rem; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .marquee-track{ display:flex; gap: 3.2rem; width: max-content; animation: scroll-x 28s linear infinite; }
+  @keyframes scroll-x{ from{ transform:translateX(0);} to{ transform: translateX(-50%);} }
+  .client-chip{ font-family: var(--font-display); font-weight:600; font-size: 1.5rem; color: var(--muted-dark); white-space:nowrap; opacity:.85; }
+  .recognition-row{ display:flex; gap: 4vw; margin-top: 4.5rem; flex-wrap:wrap; }
+  .recognition-row div{ font-family: var(--font-mono); font-size: .7rem; letter-spacing:.08em; color: var(--muted-dark); margin-bottom:.6rem; }
+  .recognition-row strong{ display:block; font-family: var(--font-display); font-size: 1.3rem; color: var(--paper); font-weight:600; }
+
+  /* ================= needs list ================= */
+  .needs-list{ margin-top: 2.6rem; border-top: 1px solid var(--line); }
+  .need-item{ display:grid; grid-template-columns: 3.2rem 1fr auto; gap: 1.4rem; align-items:center; padding: 1.15rem 0; border-bottom: 1px solid var(--line); }
+  .need-item .idx{ font-family: var(--font-mono); color: var(--leaf); font-size:.85rem; }
+  .need-item h4{ font-family: var(--font-body); font-weight: 600; font-size: 1.05rem; }
+  .need-item p{ color: var(--muted); font-size:.85rem; margin-top:.15rem; }
+  .need-item .tag{
+    font-family: var(--font-mono); font-size:.62rem; letter-spacing:.08em; text-transform:uppercase;
+    background: var(--paper-tint); color: var(--leaf); border:1px solid var(--line);
+    padding: .3rem .6rem; border-radius: 999px; white-space:nowrap;
+  }
+
+  /* ================= module slides ================= */
+  .module{ padding:0; }
+  .module-wrap{ display:flex; min-height:100svh; width:100%; }
+  .module.mirror .module-wrap{ flex-direction: row-reverse; }
+  .module-panel{
+    flex: 0 0 40%; background: var(--forest); color: var(--paper);
+    display:flex; flex-direction:column; justify-content:center;
+    padding: 6vh 4vw; position:relative; overflow:hidden;
+  }
+  .module-content{
+    flex:1; background: var(--paper);
+    display:flex; flex-direction:column; justify-content:center;
+    padding: 6vh 5vw;
+  }
+  .module-tag{ font-family: var(--font-mono); font-size:.7rem; letter-spacing:.12em; color: var(--lime); margin-bottom: 1.6rem; display:flex; align-items:center; gap:.7em; }
+  .module-tag .priority{ background: var(--lime); color: var(--forest-deep); padding:.2rem .55rem; border-radius:3px; font-weight:600; }
+  .module-icon{
+    width: 3.4rem; height:3.4rem; border-radius: 50%;
+    background: rgba(212,240,52,.12); border: 1px solid rgba(212,240,52,.3);
+    display:flex; align-items:center; justify-content:center; margin-bottom: 1.6rem;
+  }
+  .module-icon svg{ width: 1.6rem; height:1.6rem; stroke: var(--lime); fill:none; }
+  .module-panel h3{ font-size: clamp(2.1rem, 3vw, 3rem); margin-bottom: 1.4rem; }
+  .module-panel .desc{ color: var(--muted-dark); font-size: .96rem; line-height:1.65; max-width: 24em; }
+
+  .module-feat-label{ font-family: var(--font-mono); font-size:.7rem; letter-spacing:.12em; color: var(--leaf); margin-bottom: 1.3rem; }
+  .module-features{ list-style:none; display:flex; flex-direction:column; }
+  .module-features li{ display:flex; gap: .9rem; padding: .95rem 0; border-bottom: 1px solid var(--line); align-items:flex-start; }
+  .module-features li:first-child{ border-top: 1px solid var(--line); }
+  .module-features .tick{ flex:none; width:1.15rem; height:1.15rem; margin-top:.15rem; border-radius:4px; background: var(--paper-tint); display:flex; align-items:center; justify-content:center; }
+  .module-features .tick svg{ width:.68rem; height:.68rem; stroke: var(--leaf); }
+  .module-features span.txt{ font-size: .96rem; line-height:1.5; color: var(--ink); }
+
+  .module-help{
+    margin-top: 2.2rem; padding: 1.3rem 1.5rem; background: var(--paper-tint);
+    border-radius: .8rem; display:flex; gap:1rem; align-items:flex-start;
+  }
+  .module-help .lbl{ font-family: var(--font-mono); font-size:.62rem; letter-spacing:.1em; color: var(--leaf); flex:none; padding-top:.2rem; }
+  .module-help p{ font-size:.92rem; font-style:italic; color: var(--ink); line-height:1.5; }
+
+  /* ================= recap grid ================= */
+  .recap-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap: 1.1rem; margin-top: 3.4rem; max-width: 62rem; }
+  .recap-chip{
+    background: var(--forest-card); border: 1px solid var(--line-dark); border-radius: .9rem;
+    padding: 1.7rem 1.5rem; display:flex; flex-direction:column; gap: 1.1rem;
+  }
+  .recap-chip .ic{ width:2.6rem; height:2.6rem; border-radius:50%; background: rgba(212,240,52,.14); display:flex; align-items:center; justify-content:center; }
+  .recap-chip .ic svg{ width:1.25rem; height:1.25rem; stroke: var(--lime); fill:none; }
+  .recap-chip span{ font-family: var(--font-body); font-weight:600; font-size:1rem; }
+
+  /* ================= closing ================= */
+  .steps-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; margin-top: 3rem; max-width: 64rem; }
+  .step-card{ background: var(--paper-tint); border-radius: 1rem; padding: 2rem 1.7rem; }
+  .step-card .n{ font-family: var(--font-display); font-size: 2.2rem; color: var(--leaf); font-weight:700; margin-bottom: 1.6rem; }
+  .step-card h4{ font-size: 1.05rem; margin-bottom:.5rem; font-weight:600; }
+  .step-card p{ font-size:.88rem; color: var(--muted); line-height:1.5; }
+
+  .closing-footer{
+    margin-top: 4rem; padding-top: 2.2rem; border-top: 1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem; max-width: 64rem;
+  }
+  .partner-lockup{ display:flex; align-items:center; gap: 1.1rem; }
+  .partner-lockup img.shom{ height: 22px; }
+  .partner-lockup .x{ color: var(--muted); }
+  .partner-lockup .taza-badge{
+    background: #fff; border:1px solid var(--line); border-radius:.6rem; padding:.35rem .6rem;
+    display:flex; align-items:center; height: 30px;
+  }
+  .partner-lockup .taza-badge img{ height: 100%; width:auto; mix-blend-mode:multiply; }
+  .closing-footer .tagline{ font-size:.85rem; color: var(--muted); font-style:italic; max-width:20em; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="brand"><img src="assets/shomvob_logo.png" alt="Shomvob HR"></div>
+  <div class="for">PREPARED FOR TAZA HAIR OIL</div>
+</nav>
+
+<div class="dotnav" id="dotnav"></div>
+
+<!-- SLIDE 1: HERO -->
+<section class="slide dark" id="s1" data-theme="dark">
+  <svg class="grain" width="100%" height="100%">
+    <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/></filter>
+    <rect width="100%" height="100%" filter="url(#noise)"/>
+  </svg>
+
+  <svg class="hero-wave" viewBox="0 0 1000 1000" preserveAspectRatio="xMaxYMid meet" aria-hidden="true">
+    <path class="wv wv1" d="M 470 40 C 500.0 56.7, 601.7 103.3, 650 140 C 698.3 176.7, 721.7 226.7, 760 260 C 798.3 293.3, 831.7 320.0, 880 340 C 928.3 360.0, 993.3 350.0, 1050 380 C 1106.7 410.0, 1161.7 483.3, 1220 520 C 1278.3 556.7, 1370.0 586.7, 1400 600" />
+    <path class="wv wv2" d="M 510 160 C 540.0 175.0, 643.3 215.0, 690 250 C 736.7 285.0, 751.7 338.3, 790 370 C 828.3 401.7, 871.7 418.3, 920 440 C 968.3 461.7, 1023.3 466.7, 1080 500 C 1136.7 533.3, 1200.0 601.7, 1260 640 C 1320.0 678.3, 1410.0 715.0, 1440 730" />
+    <path class="wv wv3" d="M 550 280 C 580.0 293.3, 683.3 328.3, 730 360 C 776.7 391.7, 790.0 440.0, 830 470 C 870.0 500.0, 921.7 516.7, 970 540 C 1018.3 563.3, 1066.7 573.3, 1120 610 C 1173.3 646.7, 1236.7 715.0, 1290 760 C 1343.3 805.0, 1415.0 860.0, 1440 880" />
+  </svg>
+
+  <div class="eyebrow">MEETING RECAP</div>
+  <h1 class="hero-title">Let's keep<br>things <em>fresh.</em></h1>
+  <p class="hero-sub">A walkthrough of how Shomvob HR covers attendance, leave, payroll, roster, device integration, and access for Taza Hair Oil's 40+ person team.</p>
+
+  <div class="hero-badge">
+    <img src="assets/shomvob_logo.png" alt="Shomvob HR" class="badge-logo">
+    <span class="x">×</span>
+    <span class="badge-taza">TAZA HAIR OIL</span>
+  </div>
+
+  <div class="scrollcue"><div class="line"></div>SCROLL</div>
+</section>
+
+<!-- SLIDE 2: ABOUT -->
+<section class="slide" id="s2" data-theme="light">
+  <div class="section-head">
+    <div class="eyebrow">ABOUT SHOMVOB</div>
+    <h2 class="section-title">Built in the real world,<br>not in isolation.</h2>
+  </div>
+  <div class="about-grid">
+    <div>
+      <p class="section-body">Shomvob brings hiring, workforce management, and payroll into one connected ecosystem — shaped by hands-on experience solving manpower and operations challenges across 1,500+ companies in Bangladesh.</p>
+      <ul class="strengths">
+        <li>
+          <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></div>
+          <div><h4>Workforce consulting</h4><p>4+ years solving hiring and manpower challenges across industries.</p></div>
+        </li>
+        <li>
+          <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></div>
+          <div><h4>Operations at scale</h4><p>Staffing, bulk hiring, payroll, and resource augmentation for growing teams.</p></div>
+        </li>
+        <li>
+          <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></div>
+          <div><h4>Insight turned into product</h4><p>Real experience with 1,500+ companies shaped the Shomvob platform.</p></div>
+        </li>
+      </ul>
+    </div>
+    <div class="stats-col">
+      <div class="stat"><span class="num">1,500+</span><span class="label">Clients across industries</span></div>
+      <div class="stat"><span class="num">4+</span><span class="label">Years of workforce experience</span></div>
+      <div class="stat"><span class="num">30,000+</span><span class="label">Job seekers placed</span></div>
+      <div class="stat"><span class="num">98%+</span><span class="label">Platform availability</span></div>
+      <div class="stat"><span class="num">100%</span><span class="label">Payroll execution reliability</span></div>
+    </div>
+  </div>
+  <div class="slide-index">02 / 12</div>
+</section>
+
+<!-- SLIDE 3: TRUST -->
+<section class="slide dark" id="s3" data-theme="dark">
+  <svg class="grain" width="100%" height="100%"><rect width="100%" height="100%" filter="url(#noise)"/></svg>
+  <div class="section-head">
+    <div class="eyebrow">TRUSTED ACROSS BANGLADESH</div>
+    <h2 class="section-title">Real partnerships.<br>Real operating experience.</h2>
+  </div>
+
+  <div class="marquee">
+    <div class="marquee-track" id="marqueeTrack"></div>
+  </div>
+
+  <div class="recognition-row">
+    <div><span>RECOGNIZED BY</span><strong>Gates Foundation</strong></div>
+    <div><span>&nbsp;</span><strong>Cocoon</strong></div>
+    <div><span>&nbsp;</span><strong>Forbes Asia 100 to Watch</strong></div>
+  </div>
+  <div class="slide-index">03 / 12</div>
+</section>
+
+<!-- SLIDE 4: NEEDS -->
+<section class="slide" id="s4" data-theme="light">
+  <div class="section-head">
+    <div class="eyebrow">FROM OUR CONVERSATION</div>
+    <h2 class="section-title">Here's what you told us matters most.</h2>
+    <p class="section-body">Taza Hair Oil, 40+ employees — a mix of remote field staff and onsite team members on fingerprint check-in. In the order you raised them:</p>
+  </div>
+  <div class="needs-list">
+    <div class="need-item"><span class="idx">01</span><div><h4>Attendance</h4><p>Reliable tracking across remote and onsite employees</p></div><span class="tag">Top priority</span></div>
+    <div class="need-item"><span class="idx">02</span><div><h4>Leave</h4><p>Clear, policy-driven leave management for the whole team</p></div><span></span></div>
+    <div class="need-item"><span class="idx">03</span><div><h4>Payroll</h4><p>Accurate, on-time payroll for your team</p></div><span class="tag">Top priority</span></div>
+    <div class="need-item"><span class="idx">04</span><div><h4>Roster</h4><p>Structured scheduling for a distributed workforce</p></div><span></span></div>
+    <div class="need-item"><span class="idx">05</span><div><h4>Device integration</h4><p>Connecting your existing fingerprint attendance device</p></div><span></span></div>
+    <div class="need-item"><span class="idx">06</span><div><h4>Access configuration</h4><p>Right people seeing the right data and approvals</p></div><span></span></div>
+  </div>
+  <div class="slide-index">04 / 12</div>
+</section>
+
+<!-- MODULE SLIDES -->
+<section class="slide module" id="s5" data-theme="dark">
+  <div class="module-wrap">
+    <div class="module-panel">
+      <svg class="grain" width="100%" height="100%"><rect width="100%" height="100%" filter="url(#noise)"/></svg>
+      <div class="module-tag">REQUIREMENT 01 / 06 <span class="priority">TOP PRIORITY</span></div>
+      <div class="module-icon"><svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20c0-3.3 2.5-6 6-6"/><polyline points="13 15.5 15.5 18 20 12.5"/></svg></div>
+      <h3>Attendance</h3>
+      <p class="desc">Built for teams like yours — field staff and onsite employees tracked in one place, not two.</p>
+    </div>
+    <div class="module-content">
+      <div class="module-feat-label">KEY FEATURES</div>
+      <ul class="module-features">
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Mobile check-in / check-out with a live attendance overview</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Remote attendance history and attendance location mapping</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Work-from-home requests — pending, current, upcoming & history</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Forget-attendance and late-waiver requests with approval flow</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Break time tracking and waiver management</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Attendance reports by date range or by month</span></li>
+      </ul>
+      <div class="module-help"><span class="lbl">HOW THIS<br>HELPS</span><p>One accurate attendance picture across remote and onsite employees, with self-service requests and approvals on mobile.</p></div>
+    </div>
+  </div>
+  <div class="slide-index" style="color:var(--muted)">05 / 12</div>
+</section>
+
+<section class="slide module mirror" id="s6" data-theme="dark">
+  <div class="module-wrap">
+    <div class="module-panel">
+      <svg class="grain" width="100%" height="100%"><rect width="100%" height="100%" filter="url(#noise)"/></svg>
+      <div class="module-tag">REQUIREMENT 02 / 06</div>
+      <div class="module-icon"><svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17"/><path d="M8 3v3.4M16 3v3.4"/><path d="M8.5 13.5l1.8 1.8 3.7-3.7"/></svg></div>
+      <h3>Leave Management</h3>
+      <p class="desc">A clear, policy-driven system, so leave stops being a manual back-and-forth over messages.</p>
+    </div>
+    <div class="module-content">
+      <div class="module-feat-label">KEY FEATURES</div>
+      <ul class="module-features">
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Configurable leave policies and leave types for your company</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Holiday calendar and special weekly leave settings</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Bonus leave configuration and attendance bonus ledger</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Employees apply for leave directly from the mobile app</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Approval Center for pending, current & upcoming requests</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Leave history reporting for audits and record-keeping</span></li>
+      </ul>
+      <div class="module-help"><span class="lbl">HOW THIS<br>HELPS</span><p>Employees see their balances and apply on the go; managers approve in seconds — no more manual tracking on spreadsheets.</p></div>
+    </div>
+  </div>
+  <div class="slide-index" style="color:var(--muted)">06 / 12</div>
+</section>
+
+<section class="slide module" id="s7" data-theme="dark">
+  <div class="module-wrap">
+    <div class="module-panel">
+      <svg class="grain" width="100%" height="100%"><rect width="100%" height="100%" filter="url(#noise)"/></svg>
+      <div class="module-tag">REQUIREMENT 03 / 06 <span class="priority">TOP PRIORITY</span></div>
+      <div class="module-icon"><svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 6v12M17.5 6v12"/></svg></div>
+      <h3>Payroll</h3>
+      <p class="desc">Payroll is your top priority. Every cycle is built to be accurate, fast, and easy to reconcile.</p>
+    </div>
+    <div class="module-content">
+      <div class="module-feat-label">KEY FEATURES</div>
+      <ul class="module-features">
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Payroll dashboard with drafts, outstanding salary & full history</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Payslip history, accessible to employees on demand</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Bonus dashboard, off-cycle bonus, and bonus payslip history</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Configurable bonus types & policies</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Reports exportable in the exact layout your finance team needs — employee name, bank account name, payable amount, and salary month</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Mobile quick-access to payroll for employees</span></li>
+      </ul>
+      <div class="module-help"><span class="lbl">HOW THIS<br>HELPS</span><p>One dashboard drives the full payroll cycle, with reports already formatted for your bank disbursement process.</p></div>
+    </div>
+  </div>
+  <div class="slide-index" style="color:var(--muted)">07 / 12</div>
+</section>
+
+<section class="slide module mirror" id="s8" data-theme="dark">
+  <div class="module-wrap">
+    <div class="module-panel">
+      <svg class="grain" width="100%" height="100%"><rect width="100%" height="100%" filter="url(#noise)"/></svg>
+      <div class="module-tag">REQUIREMENT 04 / 06</div>
+      <div class="module-icon"><svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M21 20v-4"/></svg></div>
+      <h3>Roster &amp;<br>Scheduling</h3>
+      <p class="desc">Structured, visible scheduling, so you always know who's working, when, and where.</p>
+    </div>
+    <div class="module-content">
+      <div class="module-feat-label">KEY FEATURES</div>
+      <ul class="module-features">
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Roster schedule builder with capacity overview & capacity planning</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Working hours setup — time slots, patterns, and weekly configuration</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Employee grouping for streamlined schedule assignment</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Schedules sync directly with attendance for accurate tracking</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Full visibility for managers across every scheduled shift</span></li>
+      </ul>
+      <div class="module-help"><span class="lbl">HOW THIS<br>HELPS</span><p>Plan shifts around your real headcount and capacity, with schedules that feed straight into attendance — no duplicate data entry.</p></div>
+    </div>
+  </div>
+  <div class="slide-index" style="color:var(--muted)">08 / 12</div>
+</section>
+
+<section class="slide module" id="s9" data-theme="dark">
+  <div class="module-wrap">
+    <div class="module-panel">
+      <svg class="grain" width="100%" height="100%"><rect width="100%" height="100%" filter="url(#noise)"/></svg>
+      <div class="module-tag">REQUIREMENT 05 / 06</div>
+      <div class="module-icon"><svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8.5a7 7 0 0 1 10 0M4.5 6a10.5 10.5 0 0 1 15 0M9.3 11a3.5 3.5 0 0 1 5.4 0"/><path d="M12 12.5v2c0 2.5-1 4-2.5 5.5"/><path d="M12 12.5c1.4 0 2.3.9 2.3 2.3 0 1.7-.6 3-1.6 4.2"/></svg></div>
+      <h3>Device<br>Integration</h3>
+      <p class="desc">Your onsite team already checks in on a fingerprint device. We connect to it — you don't change a habit.</p>
+    </div>
+    <div class="module-content">
+      <div class="module-feat-label">KEY FEATURES</div>
+      <ul class="module-features">
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Biometric device integration syncs check-in / check-out data automatically</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Onsite fingerprint attendance flows into the same dashboard as remote check-ins</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">One unified attendance record — no manual reconciliation between device and system</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Our team handles the integration setup with your device vendor</span></li>
+      </ul>
+      <div class="module-help"><span class="lbl">HOW THIS<br>HELPS</span><p>Onsite and remote attendance live in a single system — your fingerprint device keeps working, and the data flows in automatically.</p></div>
+    </div>
+  </div>
+  <div class="slide-index" style="color:var(--muted)">09 / 12</div>
+</section>
+
+<section class="slide module mirror" id="s10" data-theme="dark">
+  <div class="module-wrap">
+    <div class="module-panel">
+      <svg class="grain" width="100%" height="100%"><rect width="100%" height="100%" filter="url(#noise)"/></svg>
+      <div class="module-tag">REQUIREMENT 06 / 06</div>
+      <div class="module-icon"><svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-3 7.8-7 9-4-1.2-7-4.4-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <h3>Access<br>Configuration</h3>
+      <p class="desc">As you grow past 40 employees, the right structure keeps approvals fast and data visible to only the right people.</p>
+    </div>
+    <div class="module-content">
+      <div class="module-feat-label">KEY FEATURES</div>
+      <ul class="module-features">
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Org structure setup — levels, business lines, and locations</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Location Builder to map every site your employees work from</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Company settings that reflect how Taza Hair Oil actually operates</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Approval Flow Hub with configurable approver templates</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Role-based access, so managers see only what's relevant to them</span></li>
+        <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="txt">Centralized Approval Center for every pending request, on web and mobile</span></li>
+      </ul>
+      <div class="module-help"><span class="lbl">HOW THIS<br>HELPS</span><p>A structure that mirrors your company today, and scales cleanly as you add locations, teams, or approval layers.</p></div>
+    </div>
+  </div>
+  <div class="slide-index" style="color:var(--muted)">10 / 12</div>
+</section>
+
+<!-- SLIDE 11: RECAP -->
+<section class="slide dark" id="s11" data-theme="dark">
+  <svg class="grain" width="100%" height="100%"><rect width="100%" height="100%" filter="url(#noise)"/></svg>
+  <div class="eyebrow">THE FULL PICTURE</div>
+  <h2 class="section-title">One platform.<br>Every requirement.</h2>
+  <div class="recap-grid">
+    <div class="recap-chip"><div class="ic"><svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20c0-3.3 2.5-6 6-6"/><polyline points="13 15.5 15.5 18 20 12.5"/></svg></div><span>Attendance</span></div>
+    <div class="recap-chip"><div class="ic"><svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17"/><path d="M8 3v3.4M16 3v3.4"/></svg></div><span>Leave</span></div>
+    <div class="recap-chip"><div class="ic"><svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/></svg></div><span>Payroll</span></div>
+    <div class="recap-chip"><div class="ic"><svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M21 20v-4"/></svg></div><span>Roster</span></div>
+    <div class="recap-chip"><div class="ic"><svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8.5a7 7 0 0 1 10 0M4.5 6a10.5 10.5 0 0 1 15 0M9.3 11a3.5 3.5 0 0 1 5.4 0"/><path d="M12 12.5v2c0 2.5-1 4-2.5 5.5"/></svg></div><span>Device Integration</span></div>
+    <div class="recap-chip"><div class="ic"><svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.6-3 7.8-7 9-4-1.2-7-4.4-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div><span>Access Config</span></div>
+  </div>
+  <div class="slide-index">11 / 12</div>
+</section>
+
+<!-- SLIDE 12: CLOSING -->
+<section class="slide" id="s12" data-theme="light">
+  <div class="eyebrow">NEXT STEPS</div>
+  <h2 class="section-title">Let's move forward together.</h2>
+  <div class="steps-grid">
+    <div class="step-card"><div class="n">01</div><h4>Confirm scope</h4><p>Align on attendance, leave, payroll, roster, device & access setup for your 40+ person team.</p></div>
+    <div class="step-card"><div class="n">02</div><h4>Configuration</h4><p>We set up your org structure, policies, and connect your fingerprint device.</p></div>
+    <div class="step-card"><div class="n">03</div><h4>Go live</h4><p>Onboard employees on web & mobile, and run a guided first payroll cycle.</p></div>
+  </div>
+  <div class="closing-footer">
+    <div class="partner-lockup">
+      <img src="assets/shomvob_logo.png" class="shom" alt="Shomvob HR">
+      <span class="x">×</span>
+      <div class="taza-badge"><img src="assets/taza_logo.png" alt="Taza Hair Oil"></div>
+    </div>
+    <p class="tagline">Built to help Bangladesh's frontline workforce thrive.</p>
+  </div>
+  <div class="slide-index">12 / 12</div>
+</section>
+
+<script>
+  // Populate marquee
+  const clients = ["Aarong","Artnature Bangladesh","Chillox","Domino's Pizza","foodpanda","MH Global Group","Pathao Food","ShopUp","Singer Bangladesh"];
+  const track = document.getElementById('marqueeTrack');
+  if(track){
+    const build = () => clients.map(c => `<span class="client-chip">${c}</span>`).join('');
+    track.innerHTML = build() + build();
+  }
+
+  // Build dot nav
+  const sections = Array.from(document.querySelectorAll('section.slide'));
+  const dotnav = document.getElementById('dotnav');
+  sections.forEach((s,i)=>{
+    const b = document.createElement('button');
+    b.setAttribute('aria-label', 'Go to slide '+(i+1));
+    b.addEventListener('click', ()=> s.scrollIntoView({behavior:'smooth'}));
+    dotnav.appendChild(b);
+  });
+  const dots = Array.from(dotnav.children);
+
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const idx = sections.indexOf(e.target);
+        dots.forEach(d=>d.classList.remove('active'));
+        dots[idx].classList.add('active');
+        document.body.classList.toggle('theme-dark', e.target.dataset.theme === 'dark');
+        document.body.classList.toggle('theme-light', e.target.dataset.theme !== 'dark');
+      }
+    });
+  }, { threshold: 0.6 });
+  sections.forEach(s=>io.observe(s));
+</script>
+
+</body>
+</html>

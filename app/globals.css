@@ -10,6 +10,9 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-wheel_dark1: #182837;
+  --color-wheel_dark2: #203344;
+  --color-wheel_accent: #28a7ce;
 }
 
 @media (prefers-color-scheme: dark) {

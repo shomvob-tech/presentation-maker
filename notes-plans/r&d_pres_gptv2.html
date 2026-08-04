@@ -1,0 +1,2991 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shomvob × Taza Hair Oil</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   SHOMVOB × TAZA — PREMIUM PRESENTATION SYSTEM
+   ============================================================ */
+
+:root{
+  --green-950:#06140D;
+  --green-900:#092117;
+  --green-850:#0D2A1C;
+  --green-800:#123722;
+  --green-700:#1B4B2E;
+
+  --lime:#D9F53A;
+  --lime-soft:#B9D52F;
+  --leaf:#68B947;
+
+  --white:#FFFFFF;
+  --offwhite:#F7F9F4;
+  --paper:#F1F5EE;
+
+  --ink:#0B1912;
+  --muted:#65746C;
+  --muted-dark:#A1B5A9;
+
+  --line:#DCE5DC;
+  --line-dark:rgba(255,255,255,.11);
+
+  --display:"Bricolage Grotesque",sans-serif;
+  --body:"Inter",sans-serif;
+  --mono:"DM Mono",monospace;
+
+  --radius:24px;
+}
+
+/* ---------- RESET ---------- */
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-snap-type:y mandatory;
+  scroll-behavior:smooth;
+  background:var(--green-950);
+}
+
+body{
+  font-family:var(--body);
+  color:var(--ink);
+  background:var(--green-950);
+  overflow-x:hidden;
+}
+
+::selection{
+  background:var(--lime);
+  color:var(--green-950);
+}
+
+img{
+  max-width:100%;
+}
+
+button{
+  font:inherit;
+}
+
+/* ============================================================
+   SLIDE CANVAS
+   ============================================================ */
+
+section.slide{
+  width:100%;
+  min-height:100svh;
+  height:100svh;
+  position:relative;
+  overflow:hidden;
+
+  scroll-snap-align:start;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+
+  padding:6vh 7vw;
+}
+
+.dark{
+  background:
+    radial-gradient(circle at 82% 15%,rgba(104,185,71,.10),transparent 28%),
+    radial-gradient(circle at 15% 90%,rgba(217,245,58,.05),transparent 25%),
+    var(--green-950);
+  color:var(--white);
+}
+
+.tint{
+  background:var(--paper);
+}
+
+.light{
+  background:var(--white);
+}
+
+/* Presentation viewport for desktop */
+@media(min-width:1000px){
+  section.slide{
+    min-height:100vh;
+    height:100vh;
+  }
+}
+
+/* ============================================================
+   BACKGROUND SYSTEM
+   ============================================================ */
+
+.grid-bg{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.045;
+
+  background-image:
+    linear-gradient(rgba(255,255,255,.8) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.8) 1px,transparent 1px);
+
+  background-size:80px 80px;
+
+  mask-image:linear-gradient(
+    90deg,
+    transparent,
+    black 20%,
+    black 80%,
+    transparent
+  );
+}
+
+.dark .grid-bg{
+  display:block;
+}
+
+.paper-grid{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.035;
+
+  background-image:
+    linear-gradient(var(--green-900) 1px,transparent 1px),
+    linear-gradient(90deg,var(--green-900) 1px,transparent 1px);
+
+  background-size:80px 80px;
+}
+
+/* glowing decorative orb */
+
+.orb{
+  position:absolute;
+  width:34vw;
+  height:34vw;
+  border-radius:50%;
+  background:radial-gradient(
+    circle,
+    rgba(217,245,58,.13),
+    rgba(104,185,71,.04) 40%,
+    transparent 70%
+  );
+  pointer-events:none;
+  filter:blur(10px);
+}
+
+.orb.one{
+  top:-15vw;
+  right:-8vw;
+}
+
+.orb.two{
+  bottom:-20vw;
+  left:-12vw;
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+
+.topnav{
+  position:fixed;
+  z-index:100;
+  top:0;
+  left:0;
+  right:0;
+
+  height:72px;
+
+  padding:0 3.5vw;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  pointer-events:none;
+
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+
+  color:white;
+
+  mix-blend-mode:normal;
+}
+
+.topnav::after{
+  content:"";
+  position:absolute;
+  left:3.5vw;
+  right:3.5vw;
+  bottom:0;
+  height:1px;
+  background:rgba(255,255,255,.09);
+}
+
+.topnav .brand{
+  display:flex;
+  align-items:center;
+}
+
+.topnav img{
+  width:auto;
+  height:19px;
+}
+
+.topnav .for{
+  opacity:.55;
+}
+
+/* ============================================================
+   DOT NAV
+   ============================================================ */
+
+.dotnav{
+  position:fixed;
+  z-index:100;
+
+  right:2.3vw;
+  top:50%;
+  transform:translateY(-50%);
+
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.dotnav button{
+  width:5px;
+  height:5px;
+
+  border:0;
+  border-radius:50%;
+
+  background:rgba(255,255,255,.25);
+
+  cursor:pointer;
+
+  transition:
+    transform .3s ease,
+    background .3s ease;
+}
+
+.dotnav button.active{
+  transform:scale(2);
+  background:var(--lime);
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+
+h1,
+h2,
+h3,
+h4{
+  font-family:var(--display);
+}
+
+h1,
+h2,
+h3{
+  line-height:.94;
+  letter-spacing:-.045em;
+}
+
+.eyebrow{
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  margin-bottom:20px;
+
+  font-family:var(--mono);
+  font-size:10px;
+  line-height:1;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+
+  color:var(--leaf);
+}
+
+.dark .eyebrow{
+  color:var(--lime);
+}
+
+.eyebrow::before{
+  content:"";
+
+  width:24px;
+  height:1px;
+
+  background:currentColor;
+}
+
+.section-title{
+  font-size:clamp(42px,5vw,78px);
+  max-width:900px;
+}
+
+.section-body{
+  margin-top:22px;
+
+  max-width:600px;
+
+  color:var(--muted);
+
+  font-size:16px;
+  line-height:1.65;
+}
+
+.dark .section-body{
+  color:var(--muted-dark);
+}
+
+.highlight{
+  color:var(--lime);
+}
+
+/* ============================================================
+   SLIDE NUMBER
+   ============================================================ */
+
+.slide-index{
+  position:absolute;
+  right:7vw;
+  bottom:5vh;
+
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.1em;
+
+  color:var(--muted);
+}
+
+.dark .slide-index{
+  color:rgba(255,255,255,.4);
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.hero{
+  justify-content:center !important;
+}
+
+.hero-copy{
+  position:relative;
+  z-index:2;
+  max-width:820px;
+}
+
+.hero-title{
+  font-size:clamp(70px,9.5vw,150px);
+  max-width:1000px;
+}
+
+.hero-title .outline{
+  color:transparent;
+  -webkit-text-stroke:1px rgba(255,255,255,.42);
+}
+
+.hero-title .lime{
+  color:var(--lime);
+}
+
+.hero-sub{
+  margin-top:30px;
+
+  max-width:650px;
+
+  font-size:17px;
+  line-height:1.65;
+
+  color:var(--muted-dark);
+}
+
+.hero-lockup{
+  margin-top:45px;
+
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+.hero-lockup .logo{
+  height:24px;
+  width:auto;
+}
+
+.hero-lockup .cross{
+  color:rgba(255,255,255,.35);
+  font-size:22px;
+}
+
+.taza-name{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.14em;
+  color:rgba(255,255,255,.62);
+}
+
+/* hero graphic */
+
+.hero-graphic{
+  position:absolute;
+
+  right:-3vw;
+  top:50%;
+  transform:translateY(-50%);
+
+  width:52vw;
+  height:72vh;
+
+  opacity:.9;
+}
+
+.hero-ring{
+  position:absolute;
+
+  border:1px solid rgba(217,245,58,.18);
+
+  border-radius:50%;
+}
+
+.hero-ring.r1{
+  width:38vw;
+  height:38vw;
+
+  right:0;
+  top:7vh;
+}
+
+.hero-ring.r2{
+  width:29vw;
+  height:29vw;
+
+  right:4.5vw;
+  top:11.5vh;
+
+  border-color:rgba(104,185,71,.2);
+}
+
+.hero-ring.r3{
+  width:19vw;
+  height:19vw;
+
+  right:9.5vw;
+  top:16.5vh;
+
+  border-color:rgba(255,255,255,.12);
+}
+
+.hero-core{
+  position:absolute;
+
+  width:120px;
+  height:120px;
+
+  right:calc(4.5vw + 11.5vw);
+  top:calc(11.5vh + 11.5vw);
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      var(--lime),
+      var(--leaf) 35%,
+      var(--green-800) 72%
+    );
+
+  box-shadow:
+    0 0 100px rgba(217,245,58,.14),
+    inset 0 0 30px rgba(255,255,255,.15);
+}
+
+.hero-metric{
+  position:absolute;
+
+  right:2vw;
+  bottom:8vh;
+
+  padding:18px 22px;
+
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;
+
+  background:rgba(255,255,255,.035);
+  backdrop-filter:blur(16px);
+}
+
+.hero-metric strong{
+  display:block;
+
+  font-family:var(--display);
+  font-size:40px;
+  letter-spacing:-.05em;
+
+  color:var(--lime);
+}
+
+.hero-metric span{
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+
+  color:rgba(255,255,255,.48);
+}
+
+/* ============================================================
+   ABOUT
+   ============================================================ */
+
+.about-layout{
+  display:grid;
+  grid-template-columns:1.05fr .95fr;
+  gap:7vw;
+
+  margin-top:45px;
+
+  align-items:center;
+}
+
+.about-copy{
+  max-width:620px;
+}
+
+.strengths{
+  list-style:none;
+
+  margin-top:35px;
+
+  display:grid;
+  gap:20px;
+}
+
+.strengths li{
+  display:flex;
+  gap:15px;
+}
+
+.strengths .mark{
+  flex:none;
+
+  width:30px;
+  height:30px;
+
+  border-radius:9px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:#EEF5E9;
+}
+
+.strengths .mark svg{
+  width:14px;
+  height:14px;
+
+  stroke:var(--leaf);
+}
+
+.strengths h4{
+  margin-bottom:4px;
+
+  font-size:15px;
+  font-weight:600;
+}
+
+.strengths p{
+  color:var(--muted);
+
+  font-size:13px;
+  line-height:1.5;
+}
+
+/* stats */
+
+.stats-col{
+  position:relative;
+  overflow:hidden;
+
+  padding:35px;
+
+  border-radius:var(--radius);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.07),
+      rgba(255,255,255,.025)
+    ),
+    var(--green-900);
+
+  border:1px solid var(--line-dark);
+
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.16);
+}
+
+.stats-col::before{
+  content:"";
+
+  position:absolute;
+
+  width:240px;
+  height:240px;
+
+  right:-100px;
+  top:-120px;
+
+  border-radius:50%;
+
+  background:rgba(217,245,58,.08);
+
+  filter:blur(20px);
+}
+
+.stat{
+  position:relative;
+
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+
+  padding:18px 0;
+
+  border-bottom:1px solid var(--line-dark);
+}
+
+.stat:last-child{
+  border-bottom:0;
+}
+
+.stat .num{
+  font-family:var(--display);
+
+  font-size:clamp(30px,3vw,46px);
+
+  line-height:1;
+
+  letter-spacing:-.05em;
+
+  color:var(--lime);
+}
+
+.stat .label{
+  max-width:150px;
+
+  text-align:right;
+
+  color:var(--muted-dark);
+
+  font-size:11px;
+  line-height:1.4;
+}
+
+/* ============================================================
+   TRUST
+   ============================================================ */
+
+.trust-layout{
+  position:relative;
+  z-index:2;
+}
+
+.client-wall{
+  display:flex;
+  flex-wrap:wrap;
+
+  max-width:1000px;
+
+  margin-top:65px;
+
+  gap:12px;
+}
+
+.client-chip{
+  padding:15px 20px;
+
+  border:1px solid rgba(255,255,255,.10);
+
+  border-radius:100px;
+
+  background:rgba(255,255,255,.025);
+
+  color:rgba(255,255,255,.62);
+
+  font-family:var(--display);
+
+  font-size:18px;
+
+  transition:.25s ease;
+}
+
+.client-chip:hover{
+  color:white;
+  border-color:rgba(217,245,58,.4);
+  transform:translateY(-2px);
+}
+
+.trust-footer{
+  margin-top:60px;
+
+  display:flex;
+  gap:50px;
+  flex-wrap:wrap;
+}
+
+.trust-stat span{
+  display:block;
+
+  margin-bottom:7px;
+
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+
+  color:rgba(255,255,255,.35);
+}
+
+.trust-stat strong{
+  font-family:var(--display);
+
+  font-size:20px;
+
+  font-weight:500;
+
+  color:white;
+}
+
+/* ============================================================
+   TAZA REQUIREMENTS
+   ============================================================ */
+
+.requirements{
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  margin-top:45px;
+
+  border-top:1px solid var(--line);
+}
+
+.requirement{
+  display:grid;
+
+  grid-template-columns:55px 1fr auto;
+
+  gap:15px;
+
+  align-items:center;
+
+  padding:22px 15px;
+
+  border-bottom:1px solid var(--line);
+
+  transition:.25s ease;
+}
+
+.requirement:hover{
+  background:#F7FAF5;
+}
+
+.requirement:nth-child(odd){
+  border-right:1px solid var(--line);
+}
+
+.requirement .num{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--leaf);
+}
+
+.requirement h4{
+  font-family:var(--body);
+  font-size:15px;
+  font-weight:600;
+}
+
+.requirement p{
+  margin-top:3px;
+
+  color:var(--muted);
+
+  font-size:11px;
+}
+
+.priority{
+  padding:6px 9px;
+
+  border-radius:100px;
+
+  background:#E8F6C5;
+
+  color:#527118;
+
+  font-family:var(--mono);
+
+  font-size:8px;
+
+  letter-spacing:.08em;
+
+  text-transform:uppercase;
+
+  white-space:nowrap;
+}
+
+/* ============================================================
+   MODULE SLIDES — MAJOR REDESIGN
+   ============================================================ */
+
+.module{
+  padding:0 !important;
+}
+
+.module-wrap{
+  display:grid;
+
+  grid-template-columns:40% 60%;
+
+  width:100%;
+  height:100%;
+}
+
+.module.mirror .module-wrap{
+  grid-template-columns:60% 40%;
+}
+
+.module.mirror .module-panel{
+  order:2;
+}
+
+.module.mirror .module-content{
+  order:1;
+}
+
+/* left panel */
+
+.module-panel{
+  position:relative;
+  overflow:hidden;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+
+  padding:7vh 6vw;
+
+  background:
+    radial-gradient(
+      circle at 70% 20%,
+      rgba(217,245,58,.08),
+      transparent 35%
+    ),
+    var(--green-900);
+}
+
+.module-panel::after{
+  content:"";
+
+  position:absolute;
+
+  width:1px;
+  height:65%;
+
+  right:0;
+  top:17.5%;
+
+  background:linear-gradient(
+    transparent,
+    rgba(217,245,58,.3),
+    transparent
+  );
+}
+
+.module-tag{
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  margin-bottom:30px;
+
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.14em;
+
+  color:var(--lime);
+}
+
+.module-icon{
+  width:60px;
+  height:60px;
+
+  margin-bottom:25px;
+
+  border-radius:18px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:rgba(217,245,58,.08);
+
+  border:1px solid rgba(217,245,58,.22);
+}
+
+.module-icon svg{
+  width:27px;
+  height:27px;
+
+  stroke:var(--lime);
+}
+
+.module-panel h3{
+  position:relative;
+  z-index:2;
+
+  font-size:clamp(46px,5vw,78px);
+
+  max-width:500px;
+}
+
+.module-panel .desc{
+  position:relative;
+  z-index:2;
+
+  margin-top:25px;
+
+  max-width:430px;
+
+  color:var(--muted-dark);
+
+  font-size:14px;
+  line-height:1.65;
+}
+
+/* content */
+
+.module-content{
+  position:relative;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+
+  padding:6vh 6vw;
+
+  background:var(--white);
+}
+
+.module-content::before{
+  content:"SOLUTION";
+
+  position:absolute;
+
+  top:8vh;
+  right:6vw;
+
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.15em;
+
+  color:#B8C3BB;
+}
+
+.module-feat-label{
+  margin-bottom:18px;
+
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.15em;
+
+  color:var(--leaf);
+}
+
+.module-features{
+  list-style:none;
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  column-gap:35px;
+}
+
+.module-features li{
+  min-height:70px;
+
+  display:flex;
+  gap:12px;
+
+  padding:15px 0;
+
+  border-top:1px solid var(--line);
+}
+
+.module-features .tick{
+  flex:none;
+
+  width:22px;
+  height:22px;
+
+  margin-top:2px;
+
+  border-radius:7px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:#EDF5E8;
+}
+
+.module-features .tick svg{
+  width:12px;
+  height:12px;
+
+  stroke:var(--leaf);
+}
+
+.module-features span.txt{
+  font-size:12px;
+  line-height:1.55;
+
+  color:var(--ink);
+}
+
+/* help callout */
+
+.module-help{
+  position:relative;
+
+  margin-top:30px;
+
+  padding:22px 24px;
+
+  border-radius:16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #F0F7EA,
+      #F8FAF7
+    );
+
+  border:1px solid #E0E9DE;
+
+  display:flex;
+
+  gap:20px;
+}
+
+.module-help::before{
+  content:"";
+
+  position:absolute;
+
+  left:0;
+  top:15px;
+  bottom:15px;
+
+  width:3px;
+
+  border-radius:5px;
+
+  background:var(--lime);
+}
+
+.module-help .lbl{
+  padding-left:5px;
+
+  flex:none;
+
+  font-family:var(--mono);
+
+  font-size:8px;
+
+  letter-spacing:.1em;
+
+  line-height:1.5;
+
+  color:var(--leaf);
+}
+
+.module-help p{
+  font-size:12px;
+
+  line-height:1.55;
+
+  color:#26352D;
+}
+
+/* ============================================================
+   ATTENDANCE / PAYROLL EMPHASIS
+   ============================================================ */
+
+.module.priority-module .module-panel{
+  background:
+    radial-gradient(
+      circle at 75% 35%,
+      rgba(217,245,58,.15),
+      transparent 34%
+    ),
+    var(--green-900);
+}
+
+.priority-module .module-panel h3{
+  font-size:clamp(55px,6vw,92px);
+}
+
+/* ============================================================
+   FIT / LIMITATIONS
+   ============================================================ */
+
+.fit-layout{
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:25px;
+
+  margin-top:45px;
+}
+
+.fit-card{
+  padding:30px;
+
+  border-radius:20px;
+
+  border:1px solid var(--line);
+}
+
+.fit-card.good{
+  background:#F3F8EF;
+  border-color:#DCEBD5;
+}
+
+.fit-card.limit{
+  background:#FAF8F2;
+  border-color:#ECE4CC;
+}
+
+.fit-card .fit-label{
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.14em;
+
+  color:var(--leaf);
+
+  margin-bottom:20px;
+}
+
+.fit-card.limit .fit-label{
+  color:#9C7B36;
+}
+
+.fit-card h3{
+  font-size:32px;
+  margin-bottom:25px;
+}
+
+.fit-list{
+  list-style:none;
+
+  display:grid;
+  gap:14px;
+}
+
+.fit-list li{
+  display:flex;
+  gap:12px;
+
+  font-size:13px;
+  line-height:1.5;
+}
+
+.fit-list li::before{
+  content:"";
+
+  flex:none;
+
+  width:8px;
+  height:8px;
+
+  margin-top:5px;
+
+  border-radius:50%;
+
+  background:var(--leaf);
+}
+
+.limit .fit-list li::before{
+  background:#C6A65D;
+}
+
+.device-note{
+  margin-top:25px;
+
+  padding:18px 20px;
+
+  border-radius:14px;
+
+  background:var(--green-900);
+
+  color:white;
+
+  font-size:12px;
+  line-height:1.5;
+}
+
+.device-note strong{
+  color:var(--lime);
+}
+
+/* ============================================================
+   FULL PICTURE
+   ============================================================ */
+
+.recap-layout{
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:60px;
+
+  margin-top:50px;
+
+  align-items:center;
+}
+
+.recap-copy p{
+  margin-top:22px;
+
+  max-width:470px;
+
+  color:var(--muted-dark);
+
+  font-size:15px;
+  line-height:1.65;
+}
+
+.recap-grid{
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:10px;
+}
+
+.recap-chip{
+  min-height:110px;
+
+  padding:20px;
+
+  border-radius:16px;
+
+  background:rgba(255,255,255,.045);
+
+  border:1px solid rgba(255,255,255,.09);
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:space-between;
+
+  transition:.25s ease;
+}
+
+.recap-chip:hover{
+  transform:translateY(-3px);
+
+  border-color:rgba(217,245,58,.35);
+}
+
+.recap-chip .ic{
+  width:30px;
+  height:30px;
+
+  border-radius:9px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:rgba(217,245,58,.09);
+}
+
+.recap-chip .ic svg{
+  width:15px;
+  height:15px;
+
+  stroke:var(--lime);
+}
+
+.recap-chip span{
+  font-family:var(--display);
+
+  font-size:16px;
+
+  color:white;
+}
+
+/* ============================================================
+   CLOSING
+   ============================================================ */
+
+.closing{
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(104,185,71,.09),
+      transparent 40%
+    ),
+    var(--paper);
+}
+
+.closing-inner{
+  max-width:1100px;
+}
+
+.steps-grid{
+  display:grid;
+
+  grid-template-columns:repeat(3,1fr);
+
+  gap:12px;
+
+  margin-top:45px;
+}
+
+.step-card{
+  position:relative;
+
+  padding:28px;
+
+  min-height:190px;
+
+  border-radius:20px;
+
+  background:white;
+
+  border:1px solid var(--line);
+
+  overflow:hidden;
+}
+
+.step-card::after{
+  content:"";
+
+  position:absolute;
+
+  right:-30px;
+  bottom:-45px;
+
+  width:120px;
+  height:120px;
+
+  border-radius:50%;
+
+  background:#EFF7E8;
+}
+
+.step-card .n{
+  font-family:var(--mono);
+
+  font-size:10px;
+
+  color:var(--leaf);
+
+  letter-spacing:.1em;
+
+  margin-bottom:35px;
+}
+
+.step-card h4{
+  font-family:var(--display);
+
+  font-size:22px;
+
+  letter-spacing:-.02em;
+
+  margin-bottom:8px;
+}
+
+.step-card p{
+  max-width:240px;
+
+  color:var(--muted);
+
+  font-size:12px;
+
+  line-height:1.55;
+}
+
+.closing-footer{
+  margin-top:45px;
+
+  padding-top:25px;
+
+  border-top:1px solid var(--line);
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:20px;
+}
+
+.partner-lockup{
+  display:flex;
+
+  align-items:center;
+
+  gap:15px;
+}
+
+.partner-lockup .shom{
+  height:22px;
+}
+
+.partner-lockup .x{
+  color:#AEB8B1;
+}
+
+.taza-badge{
+  height:30px;
+
+  padding:5px 10px;
+
+  border:1px solid var(--line);
+
+  border-radius:8px;
+
+  background:white;
+}
+
+.taza-badge img{
+  height:100%;
+
+  width:auto;
+
+  mix-blend-mode:multiply;
+}
+
+.tagline{
+  color:var(--muted);
+
+  font-size:11px;
+}
+
+/* ============================================================
+   SCROLL CUE
+   ============================================================ */
+
+.scrollcue{
+  position:absolute;
+
+  bottom:5vh;
+  left:7vw;
+
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.15em;
+
+  color:rgba(255,255,255,.4);
+}
+
+.scrollcue .line{
+  width:30px;
+  height:1px;
+
+  background:var(--lime);
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media(max-width:900px){
+
+  section.slide{
+    min-height:auto;
+    height:auto;
+
+    padding:90px 7vw;
+  }
+
+  .topnav .for{
+    display:none;
+  }
+
+  .hero-title{
+    font-size:18vw;
+  }
+
+  .hero-graphic{
+    opacity:.35;
+    right:-25vw;
+  }
+
+  .about-layout,
+  .recap-layout,
+  .fit-layout{
+    grid-template-columns:1fr;
+  }
+
+  .requirements{
+    grid-template-columns:1fr;
+  }
+
+  .requirement:nth-child(odd){
+    border-right:0;
+  }
+
+  .module-wrap,
+  .module.mirror .module-wrap{
+    display:block;
+    height:auto;
+  }
+
+  .module-panel,
+  .module-content{
+    padding:80px 7vw;
+  }
+
+  .module-panel{
+    min-height:55vh;
+  }
+
+  .module-content{
+    min-height:60vh;
+  }
+
+  .module-features{
+    grid-template-columns:1fr;
+  }
+
+  .steps-grid{
+    grid-template-columns:1fr;
+  }
+
+  .recap-grid{
+    grid-template-columns:1fr;
+  }
+
+  .dotnav{
+    display:none;
+  }
+
+  .closing-footer{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+}
+
+/* ============================================================
+   PDF / PRINT
+   ============================================================ */
+
+@media print{
+
+  @page{
+    size:16in 9in;
+    margin:0;
+  }
+
+  html,
+  body{
+    background:white;
+  }
+
+  section.slide{
+    width:16in;
+    height:9in;
+    min-height:9in;
+
+    page-break-after:always;
+    break-after:page;
+
+    scroll-snap-align:none;
+  }
+
+  .topnav,
+  .dotnav,
+  .scrollcue{
+    display:none !important;
+  }
+
+  *{
+    animation:none !important;
+    transition:none !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============================================================
+     NAV
+     ============================================================ -->
+
+<nav class="topnav">
+  <div class="brand">
+    <img src="assets/shomvob_logo.png" alt="Shomvob HR">
+  </div>
+
+  <div class="for">
+    Prepared for Taza Hair Oil
+  </div>
+</nav>
+
+<div class="dotnav" id="dotnav"></div>
+
+
+<!-- ============================================================
+     01 — HERO
+     ============================================================ -->
+
+<section class="slide dark hero" id="s1" data-theme="dark">
+
+  <div class="grid-bg"></div>
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+
+  <div class="hero-copy">
+
+    <div class="eyebrow">
+      Meeting recap
+    </div>
+
+    <h1 class="hero-title">
+      Your people.<br>
+      <span class="outline">One</span>
+      <span class="lime">system.</span>
+    </h1>
+
+    <p class="hero-sub">
+      A focused look at how Shomvob HR can bring Taza Hair Oil's
+      attendance, leave, payroll, roster, device integration and
+      access requirements into one connected workflow.
+    </p>
+
+    <div class="hero-lockup">
+
+      <img
+        src="assets/shomvob_logo.png"
+        class="logo"
+        alt="Shomvob HR"
+      >
+
+      <span class="cross">×</span>
+
+      <span class="taza-name">
+        TAZA HAIR OIL
+      </span>
+
+    </div>
+
+  </div>
+
+  <div class="hero-graphic">
+    <div class="hero-ring r1"></div>
+    <div class="hero-ring r2"></div>
+    <div class="hero-ring r3"></div>
+
+    <div class="hero-core"></div>
+
+    <div class="hero-metric">
+      <strong>40+</strong>
+      <span>Employees</span>
+    </div>
+  </div>
+
+  <div class="scrollcue">
+    <div class="line"></div>
+    Explore
+  </div>
+
+  <div class="slide-index">01 / 13</div>
+
+</section>
+
+
+<!-- ============================================================
+     02 — ABOUT
+     ============================================================ -->
+
+<section class="slide light" id="s2" data-theme="light">
+
+  <div class="paper-grid"></div>
+
+  <div class="eyebrow">
+    About Shomvob
+  </div>
+
+  <h2 class="section-title">
+    Built from real<br>
+    workforce experience.
+  </h2>
+
+  <div class="about-layout">
+
+    <div class="about-copy">
+
+      <p class="section-body">
+        Shomvob brings hiring, workforce management and payroll
+        into one connected ecosystem — shaped by hands-on
+        experience solving manpower and operations challenges
+        across 1,500+ companies in Bangladesh.
+      </p>
+
+      <ul class="strengths">
+
+        <li>
+          <div class="mark">
+            <svg viewBox="0 0 24 24" fill="none"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="4 12 10 18 20 6"/>
+            </svg>
+          </div>
+
+          <div>
+            <h4>Workforce consulting</h4>
+            <p>
+              4+ years solving hiring and manpower challenges
+              across industries.
+            </p>
+          </div>
+        </li>
+
+        <li>
+          <div class="mark">
+            <svg viewBox="0 0 24 24" fill="none"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="4 12 10 18 20 6"/>
+            </svg>
+          </div>
+
+          <div>
+            <h4>Operations at scale</h4>
+            <p>
+              Staffing, bulk hiring, payroll and resource
+              augmentation for growing teams.
+            </p>
+          </div>
+        </li>
+
+        <li>
+          <div class="mark">
+            <svg viewBox="0 0 24 24" fill="none"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="4 12 10 18 20 6"/>
+            </svg>
+          </div>
+
+          <div>
+            <h4>Insight turned into product</h4>
+            <p>
+              Real experience with 1,500+ companies shaped
+              the Shomvob platform.
+            </p>
+          </div>
+        </li>
+
+      </ul>
+
+    </div>
+
+
+    <div class="stats-col">
+
+      <div class="stat">
+        <span class="num">1,500+</span>
+        <span class="label">Clients across industries</span>
+      </div>
+
+      <div class="stat">
+        <span class="num">4+</span>
+        <span class="label">Years of workforce experience</span>
+      </div>
+
+      <div class="stat">
+        <span class="num">30,000+</span>
+        <span class="label">Job seekers placed</span>
+      </div>
+
+      <div class="stat">
+        <span class="num">98%+</span>
+        <span class="label">Platform availability</span>
+      </div>
+
+      <div class="stat">
+        <span class="num">100%</span>
+        <span class="label">Payroll execution reliability</span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="slide-index">02 / 13</div>
+
+</section>
+
+
+<!-- ============================================================
+     03 — TRUST
+     ============================================================ -->
+
+<section class="slide dark" id="s3" data-theme="dark">
+
+  <div class="grid-bg"></div>
+  <div class="orb one"></div>
+
+  <div class="trust-layout">
+
+    <div class="eyebrow">
+      Trusted across Bangladesh
+    </div>
+
+    <h2 class="section-title">
+      Real partnerships.<br>
+      Real operating experience.
+    </h2>
+
+    <div class="client-wall">
+
+      <span class="client-chip">Aarong</span>
+      <span class="client-chip">Artnature Bangladesh</span>
+      <span class="client-chip">Chillox</span>
+      <span class="client-chip">Domino's Pizza</span>
+      <span class="client-chip">foodpanda</span>
+      <span class="client-chip">MH Global Group</span>
+      <span class="client-chip">Pathao Food</span>
+      <span class="client-chip">ShopUp</span>
+      <span class="client-chip">Singer Bangladesh</span>
+
+    </div>
+
+    <div class="trust-footer">
+
+      <div class="trust-stat">
+        <span>Recognized by</span>
+        <strong>Gates Foundation</strong>
+      </div>
+
+      <div class="trust-stat">
+        <span>Recognized by</span>
+        <strong>Cocoon</strong>
+      </div>
+
+      <div class="trust-stat">
+        <span>Recognition</span>
+        <strong>Forbes Asia 100 to Watch</strong>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="slide-index">03 / 13</div>
+
+</section>
+
+
+<!-- ============================================================
+     04 — WHAT WE HEARD
+     ============================================================ -->
+
+<section class="slide light" id="s4" data-theme="light">
+
+  <div class="paper-grid"></div>
+
+  <div class="eyebrow">
+    From our conversation
+  </div>
+
+  <h2 class="section-title">
+    Six requirements.<br>
+    <span class="highlight">One workforce.</span>
+  </h2>
+
+  <p class="section-body">
+    Taza Hair Oil has 40+ employees, with a mix of remote
+    employees and onsite employees using a fingerprint device.
+  </p>
+
+  <div class="requirements">
+
+    <div class="requirement">
+      <span class="num">01</span>
+
+      <div>
+        <h4>Attendance</h4>
+        <p>Reliable tracking across remote and onsite employees</p>
+      </div>
+
+      <span class="priority">Top priority</span>
+    </div>
+
+    <div class="requirement">
+      <span class="num">02</span>
+
+      <div>
+        <h4>Leave</h4>
+        <p>Clear, policy-driven leave management</p>
+      </div>
+    </div>
+
+    <div class="requirement">
+      <span class="num">03</span>
+
+      <div>
+        <h4>Payroll</h4>
+        <p>Accurate and efficient salary processing</p>
+      </div>
+
+      <span class="priority">Top priority</span>
+    </div>
+
+    <div class="requirement">
+      <span class="num">04</span>
+
+      <div>
+        <h4>Roster</h4>
+        <p>Structured scheduling for the workforce</p>
+      </div>
+    </div>
+
+    <div class="requirement">
+      <span class="num">05</span>
+
+      <div>
+        <h4>Device integration</h4>
+        <p>ZK SenseFace 2A fingerprint device</p>
+      </div>
+    </div>
+
+    <div class="requirement">
+      <span class="num">06</span>
+
+      <div>
+        <h4>Access configuration</h4>
+        <p>Controlled access and approval workflows</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="slide-index">04 / 13</div>
+
+</section>
+
+
+<!-- ============================================================
+     05 — ATTENDANCE
+     ============================================================ -->
+
+<section class="slide module priority-module" id="s5" data-theme="dark">
+
+  <div class="module-wrap">
+
+    <div class="module-panel">
+
+      <div class="grid-bg"></div>
+
+      <div class="module-tag">
+        REQUIREMENT 01 / 06
+        <span class="priority">TOP PRIORITY</span>
+      </div>
+
+      <div class="module-icon">
+        <svg viewBox="0 0 24 24"
+          fill="none"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+          <circle cx="9" cy="8" r="3.2"/>
+          <path d="M3.5 20c0-3.3 2.5-6 6-6"/>
+          <polyline points="13 15.5 15.5 18 20 12.5"/>
+        </svg>
+      </div>
+
+      <h3>
+        Attendance
+      </h3>
+
+      <p class="desc">
+        One attendance picture for remote employees,
+        onsite employees and the people managing them.
+      </p>
+
+    </div>
+
+
+    <div class="module-content">
+
+      <div class="module-feat-label">
+        KEY FEATURES
+      </div>
+
+      <ul class="module-features">
+
+        <li>
+          <span class="tick">
+            <svg viewBox="0 0 24 24" fill="none"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="4 12 10 18 20 6"/>
+            </svg>
+          </span>
+          <span class="txt">
+            Mobile check-in / check-out with a live attendance overview
+          </span>
+        </li>
+
+        <li>
+          <span class="tick">
+            <svg viewBox="0 0 24 24" fill="none"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="4 12 10 18 20 6"/>
+            </svg>
+          </span>
+          <span class="txt">
+            Remote attendance history and attendance location mapping
+          </span>
+        </li>
+
+        <li>
+          <span class="tick">
+            <svg viewBox="0 0 24 24" fill="none"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="4 12 10 18 20 6"/>
+            </svg>
+          </span>
+          <span class="txt">
+            Work-from-home requests with approval history
+          </span>
+        </li>
+
+        <li>
+          <span class="tick">
+            <svg viewBox="0 0 24 24" fill="none"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="4 12 10 18 20 6"/>
+            </svg>
+          </span>
+          <span class="txt">
+            Forget-attendance and late-waiver requests
+          </span>
+        </li>
+
+        <li>
+          <span class="tick">
+            <svg viewBox="0 0 24 24" fill="none"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="4 12 10 18 20 6"/>
+            </svg>
+          </span>
+          <span class="txt">
+            Break time tracking and waiver management
+          </span>
+        </li>
+
+        <li>
+          <span class="tick">
+            <svg viewBox="0 0 24 24" fill="none"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="4 12 10 18 20 6"/>
+            </svg>
+          </span>
+          <span class="txt">
+            Attendance reports by date range or month
+          </span>
+        </li>
+
+      </ul>
+
+      <div class="module-help">
+        <span class="lbl">HOW THIS<br>HELPS</span>
+
+        <p>
+          One accurate attendance picture across remote and onsite
+          employees, with self-service requests and approvals on mobile.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="slide-index">05 / 13</div>
+
+</section>
+
+
+<!-- ============================================================
+     06 — LEAVE
+     ============================================================ -->
+
+<section class="slide module mirror" id="s6" data-theme="dark">
+
+  <div class="module-wrap">
+
+    <div class="module-panel">
+
+      <div class="grid-bg"></div>
+
+      <div class="module-tag">
+        REQUIREMENT 02 / 06
+      </div>
+
+      <div class="module-icon">
+        <svg viewBox="0 0 24 24"
+          fill="none"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+          <rect x="3.5" y="5" width="17" height="15" rx="2"/>
+          <path d="M3.5 9.5h17"/>
+          <path d="M8 3v3.4M16 3v3.4"/>
+          <path d="M8.5 13.5l1.8 1.8 3.7-3.7"/>
+        </svg>
+      </div>
+
+      <h3>
+        Leave
+      </h3>
+
+      <p class="desc">
+        A clear, policy-driven system that moves leave
+        requests out of manual back-and-forth.
+      </p>
+
+    </div>
+
+
+    <div class="module-content">
+
+      <div class="module-feat-label">
+        KEY FEATURES
+      </div>
+
+      <ul class="module-features">
+
+        <li><span class="tick">✓</span><span class="txt">Configurable leave policies and leave types</span></li>
+        <li><span class="tick">✓</span><span class="txt">Holiday calendar and weekly leave settings</span></li>
+        <li><span class="tick">✓</span><span class="txt">Bonus leave configuration and attendance bonus ledger</span></li>
+        <li><span class="tick">✓</span><span class="txt">Employees apply for leave from the mobile app</span></li>
+        <li><span class="tick">✓</span><span class="txt">Approval Center for pending and upcoming requests</span></li>
+        <li><span class="tick">✓</span><span class="txt">Leave history reporting</span></li>
+
+      </ul>
+
+      <div class="module-help">
+        <span class="lbl">HOW THIS<br>HELPS</span>
+
+        <p>
+          Employees apply on the go while managers review and approve
+          through a centralized workflow.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="slide-index">06 / 13</div>
+
+</section>
+
+
+<!-- ============================================================
+     07 — PAYROLL
+     ============================================================ -->
+
+<section class="slide module priority-module" id="s7" data-theme="dark">
+
+  <div class="module-wrap">
+
+    <div class="module-panel">
+
+      <div class="grid-bg"></div>
+
+      <div class="module-tag">
+        REQUIREMENT 03 / 06
+        <span class="priority">TOP PRIORITY</span>
+      </div>
+
+      <div class="module-icon">
+        <svg viewBox="0 0 24 24"
+          fill="none"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+          <rect x="2.5" y="6" width="19" height="12" rx="2"/>
+          <circle cx="12" cy="12" r="2.6"/>
+          <path d="M6.5 6v12M17.5 6v12"/>
+        </svg>
+      </div>
+
+      <h3>
+        Payroll
+      </h3>
+
+      <p class="desc">
+        Turn attendance data into a structured payroll process
+        your team can review, run and report.
+      </p>
+
+    </div>
+
+
+    <div class="module-content">
+
+      <div class="module-feat-label">
+        KEY FEATURES
+      </div>
+
+      <ul class="module-features">
+
+        <li><span class="tick">✓</span><span class="txt">Payroll dashboard with drafts, outstanding salary and history</span></li>
+        <li><span class="tick">✓</span><span class="txt">Payslip history accessible to employees</span></li>
+        <li><span class="tick">✓</span><span class="txt">Bonus dashboard and off-cycle bonus</span></li>
+        <li><span class="tick">✓</span><span class="txt">Configurable bonus types and policies</span></li>
+
+        <li>
+          <span class="tick">✓</span>
+          <span class="txt">
+            Payroll report with employee name, bank account name,
+            payable amount and salary month
+          </span>
+        </li>
+
+        <li><span class="tick">✓</span><span class="txt">Mobile quick-access to payroll information</span></li>
+
+      </ul>
+
+      <div class="module-help">
+        <span class="lbl">TAZA FIT</span>
+
+        <p>
+          Your requested four-column payroll report can be provided:
+          <strong>employee name · bank account name · payable amount · salary month</strong>.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="slide-index">07 / 13</div>
+
+</section>
+
+
+<!-- ============================================================
+     08 — ROSTER
+     ============================================================ -->
+
+<section class="slide module mirror" id="s8" data-theme="dark">
+
+  <div class="module-wrap">
+
+    <div class="module-panel">
+
+      <div class="grid-bg"></div>
+
+      <div class="module-tag">
+        REQUIREMENT 04 / 06
+      </div>
+
+      <div class="module-icon">
+        <svg viewBox="0 0 24 24"
+          fill="none"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M4 20V10M10 20V4M16 20v-7M21 20v-4"/>
+        </svg>
+      </div>
+
+      <h3>
+        Roster
+      </h3>
+
+      <p class="desc">
+        Structured scheduling that gives managers visibility
+        into who is working and when.
+      </p>
+
+    </div>
+
+
+    <div class="module-content">
+
+      <div class="module-feat-label">
+        KEY FEATURES
+      </div>
+
+      <ul class="module-features">
+
+        <li><span class="tick">✓</span><span class="txt">Roster schedule builder with capacity overview</span></li>
+        <li><span class="tick">✓</span><span class="txt">Working hours, time slots and weekly patterns</span></li>
+        <li><span class="tick">✓</span><span class="txt">Employee grouping for schedule assignment</span></li>
+        <li><span class="tick">✓</span><span class="txt">Schedules sync with attendance</span></li>
+        <li><span class="tick">✓</span><span class="txt">Manager visibility across scheduled shifts</span></li>
+
+      </ul>
+
+      <div class="module-help">
+        <span class="lbl">HOW THIS<br>HELPS</span>
+
+        <p>
+          Give managers a structured view of schedules while keeping
+          roster information connected to attendance.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="slide-index">08 / 13</div>
+
+</section>
+
+
+<!-- ============================================================
+     09 — DEVICE
+     ============================================================ -->
+
+<section class="slide module" id="s9" data-theme="dark">
+
+  <div class="module-wrap">
+
+    <div class="module-panel">
+
+      <div class="grid-bg"></div>
+
+      <div class="module-tag">
+        REQUIREMENT 05 / 06
+      </div>
+
+      <div class="module-icon">
+        <svg viewBox="0 0 24 24"
+          fill="none"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M7 8.5a7 7 0 0 1 10 0"/>
+          <path d="M4.5 6a10.5 10.5 0 0 1 15 0"/>
+          <path d="M9.3 11a3.5 3.5 0 0 1 5.4 0"/>
+          <path d="M12 12.5v2"/>
+          <path d="M12 12.5c1.4 0 2.3.9 2.3 2.3"/>
+        </svg>
+      </div>
+
+      <h3>
+        Device<br>
+        Integration
+      </h3>
+
+      <p class="desc">
+        Keep the fingerprint workflow your onsite employees
+        already use while bringing its data into the same system.
+      </p>
+
+    </div>
+
+
+    <div class="module-content">
+
+      <div class="module-feat-label">
+        TAZA'S DEVICE
+      </div>
+
+      <div class="device-note">
+        <strong>ZK SenseFace 2A</strong><br>
+        Existing onsite fingerprint attendance device.
+      </div>
+
+      <ul class="module-features" style="margin-top:20px">
+
+        <li><span class="tick">✓</span><span class="txt">Biometric attendance data integration</span></li>
+        <li><span class="tick">✓</span><span class="txt">Onsite device attendance alongside remote check-ins</span></li>
+        <li><span class="tick">✓</span><span class="txt">Unified attendance records</span></li>
+        <li><span class="tick">✓</span><span class="txt">Integration setup support</span></li>
+
+      </ul>
+
+      <div class="module-help">
+        <span class="lbl">HOW THIS<br>HELPS</span>
+
+        <p>
+          Your onsite employees can continue using their existing
+          fingerprint workflow while attendance is consolidated.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="slide-index">09 / 13</div>
+
+</section>
+
+
+<!-- ============================================================
+     10 — ACCESS
+     ============================================================ -->
+
+<section class="slide module mirror" id="s10" data-theme="dark">
+
+  <div class="module-wrap">
+
+    <div class="module-panel">
+
+      <div class="grid-bg"></div>
+
+      <div class="module-tag">
+        REQUIREMENT 06 / 06
+      </div>
+
+      <div class="module-icon">
+        <svg viewBox="0 0 24 24"
+          fill="none"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M12 3l7 3v5c0 4.6-3 7.8-7 9-4-1.2-7-4.4-7-9V6l7-3z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+      </div>
+
+      <h3>
+        Access<br>
+        Configuration
+      </h3>
+
+      <p class="desc">
+        The right people see the right information —
+        with approval structures that reflect your organization.
+      </p>
+
+    </div>
+
+
+    <div class="module-content">
+
+      <div class="module-feat-label">
+        KEY FEATURES
+      </div>
+
+      <ul class="module-features">
+
+        <li><span class="tick">✓</span><span class="txt">Organization structure and locations</span></li>
+        <li><span class="tick">✓</span><span class="txt">Location Builder</span></li>
+        <li><span class="tick">✓</span><span class="txt">Company settings</span></li>
+        <li><span class="tick">✓</span><span class="txt">Configurable approval templates</span></li>
+        <li><span class="tick">✓</span><span class="txt">Role-based access</span></li>
+        <li><span class="tick">✓</span><span class="txt">Centralized Approval Center</span></li>
+
+      </ul>
+
+      <div class="module-help">
+        <span class="lbl">HOW THIS<br>HELPS</span>
+
+        <p>
+          Build a controlled workflow where access and approvals
+          match Taza's organizational structure.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="slide-index">10 / 13</div>
+
+</section>
+
+
+<!-- ============================================================
+     11 — FIT / LIMITATIONS
+     ============================================================ -->
+
+<section class="slide light" id="s11" data-theme="light">
+
+  <div class="paper-grid"></div>
+
+  <div class="eyebrow">
+    Transparent fit
+  </div>
+
+  <h2 class="section-title">
+    What fits today.<br>
+    What needs discussion.
+  </h2>
+
+  <div class="fit-layout">
+
+    <div class="fit-card good">
+
+      <div class="fit-label">
+        SUPPORTED
+      </div>
+
+      <h3>
+        Strong fit
+      </h3>
+
+      <ul class="fit-list">
+
+        <li>
+          Attendance management
+        </li>
+
+        <li>
+          Leave management
+        </li>
+
+        <li>
+          Payroll management
+        </li>
+
+        <li>
+          Four-column payroll report
+        </li>
+
+        <li>
+          Roster and scheduling
+        </li>
+
+        <li>
+          Access configuration
+        </li>
+
+      </ul>
+
+    </div>
+
+
+    <div class="fit-card limit">
+
+      <div class="fit-label">
+        CURRENT LIMITATIONS
+      </div>
+
+      <h3>
+        Three items to note
+      </h3>
+
+      <ul class="fit-list">
+
+        <li>
+          Underwork penalty / deduction is not currently supported.
+        </li>
+
+        <li>
+          Multiple shifts within a single day are not currently supported.
+        </li>
+
+        <li>
+          ZK SenseFace 2A integration should be confirmed during
+          technical setup.
+        </li>
+
+      </ul>
+
+    </div>
+
+  </div>
+
+  <div class="slide-index">11 / 13</div>
+
+</section>
+
+
+<!-- ============================================================
+     12 — FULL PICTURE
+     ============================================================ -->
+
+<section class="slide dark" id="s12" data-theme="dark">
+
+  <div class="grid-bg"></div>
+  <div class="orb two"></div>
+
+  <div class="recap-layout">
+
+    <div class="recap-copy">
+
+      <div class="eyebrow">
+        The full picture
+      </div>
+
+      <h2 class="section-title">
+        From attendance<br>
+        to payroll.
+      </h2>
+
+      <p>
+        The goal isn't another HR tool.
+        It's a connected workforce workflow where attendance,
+        leave, schedules and payroll work from the same foundation.
+      </p>
+
+    </div>
+
+
+    <div class="recap-grid">
+
+      <div class="recap-chip">
+        <div class="ic">01</div>
+        <span>Attendance</span>
+      </div>
+
+      <div class="recap-chip">
+        <div class="ic">02</div>
+        <span>Leave</span>
+      </div>
+
+      <div class="recap-chip">
+        <div class="ic">03</div>
+        <span>Payroll</span>
+      </div>
+
+      <div class="recap-chip">
+        <div class="ic">04</div>
+        <span>Roster</span>
+      </div>
+
+      <div class="recap-chip">
+        <div class="ic">05</div>
+        <span>Device Integration</span>
+      </div>
+
+      <div class="recap-chip">
+        <div class="ic">06</div>
+        <span>Access Configuration</span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="slide-index">12 / 13</div>
+
+</section>
+
+
+<!-- ============================================================
+     13 — CLOSING
+     ============================================================ -->
+
+<section class="slide closing" id="s13" data-theme="light">
+
+  <div class="closing-inner">
+
+    <div class="eyebrow">
+      Next steps
+    </div>
+
+    <h2 class="section-title">
+      Let's turn the<br>
+      conversation into action.
+    </h2>
+
+
+    <div class="steps-grid">
+
+      <div class="step-card">
+
+        <div class="n">
+          01 — CONFIRM
+        </div>
+
+        <h4>
+          Confirm scope
+        </h4>
+
+        <p>
+          Align on attendance, leave, payroll, roster,
+          device integration and access setup.
+        </p>
+
+      </div>
+
+
+      <div class="step-card">
+
+        <div class="n">
+          02 — CONFIGURE
+        </div>
+
+        <h4>
+          Configure
+        </h4>
+
+        <p>
+          Set up organizational structure, policies,
+          workflows and attendance integration.
+        </p>
+
+      </div>
+
+
+      <div class="step-card">
+
+        <div class="n">
+          03 — GO LIVE
+        </div>
+
+        <h4>
+          Go live
+        </h4>
+
+        <p>
+          Bring employees onto the platform and
+          establish the first payroll workflow.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="closing-footer">
+
+      <div class="partner-lockup">
+
+        <img
+          src="assets/shomvob_logo.png"
+          class="shom"
+          alt="Shomvob HR"
+        >
+
+        <span class="x">×</span>
+
+        <div class="taza-badge">
+          <img
+            src="assets/taza_logo.png"
+            alt="Taza Hair Oil"
+          >
+        </div>
+
+      </div>
+
+      <p class="tagline">
+        Shomvob HR × Taza Hair Oil
+      </p>
+
+    </div>
+
+  </div>
+
+  <div class="slide-index">13 / 13</div>
+
+</section>
+
+
+<script>
+
+/* ============================================================
+   DOT NAV
+   ============================================================ */
+
+const sections = [
+  ...document.querySelectorAll("section.slide")
+];
+
+const dotnav = document.getElementById("dotnav");
+
+sections.forEach((section,index)=>{
+
+  const button = document.createElement("button");
+
+  button.setAttribute(
+    "aria-label",
+    `Go to slide ${index + 1}`
+  );
+
+  button.addEventListener("click",()=>{
+
+    section.scrollIntoView({
+      behavior:"smooth"
+    });
+
+  });
+
+  dotnav.appendChild(button);
+
+});
+
+const dots = [
+  ...dotnav.children
+];
+
+
+/* ============================================================
+   ACTIVE SLIDE
+   ============================================================ */
+
+const observer =
+  new IntersectionObserver(
+    entries => {
+
+      entries.forEach(entry => {
+
+        if(!entry.isIntersecting)
+          return;
+
+        const index =
+          sections.indexOf(entry.target);
+
+        dots.forEach(dot =>
+          dot.classList.remove("active")
+        );
+
+        if(dots[index])
+          dots[index].classList.add("active");
+
+      });
+
+    },
+    {
+      threshold:.6
+    }
+  );
+
+
+sections.forEach(section =>
+  observer.observe(section)
+);
+
+
+/* ============================================================
+   KEYBOARD NAVIGATION
+   ============================================================ */
+
+let currentSlide = 0;
+
+function goTo(index){
+
+  index = Math.max(
+    0,
+    Math.min(index,sections.length - 1)
+  );
+
+  currentSlide = index;
+
+  sections[index].scrollIntoView({
+    behavior:"smooth"
+  });
+
+}
+
+window.addEventListener("keydown",event=>{
+
+  if(
+    event.key === "ArrowDown" ||
+    event.key === "PageDown" ||
+    event.key === " "
+  ){
+
+    event.preventDefault();
+
+    goTo(currentSlide + 1);
+
+  }
+
+  if(
+    event.key === "ArrowUp" ||
+    event.key === "PageUp"
+  ){
+
+    event.preventDefault();
+
+    goTo(currentSlide - 1);
+
+  }
+
+});
+
+
+/* ============================================================
+   KEEP CURRENT INDEX IN SYNC
+   ============================================================ */
+
+const indexObserver =
+  new IntersectionObserver(
+    entries => {
+
+      entries.forEach(entry => {
+
+        if(entry.isIntersecting){
+
+          currentSlide =
+            sections.indexOf(entry.target);
+
+        }
+
+      });
+
+    },
+    {
+      threshold:.65
+    }
+  );
+
+sections.forEach(section =>
+  indexObserver.observe(section)
+);
+
+</script>
+
+</body>
+</html>
+```
+

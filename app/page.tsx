@@ -52,10 +52,10 @@ export default function Home() {
             Make new presentation
           </Link>
           <Link
-            href="/300ltd"
+            href="/knowledge"
             className="rounded-xl border border-white/25 px-8 py-4 text-base font-medium text-white/90 transition hover:border-white/50 hover:bg-white/5"
           >
-            View 300 Ltd example
+            View current knowledge base and slide points
           </Link>
         </div>
       </section>

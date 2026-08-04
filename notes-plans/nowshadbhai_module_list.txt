@@ -1,0 +1,118 @@
+Module	Feature 	Platform
+
+Core	Dashboard Overview - Employee Leave, Attendance Overview, Employee Attendance, Employee Onboarding	Web
+Core	Approval Center (pending requests)	Web
+Core	Approver Templates	Web
+Core	Approval Flow Hub	Web
+Core	Settings - Approver Template	Web
+Core	App - Pending Approvals	Mobile App
+Core	App (Quick Access) - Approval	Mobile App
+Core	Org Structure - Levels	Web
+Core	Org Structure - Business Line	Web
+Core	Org Structure - Location Types	Web
+Core	Org Structure - Locations (Location Builder)	Web
+Core	Org Structure - Company Settings	Web
+Core	Org Structure - Approval Center - Transition	Web
+Core	Org Structure - App (Approval Center, Approval) - Transition	Mobile App
+Employees	Manage Employees (All Employees)	Web
+Employees	Add New Employee	Web
+Employees	Bulk Upload Employees	Web
+Employees	Probation Tracking	Web
+Employees	Offboarding Employees	Web
+Employees	Offboarding Settings	Web
+Employees	Manage Line Managers	Web
+Employees	Manage Branch Managers	Web
+Employees	Settings - Employee Settings	Web
+Employees	Reports - Employee Master Report	Web
+Employees	Reports - Department Report	Web
+Employees	App - Profile	Mobile App
+Employees	App - Employee Directory	Mobile App
+Attendance	Attendance Overview	Web
+Attendance	Add Attendance Record	Web
+Attendance	Forget Attendance Requests	Web
+Attendance	Late Waiver Requests	Web
+Attendance	Employee Streak Details	Web
+Attendance	Attendance Location Map	Web
+Attendance	Remote Attendance History	Web
+Attendance	Work From Home - Pending	Web
+Attendance	Work From Home - Current	Web
+Attendance	Work From Home - Upcoming	Web
+Attendance	Work From Home - History	Web
+Attendance	Break Time List	Web
+Attendance	Break Time Waiver	Web
+Attendance	Settings - Attendance Settings	Web
+Attendance	Approval Center - Forget  Attendance, Late Waiver, Remote Attendance, WFH	Web
+Attendance	Schedule Management - Roster - Schedule	Web
+Attendance	Schedule Management - Roster - Capacity Overview	Web
+Attendance	Schedule Management - Roster - Capacity Plan	Web
+Attendance	Schedule Management - Working Hours - Time Slots	Web
+Attendance	Schedule Management - Working Hours - Patterns	Web
+Attendance	Schedule Management - Working Hours - Week Setup	Web
+Attendance	Schedule Management - Groups	Web
+Attendance	Attendance, WFH Approval Flow	Web
+Attendance	Reports - Attendance Report (Date Range)	Web
+Attendance	Reports - Attendance Report (Monthly)	Web
+Attendance	App - Check in / Check Out	Mobile App
+Attendance	App - Break Time	Mobile App
+Attendance	App (Quick Access) - Attendance	Mobile App
+Attendance	App (Quick Access) - WFH	Mobile App
+Attendance	App (Approval Center, Approvals, My Requests) - Forget  Attendance, Late Waiver, Remote Attendance, WFH	Mobile App
+Leave Management	Leave Overview	Web
+Leave Management	Pending Leaves	Web
+Leave Management	Current Leaves	Web
+Leave Management	Upcoming Leaves	Web
+Leave Management	Attendance Bonus Ledger	Web
+Leave Management	Leave Deduction Ledger	Web
+Leave Management	Leave Policies	Web
+Leave Management	Leave Types	Web
+Leave Management	Holiday Calendar	Web
+Leave Management	Special Weekly Leave	Web
+Leave Management	Bonus Leave Configuration	Web
+Leave Management	Reports - Leave History Report	Web
+Leave Management	App (Quick Access) - Leave	Mobile App
+Leave Management	Approval Center - Leave	Web
+Leave Management	App (Approval Center, Approval, My Requests) - Leave	Mobile App
+Payroll	Payroll Dashboard	Web
+Payroll	Payroll Drafts	Web
+Payroll	Outstanding Salary	Web
+Payroll	Payroll History	Web
+Payroll	Payslip History	Web
+Payroll	Settings - Payroll Settings	Web
+Payroll	Bonus Dashboard	Web
+Payroll	Bonus Drafts	Web
+Payroll	Off Cycle Bonus	Web
+Payroll	Bonus Payslip History	Web
+Payroll	Bonus Types & Policies	Web
+Payroll	Reports - Payroll Report	Web
+Payroll	App (Quick Access) - Payroll	Mobile App
+EWA	Earned Wage Access (EWA)	Web
+EWA	App (Quick Access) - EWA	Mobile App
+Expense Management	Expense Summary	Web
+Expense Management	Monthly Report	Web
+Expense Management	App (Quick Access) - Expense	Web
+Expense Management	Approval Center - Expense	Web
+Expense Management	App (Approval Center, Approval, My Requests) - Expense	Mobile App
+Assets	Asset Overview	Web
+Assets	Add Asset Type	Web
+Assets	Add New Asset	Web
+Assets	App (Quick Access) - Assets	Mobile App
+Document Management	Templates	Web
+Document Management	Variables	Web
+Policy Management	Policy List	Web
+Policy Management	Create Policy	Web
+Policy Management	App (Quick Access) - Policies	Mobile App
+Visit Management	Visit Types	Web
+Visit Management	Create a Visit Type	Web
+Visit Management	App (Quick Access) - Visits	Mobile App
+Announcements	Announcements List	Web
+Announcements	Create New Announcement	Web
+Announcements	App - Announcements	Mobile App
+Core	Integration - Biometric Device Integration	Web
+Core	Integrations - Bot Integrations	Web
+Core	Apps Settings	Web
+Core	Notifications	Mobile App
+Employee Tracking	Live Tracking	Web
+Employee Tracking	Tracking History	Web
+Employee Tracking	Employee Tracking Settings	Web
+Employee Tracking	Employee Report	Web
+Employee Tracking	Daily Report	Web

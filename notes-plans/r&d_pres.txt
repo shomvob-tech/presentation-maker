@@ -1,0 +1,24 @@
+Presentation 1:
+
+Company name: Taza Hair Oil
+Employees: 40+
+
+Meeting Minutes:
+
+Client requirements:
+1. attendance
+2. leave 
+3. payroll
+4. roster
+5. device integration; zk senseface 2a
+6. access configuration
+
+Blockers:
+1. Underwork penalty/deduction
+2. Needs payroll report in specific format of 4 columns only (emp name, 
+bank acc name, payable amount, month of salary)
+3. Employees can do multiple shifts in a day
+
+Remarks:
+Their main concern is attendance and payroll. They have mostly remote 
+employees. Onsite employees use fingerprint device. 

@@ -1,0 +1,68 @@
+Shomvob Slide Information
+Extracted from: ShomvobIntroductionSlide.tsx, AboutShomvobSlide.tsx
+================================================================================
+
+COMPANY
+--------------------------------------------------------------------------------
+Name:           Shomvob Technologies / Shomvob HR
+Tagline:        Built to help Bangladesh's frontline workforce thrive.
+Positioning:    Built in the real world.
+Description:    Shomvob brings hiring, workforce management, and payroll into
+                one connected ecosystem—built around real operational needs.
+About copy:     Practical workforce experience, translated into a stronger HR
+                system—not software built in isolation.
+
+
+STATS
+--------------------------------------------------------------------------------
+1,500+          Clients across industries
+4+              Years — Workforce experience
+30,000+         Placed — Job seekers connected
+98%+            Availability — Reliable operations
+100%            Payroll — Consistent execution
+
+
+STRENGTHS
+--------------------------------------------------------------------------------
+01  Workforce consulting
+    Four-plus years solving hiring and manpower challenges across industries.
+
+02  Operations at scale
+    Staffing, bulk hiring, payroll, and resource augmentation for growing teams.
+
+03  Insight turned into product
+    Real experience with 1,500+ companies shaped the Shomvob platform.
+
+
+PREVIOUS / FEATURED CLIENTS
+--------------------------------------------------------------------------------
+- Aarong
+- Artnature Bangladesh
+- Chillox
+- Domino's Pizza
+- foodpanda
+- MH Global Group
+- Pathao Food
+- ShopUp
+- Singer Bangladesh
+
+Section label: "Trusted across Bangladesh"
+Tagline:       "Real partnerships. Real operating experience."
+
+
+CREDIBILITY / RECOGNITION
+--------------------------------------------------------------------------------
+Section: Recognized by global and regional institutions
+
+- Gates Foundation
+- Cocoon
+- Forbes Asia 100 to Watch
+
+
+SOCIAL-IMPACT PARTNERSHIPS
+--------------------------------------------------------------------------------
+- Gates Foundation      — Women's economic empowerment
+- Roots of Impact       — Corporate governance
+- UNICEF                — Community paramedics
+- Swisscontact          — Skills development
+- World Bank Group      — Youth and female TVET

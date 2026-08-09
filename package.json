@@ -11,6 +11,7 @@
     "test:points": "npx --yes tsx scripts/test-point-selection.mts"
   },
   "dependencies": {
+    "@sparticuz/chromium": "^147.0.0",
     "@tiptap/extension-placeholder": "^3.29.2",
     "@tiptap/pm": "^3.29.2",
     "@tiptap/react": "^3.29.2",
@@ -19,6 +20,7 @@
     "lucide-react": "^1.28.0",
     "next": "16.2.10",
     "ogl": "^1.0.11",
+    "playwright-core": "^1.62.1",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },

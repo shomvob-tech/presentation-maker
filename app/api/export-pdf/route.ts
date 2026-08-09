@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { chromium } from "playwright";
+import { launchBrowser } from "@/lib/launch-browser";
 import {
   PRESENTATION_SESSION_KEY,
   PREVIEW_CLIENT_NAME_KEY,
@@ -13,34 +13,14 @@ import {
   PREVIEW_CONTENT_KEY,
 } from "@/lib/presentation-content-storage";
 
-/**
- * Tries the same browser candidates as scripts/export-pdf.mjs: system Edge
- * or Chrome first (already installed on most machines), falling back to the
- * Playwright-managed Chromium if neither is available.
- */
-async function launchBrowser() {
-  const candidates =
-    process.platform === "win32"
-      ? [{ channel: "msedge" }, { channel: "chrome" }, {}]
-      : [{ channel: "chrome" }, {}];
-  const errors: string[] = [];
+// Chromium (real or @sparticuz/chromium) cannot run on the Edge runtime —
+// this must stay on Node.js.
+export const runtime = "nodejs";
 
-  for (const candidate of candidates) {
-    try {
-      return await chromium.launch({ headless: true, ...candidate });
-    } catch (error) {
-      errors.push(error instanceof Error ? error.message : String(error));
-    }
-  }
-
-  throw new Error(
-    [
-      "Could not launch Edge, Chrome, or Playwright Chromium.",
-      "Install Edge/Chrome, or run: npx playwright install chromium",
-      errors.at(-1),
-    ].join(" "),
-  );
-}
+// Cold start + page render + font/image wait + PDF export can run well
+// past the default timeout. 60s is the Hobby-plan ceiling; raise this if
+// you're on Pro/Enterprise and still see timeouts on larger proposals.
+export const maxDuration = 60;
 
 function isProposalDetails(value: unknown): value is ProposalDetails {
   if (!value || typeof value !== "object") return false;

@@ -1,16 +1,28 @@
 import Image from "next/image";
 import Link from "next/link";
 import Clientdetails2 from "../components/Clientdetails2";
+import LightRays from "@/app/components/LightRays";
 
 export default function ProposalBuilderPage() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#0c3d20] text-white">
-      <div
-        className="pointer-events-none absolute inset-0 bg-[#062b16]"
-        style={{ clipPath: "polygon(0 0, 40% 0, 25% 100%, 0% 100%)" }}
-      />
-      <div className="pointer-events-none absolute -right-24 top-0 h-[360px] w-[360px] rounded-full bg-[#edb713] opacity-15 blur-[100px]" />
-
+    <main className="relative flex min-h-screen flex-col overflow-hidden bg-[#03110a] text-white">
+      {/* Animated background — sits behind everything, ignores pointer events */}
+      <div className="absolute inset-0 z-0">
+        <LightRays
+          raysOrigin="top-center"
+          raysColor="#28a143"
+          raysSpeed={0.7}
+          lightSpread={0.9}
+          rayLength={2}
+          followMouse
+          mouseInfluence={0.2}
+          noiseAmount={0}
+          distortion={0}
+          pulsating={false}
+          fadeDistance={1.3}
+          saturation={1.1}
+        />
+      </div>
       <header className="relative z-10 flex items-center justify-between px-6 py-6 md:px-10">
         <Link href="/proposal-builder" className="inline-flex items-center gap-3">
           <Image
@@ -18,7 +30,7 @@ export default function ProposalBuilderPage() {
             alt="Shomvob HR"
             width={140}
             height={34}
-            className="rounded-lg bg-white/95 px-3 py-2 shadow-lg"
+            className="rounded-lg bg-var[--color-brand_gray] px-3 py-2 shadow-lg"
           />
         </Link>
         <p className="text-sm font-medium text-white/70">Proposal builder</p>

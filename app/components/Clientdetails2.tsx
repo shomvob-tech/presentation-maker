@@ -127,12 +127,10 @@ const initialForm: FormState = {
   trialPassword: TRIAL_ACCOUNT_PASSWORD,
   trialStartDate: todayAsDateInputValue(),
   trialEndDate: "",
-  // Pre-filled with the demonstrated real sender — change these defaults if
-  // a different person typically sends trial invites.
-  trialSenderName: "Md. Ariful Islam Manik",
-  trialSenderTitle: "Manager – HRM Growth",
-  trialSenderPhone: "+880 1404-071418",
-  trialSenderEmail: "ariful@shomvob.com",
+  trialSenderName: "",
+  trialSenderTitle: "",
+  trialSenderPhone: "",
+  trialSenderEmail: "",
 };
 
 function isPositiveNumber(value: string): boolean {
@@ -1138,8 +1136,8 @@ export default function Clientdetails2() {
         <div className="mt-6 border-t border-[#0c3d20]/10 pt-6">
           <h4 className="text-sm font-semibold text-[#0c3d20]">Sent from</h4>
           <p className="mt-1 text-xs text-[#0c3d20]/60">
-            Signs off the trial email — pre-filled, change if someone else on
-            the team is sending this one.
+            Signs off the trial email — fill in who on the team is sending this
+            one.
           </p>
 
           <div className="mt-3 grid gap-6 md:grid-cols-2">
@@ -1155,6 +1153,7 @@ export default function Clientdetails2() {
                 onChange={(event) =>
                   updateField("trialSenderName", event.target.value)
                 }
+                placeholder="e.g. Md. Ariful Islam Manik"
                 className={`${inputClassName} mt-2`}
               />
             </div>
@@ -1171,6 +1170,7 @@ export default function Clientdetails2() {
                 onChange={(event) =>
                   updateField("trialSenderTitle", event.target.value)
                 }
+                placeholder="e.g. Manager – HRM Growth"
                 className={`${inputClassName} mt-2`}
               />
             </div>
@@ -1187,6 +1187,7 @@ export default function Clientdetails2() {
                 onChange={(event) =>
                   updateField("trialSenderPhone", event.target.value)
                 }
+                placeholder="e.g. +880 1xxxxxxx"
                 className={`${inputClassName} mt-2`}
               />
             </div>
@@ -1204,6 +1205,7 @@ export default function Clientdetails2() {
                 onChange={(event) =>
                   updateField("trialSenderEmail", event.target.value)
                 }
+                placeholder="e.g. ariful@shomvob.com"
                 className={`${inputClassName} mt-2`}
               />
             </div>

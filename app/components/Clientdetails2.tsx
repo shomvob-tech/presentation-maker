@@ -5,9 +5,17 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { getModuleRecommendation } from "@/app/components/ModuleRecommendation";
 import type { ClientDetailsInput } from "@/lib/module-recommendation";
-import { buildClientMailtoUrl } from "@/lib/client-email-template";
+import {
+  buildClientMailtoUrl,
+  buildSuggestedProposalPdfFileName,
+  TRIAL_ACCOUNT_PASSWORD,
+} from "@/lib/client-email-template";
+import { MODULE_HIGHLIGHTS } from "@/lib/module-highlights";
+import Richtexteditor from "@/app/components/Richtexteditor";
 import {
   fileToDataUrl,
+  loadPreviewLogo,
+  loadProposalDetails,
   savePresentationSession,
   savePreviewClientName,
   savePreviewLogo,
@@ -18,8 +26,12 @@ type FormState = {
   // Existing fields
   clientName: string;
   clientEmail: string;
+  // `requirements` no longer has a UI field (removed in favor of Problem
+  // statement + Module selection below) but stays in the data model as an
+  // always-empty string — ClientDetailsInput / getModuleRecommendation may
+  // still depend on this key existing. Safe to delete once confirmed.
   requirements: string;
-  notes: string;
+  notes: string; // same story — see the Problem statement section.
 
   // Section 1 (Cover) + Section 2 (COO Letter)
   documentTitle: string;
@@ -28,6 +40,11 @@ type FormState = {
   letterAddresseeName: string;
   meetingDateReference: string;
   validityDays: string;
+
+  // Section 3 (Solution Proposal) — one-page format
+  problemStatementHeading: string;
+  problemStatementText: string; // HTML from Richtexteditor, not plain text
+  selectedModules: string[]; // module ids from MODULE_HIGHLIGHTS
 
   // Section 4 (Commercial Terms)
   employeeCount: string;
@@ -41,13 +58,37 @@ type FormState = {
   contactTeam: string;
   contactEmail: string;
   contactPhone: string;
+
+  // Trial account email (Send mail button). Kept separate from the
+  // "Proposal contact" fields above — the trial invite is plausibly sent by
+  // a different team member than whoever's listed on the proposal PDF.
+  trialPortalUrl: string;
+  trialUsername: string;
+  trialPassword: string;
+  trialStartDate: string; // "YYYY-MM-DD" from <input type="date">
+  trialEndDate: string;
+  trialSenderName: string;
+  trialSenderTitle: string;
+  trialSenderPhone: string;
+  trialSenderEmail: string;
 };
 
-type FormErrors = Partial<Record<keyof FormState | "logo", string>>;
+type FormErrors = Partial<Record<keyof FormState | "logo" | "selectedModules", string>>;
 
 /** Mirrors the default set in CoverPage.tsx — keep these in sync. */
 const DEFAULT_DOCUMENT_TITLE = "Workforce Management Ecosystem";
 const DEFAULT_RECIPIENT_TITLE = "Managing Director";
+
+/** Trial accounts are always on the same portal today — override per row if
+ * that ever changes (e.g. staging environment for a specific client). */
+const DEFAULT_TRIAL_PORTAL_URL = "https://hr.shomvob.com/";
+
+/** Section 3 is a fixed one-page layout: 3 modules if a problem statement is
+ * present (it takes up the space of the other 3), 6 modules if not. This
+ * is what keeps the page from ever looking wonky — see module-highlights.ts
+ * for the finalized content each checkbox pulls from. */
+const MODULE_COUNT_WITH_PROBLEM_STATEMENT = 3;
+const MODULE_COUNT_WITHOUT_PROBLEM_STATEMENT = 6;
 
 function todayAsDateInputValue(): string {
   return new Date().toISOString().slice(0, 10);
@@ -66,6 +107,10 @@ const initialForm: FormState = {
   meetingDateReference: todayAsDateInputValue(),
   validityDays: "30",
 
+  problemStatementHeading: "",
+  problemStatementText: "",
+  selectedModules: [],
+
   employeeCount: "",
   mrcFee: "",
   rolloutCharge: "",
@@ -76,6 +121,18 @@ const initialForm: FormState = {
   contactTeam: "",
   contactEmail: "",
   contactPhone: "",
+
+  trialPortalUrl: DEFAULT_TRIAL_PORTAL_URL,
+  trialUsername: "",
+  trialPassword: TRIAL_ACCOUNT_PASSWORD,
+  trialStartDate: todayAsDateInputValue(),
+  trialEndDate: "",
+  // Pre-filled with the demonstrated real sender — change these defaults if
+  // a different person typically sends trial invites.
+  trialSenderName: "Md. Ariful Islam Manik",
+  trialSenderTitle: "Manager – HRM Growth",
+  trialSenderPhone: "+880 1404-071418",
+  trialSenderEmail: "ariful@shomvob.com",
 };
 
 function isPositiveNumber(value: string): boolean {
@@ -88,6 +145,22 @@ function isPositiveInteger(value: string): boolean {
   if (!value.trim()) return false;
   const n = Number(value);
   return Number.isInteger(n) && n > 0;
+}
+
+/** Tiptap reports an empty editor as "<p></p>", not "" — strip tags before
+ * checking for real content, or an empty editor would count as "has text". */
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, "").trim();
+}
+
+function hasProblemStatement(form: FormState): boolean {
+  return stripHtml(form.problemStatementText).length > 0;
+}
+
+function requiredModuleCount(form: FormState): number {
+  return hasProblemStatement(form)
+    ? MODULE_COUNT_WITH_PROBLEM_STATEMENT
+    : MODULE_COUNT_WITHOUT_PROBLEM_STATEMENT;
 }
 
 function validateForm(form: FormState, logo: File | null): FormErrors {
@@ -140,6 +213,47 @@ function validateForm(form: FormState, logo: File | null): FormErrors {
     errors.fieldTrackingFee = "Enter a per-user fee, or turn this off.";
   }
 
+  // Cross-validation: module count must match the problem-statement state,
+  // exactly, so the one-page layout never has to guess how to fit content.
+  const required = requiredModuleCount(form);
+  const selectedCount = form.selectedModules.length;
+  if (selectedCount !== required) {
+    errors.selectedModules = hasProblemStatement(form)
+      ? `You've written a problem statement, so it takes the place of 3 modules on the page — select exactly ${required} modules (currently ${selectedCount} selected).`
+      : `With no problem statement, all 6 module slots are available — select exactly ${required} modules (currently ${selectedCount} selected).`;
+  }
+
+  return errors;
+}
+
+/** Separate from validateForm — these only matter for the "Send mail"
+ * action, not for building/downloading the proposal PDF. A proposal can
+ * exist without a trial account being ready yet, so the main form doesn't
+ * block on these. */
+function validateTrialEmailFields(form: FormState): FormErrors {
+  const errors: FormErrors = {};
+
+  if (!form.trialPortalUrl.trim()) {
+    errors.trialPortalUrl = "Portal URL is required.";
+  }
+
+  if (!form.trialUsername.trim()) {
+    errors.trialUsername = "Trial username is required.";
+  }
+
+  if (!form.trialStartDate) {
+    errors.trialStartDate = "Trial start date is required.";
+  }
+
+  if (!form.trialEndDate) {
+    errors.trialEndDate = "Trial end date is required.";
+  } else if (
+    form.trialStartDate &&
+    new Date(form.trialEndDate) < new Date(form.trialStartDate)
+  ) {
+    errors.trialEndDate = "Trial end date can't be before the start date.";
+  }
+
   return errors;
 }
 
@@ -150,10 +264,23 @@ export default function Clientdetails2() {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
+  const [pdfError, setPdfError] = useState<string | null>(null);
 
   function updateField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: undefined }));
+  }
+
+  function toggleModule(id: string) {
+    setForm((current) => {
+      const isSelected = current.selectedModules.includes(id);
+      const selectedModules = isSelected
+        ? current.selectedModules.filter((m) => m !== id)
+        : [...current.selectedModules, id];
+      return { ...current, selectedModules };
+    });
+    setErrors((current) => ({ ...current, selectedModules: undefined }));
   }
 
   function handleLogoChange(file: File | null) {
@@ -193,6 +320,8 @@ export default function Clientdetails2() {
     savePreviewLogo(logoDataUrl);
     savePreviewClientName(clientDetails.clientName);
 
+    const problemStatementPresent = hasProblemStatement(form);
+
     saveProposalDetails({
       documentTitle: form.documentTitle.trim() || DEFAULT_DOCUMENT_TITLE,
       preparedDate: form.preparedDate,
@@ -213,6 +342,14 @@ export default function Clientdetails2() {
       contactTeam: form.contactTeam.trim() || undefined,
       contactEmail: form.contactEmail.trim() || undefined,
       contactPhone: form.contactPhone.trim() || undefined,
+
+      problemStatementHeading: problemStatementPresent
+        ? form.problemStatementHeading.trim() || undefined
+        : undefined,
+      problemStatementText: problemStatementPresent
+        ? form.problemStatementText
+        : undefined,
+      selectedModules: form.selectedModules,
     });
 
     return clientDetails;
@@ -254,12 +391,85 @@ export default function Clientdetails2() {
       nextErrors.clientEmail = "Enter a valid email address.";
     }
 
+    Object.assign(nextErrors, validateTrialEmailFields(form));
+
     if (Object.keys(nextErrors).length > 0) {
       setErrors((current) => ({ ...current, ...nextErrors }));
       return;
     }
 
-    window.location.href = buildClientMailtoUrl({ clientName, clientEmail });
+    // Dates are passed as raw "YYYY-MM-DD"; reformatted to DD-MM-YYYY inside
+    // the template. Password is always TRIAL_ACCOUNT_PASSWORD (demo@1234).
+    window.location.href = buildClientMailtoUrl({
+      clientName,
+      clientEmail,
+      trialPortalUrl: form.trialPortalUrl.trim(),
+      trialUsername: form.trialUsername.trim(),
+      trialStartDate: form.trialStartDate,
+      trialEndDate: form.trialEndDate,
+      senderName: form.trialSenderName.trim(),
+      senderTitle: form.trialSenderTitle.trim(),
+      senderPhone: form.trialSenderPhone.trim(),
+      senderEmail: form.trialSenderEmail.trim(),
+    });
+  }
+
+  /**
+   * Uses the last saved proposal inputs (from Preview Proposal) and asks
+   * /api/export-pdf to render /proposal-preview via Playwright — same capture
+   * approach as scripts/export-pdf.mjs.
+   */
+  async function handleDownloadPdf() {
+    const logoDataUrl = loadPreviewLogo();
+    const details = loadProposalDetails();
+    const clientName =
+      form.clientName.trim() || details?.letterAddresseeName || "Client";
+
+    if (!logoDataUrl || !details) {
+      setPdfError(
+        'No saved proposal found. Click "Preview Proposal" first, then download the PDF.',
+      );
+      return;
+    }
+
+    setIsDownloadingPdf(true);
+    setPdfError(null);
+
+    try {
+      const response = await fetch("/api/export-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url: `${window.location.origin}/proposal-preview`,
+          logoDataUrl,
+          clientName,
+          proposalDetails: details,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(
+          data?.error ?? `Request failed with status ${response.status}`,
+        );
+      }
+
+      const blob = await response.blob();
+      const downloadUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = buildSuggestedProposalPdfFileName(clientName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      setPdfError(
+        error instanceof Error ? error.message : "Failed to generate PDF.",
+      );
+    } finally {
+      setIsDownloadingPdf(false);
+    }
   }
 
   const inputClassName =
@@ -270,6 +480,11 @@ export default function Clientdetails2() {
   const hintClassName = "mt-1 text-xs text-[#0c3d20]/60";
 
   const errorClassName = "mt-1 text-xs font-medium text-red-600";
+
+  const problemStatementActive = hasProblemStatement(form);
+  const requiredCount = requiredModuleCount(form);
+  const selectedCount = form.selectedModules.length;
+  const countIsCorrect = selectedCount === requiredCount;
 
   return (
     <form onSubmit={handlePreview} className="space-y-8">
@@ -381,41 +596,106 @@ export default function Clientdetails2() {
         {errors.logo ? <p className={errorClassName}>{errors.logo}</p> : null}
       </div>
 
+      {/* ---------------------------------------------------------------- */}
+      {/* Section 3 (Solution Proposal) — problem statement + modules       */}
+      {/* Replaces the old "Requirements" field, which lived here before.   */}
+      {/* ---------------------------------------------------------------- */}
       <div>
-        <label htmlFor="requirements" className={labelClassName}>
-          Requirements
-        </label>
-        <p className={hintClassName}>
-          Modules, features, or pain points discussed on the demo call.
+        <h3 className="text-base font-semibold text-[#0c3d20]">
+          Problem statement
+        </h3>
+        <p className="mt-1 text-sm text-[#0c3d20]/60">
+          Optional. If filled in, this is placed directly into the proposal
+          as a highlighted callout — write it exactly as you want the client
+          to read it. Leave both fields blank for no problem statement at all.
         </p>
-        <textarea
-          id="requirements"
-          name="requirements"
-          rows={5}
-          value={form.requirements}
-          onChange={(event) => updateField("requirements", event.target.value)}
-          placeholder="e.g. Attendance tracking, leave management, payroll integration, mobile app for field staff..."
-          className={`${inputClassName} mt-2 resize-y`}
-        />
-      </div>
 
-      <div>
-        <label htmlFor="notes" className={labelClassName}>
-          Notes
-        </label>
-        <p className={hintClassName}>
-          Extra context for the sales or content team — tone, deadlines,
-          stakeholders, or sections to emphasize.
-        </p>
-        <textarea
-          id="notes"
-          name="notes"
-          rows={4}
-          value={form.notes}
-          onChange={(event) => updateField("notes", event.target.value)}
-          placeholder="e.g. Focus on factory workforce. Management wants ROI within 6 months. Avoid technical jargon."
-          className={`${inputClassName} mt-2 resize-y`}
-        />
+        <div className="mt-4 space-y-4">
+          <div>
+            <label htmlFor="problemStatementHeading" className={labelClassName}>
+              Heading (optional)
+            </label>
+            <input
+              id="problemStatementHeading"
+              name="problemStatementHeading"
+              type="text"
+              value={form.problemStatementHeading}
+              onChange={(event) =>
+                updateField("problemStatementHeading", event.target.value)
+              }
+              placeholder="e.g. Custom deductions & negative balances"
+              className={`${inputClassName} mt-2`}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="problemStatementText" className={labelClassName}>
+              Body text
+            </label>
+            <p className={hintClassName}>
+              Use the toolbar for bold, italic, or a bullet list — this
+              renders directly into the proposal&apos;s callout box.
+            </p>
+            <div className="mt-2">
+              <Richtexteditor
+                value={form.problemStatementText}
+                onChange={(html) => updateField("problemStatementText", html)}
+                placeholder="e.g. Deductions are capped so a payslip can never go negative. If a manually entered deduction is larger than what a single month can absorb, the excess is carried forward to next month's payroll."
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 border-t border-[#0c3d20]/10 pt-6">
+          <h3 className="text-base font-semibold text-[#0c3d20]">
+            Module selection
+          </h3>
+          <p className="mt-1 text-sm text-[#0c3d20]/60">
+            <b>6 modules</b> if there's no problem statement above, or{" "}
+            <b>3 modules</b> if there is one. Pick whichever modules are most
+            relevant to this client — the highlights for each are already
+            finalized.
+          </p>
+
+          <div
+            className={`mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${
+              countIsCorrect
+                ? "bg-[#137a3c]/10 text-[#137a3c]"
+                : "bg-amber-100 text-amber-800"
+            }`}
+          >
+            {selectedCount} of {requiredCount} selected
+            {problemStatementActive ? " (problem statement included)" : ""}
+          </div>
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+            {MODULE_HIGHLIGHTS.map((module) => {
+              const checked = form.selectedModules.includes(module.id);
+              return (
+                <label
+                  key={module.id}
+                  className={`flex cursor-pointer items-start gap-2 rounded-lg border px-3 py-2.5 text-sm transition ${
+                    checked
+                      ? "border-[#137a3c] bg-[#137a3c]/5 text-[#0c3d20]"
+                      : "border-[#0c3d20]/15 text-[#0c3d20]/80 hover:border-[#137a3c]/40"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => toggleModule(module.id)}
+                    className="mt-0.5 h-4 w-4 rounded border-[#0c3d20]/30 text-[#137a3c] focus:ring-[#137a3c]/30"
+                  />
+                  <span className="font-medium">{module.label}</span>
+                </label>
+              );
+            })}
+          </div>
+
+          {errors.selectedModules ? (
+            <p className={`${errorClassName} mt-3`}>{errors.selectedModules}</p>
+          ) : null}
+        </div>
       </div>
 
       {/* ---------------------------------------------------------------- */}
@@ -747,12 +1027,197 @@ export default function Clientdetails2() {
         </div>
       </div>
 
+      {/* ---------------------------------------------------------------- */}
+      {/* Trial account email (Send mail button)                           */}
+      {/* ---------------------------------------------------------------- */}
+      <div className="border-t border-[#0c3d20]/10 pt-8">
+        <h3 className="text-base font-semibold text-[#0c3d20]">
+          Trial account email
+        </h3>
+        <p className="mt-1 text-sm text-[#0c3d20]/60">
+          Only used by the &quot;Send mail&quot; button below — not part of
+          the proposal PDF. Required to send, but won&apos;t block saving or
+          downloading the proposal.
+        </p>
+
+        <div className="mt-5 grid gap-6 md:grid-cols-2">
+          <div>
+            <label htmlFor="trialPortalUrl" className={labelClassName}>
+              Portal URL
+            </label>
+            <input
+              id="trialPortalUrl"
+              name="trialPortalUrl"
+              type="url"
+              value={form.trialPortalUrl}
+              onChange={(event) => updateField("trialPortalUrl", event.target.value)}
+              placeholder={DEFAULT_TRIAL_PORTAL_URL}
+              className={`${inputClassName} mt-2`}
+            />
+            {errors.trialPortalUrl ? (
+              <p className={errorClassName}>{errors.trialPortalUrl}</p>
+            ) : null}
+          </div>
+
+          <div>
+            <label htmlFor="trialUsername" className={labelClassName}>
+              Username
+            </label>
+            <input
+              id="trialUsername"
+              name="trialUsername"
+              type="text"
+              value={form.trialUsername}
+              onChange={(event) => updateField("trialUsername", event.target.value)}
+              placeholder="e.g. nazmul@tazahairoil.com"
+              className={`${inputClassName} mt-2`}
+            />
+            {errors.trialUsername ? (
+              <p className={errorClassName}>{errors.trialUsername}</p>
+            ) : null}
+          </div>
+
+          <div>
+            <label htmlFor="trialPassword" className={labelClassName}>
+              Password
+            </label>
+            <input
+              id="trialPassword"
+              name="trialPassword"
+              type="text"
+              value={TRIAL_ACCOUNT_PASSWORD}
+              readOnly
+              className={`${inputClassName} mt-2 bg-[#0c3d20]/5 text-[#0c3d20]/70`}
+            />
+            <p className="mt-1 text-xs text-[#0c3d20]/55">
+              Fixed for all trial accounts — included automatically in the mail.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="trialStartDate" className={labelClassName}>
+                Trial start
+              </label>
+              <input
+                id="trialStartDate"
+                name="trialStartDate"
+                type="date"
+                value={form.trialStartDate}
+                onChange={(event) =>
+                  updateField("trialStartDate", event.target.value)
+                }
+                className={`${inputClassName} mt-2`}
+              />
+              {errors.trialStartDate ? (
+                <p className={errorClassName}>{errors.trialStartDate}</p>
+              ) : null}
+            </div>
+
+            <div>
+              <label htmlFor="trialEndDate" className={labelClassName}>
+                Trial end
+              </label>
+              <input
+                id="trialEndDate"
+                name="trialEndDate"
+                type="date"
+                value={form.trialEndDate}
+                onChange={(event) =>
+                  updateField("trialEndDate", event.target.value)
+                }
+                className={`${inputClassName} mt-2`}
+              />
+              {errors.trialEndDate ? (
+                <p className={errorClassName}>{errors.trialEndDate}</p>
+              ) : null}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 border-t border-[#0c3d20]/10 pt-6">
+          <h4 className="text-sm font-semibold text-[#0c3d20]">Sent from</h4>
+          <p className="mt-1 text-xs text-[#0c3d20]/60">
+            Signs off the trial email — pre-filled, change if someone else on
+            the team is sending this one.
+          </p>
+
+          <div className="mt-3 grid gap-6 md:grid-cols-2">
+            <div>
+              <label htmlFor="trialSenderName" className={labelClassName}>
+                Name
+              </label>
+              <input
+                id="trialSenderName"
+                name="trialSenderName"
+                type="text"
+                value={form.trialSenderName}
+                onChange={(event) =>
+                  updateField("trialSenderName", event.target.value)
+                }
+                className={`${inputClassName} mt-2`}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="trialSenderTitle" className={labelClassName}>
+                Title
+              </label>
+              <input
+                id="trialSenderTitle"
+                name="trialSenderTitle"
+                type="text"
+                value={form.trialSenderTitle}
+                onChange={(event) =>
+                  updateField("trialSenderTitle", event.target.value)
+                }
+                className={`${inputClassName} mt-2`}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="trialSenderPhone" className={labelClassName}>
+                Phone
+              </label>
+              <input
+                id="trialSenderPhone"
+                name="trialSenderPhone"
+                type="tel"
+                value={form.trialSenderPhone}
+                onChange={(event) =>
+                  updateField("trialSenderPhone", event.target.value)
+                }
+                className={`${inputClassName} mt-2`}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="trialSenderEmail" className={labelClassName}>
+                Email
+              </label>
+              <input
+                id="trialSenderEmail"
+                name="trialSenderEmail"
+                type="email"
+                autoComplete="email"
+                value={form.trialSenderEmail}
+                onChange={(event) =>
+                  updateField("trialSenderEmail", event.target.value)
+                }
+                className={`${inputClassName} mt-2`}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="rounded-xl border border-[#137a3c]/20 bg-[#137a3c]/5 px-5 py-4">
         <p className="text-sm font-medium text-[#0c3d20]">What happens next</p>
         <ul className="mt-2 space-y-1 text-sm text-[#0c3d20]/75">
-          <li>Preview opens in a new tab so your form entries stay here.</li>
-          <li>Send mail opens your email app with a drafted message to the client.</li>
-          <li>Attach the proposal PDF manually before sending.</li>
+          <li>"Save &amp; Preview" saves input and opens in a new tab.</li>
+          <li>"Download pdf" uses the last saved version of inputs.</li>
+          <li>"Send mail" opens your mail client without attachment. (for current version)</li>
+          <li>Attach proposal PDF manually before sending.</li>
         </ul>
       </div>
 
@@ -770,17 +1235,31 @@ export default function Clientdetails2() {
             onClick={handleSendMail}
             className="rounded-xl border border-[#0c3d20]/20 bg-white px-8 py-4 text-base font-semibold text-[#0c3d20] transition hover:border-[#0c3d20]/40 hover:bg-[#f4f7f5]"
           >
-            Send mail to client
+            Send mail
+          </button>
+          <button
+            type="button"
+            onClick={handleDownloadPdf}
+            disabled={isDownloadingPdf}
+            className="rounded-xl border border-[#0c3d20]/20 bg-white px-8 py-4 text-base font-semibold text-[#0c3d20] transition hover:border-[#0c3d20]/40 hover:bg-[#f4f7f5] disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {isDownloadingPdf ? "Generating PDF…" : "Download PDF"}
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
             className="rounded-xl bg-[#edb713] px-8 py-4 text-base font-semibold text-[#0c3d20] shadow-lg shadow-black/10 transition hover:bg-[#f5c832] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isSubmitting ? "Saving…" : "Preview cover page"}
+            {isSubmitting ? "Saving…" : "Preview Proposal"}
           </button>
         </div>
       </div>
+
+      {pdfError ? (
+        <p className="text-sm font-medium text-red-600" role="alert">
+          Could not generate PDF: {pdfError}
+        </p>
+      ) : null}
     </form>
   );
 }

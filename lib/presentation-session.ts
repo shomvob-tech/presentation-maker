@@ -6,7 +6,7 @@ export const PREVIEW_CLIENT_NAME_KEY = "presentation-preview-client-name";
 export const PROPOSAL_DETAILS_KEY = "presentation-proposal-details";
 export const DEFAULT_CLIENT_NAME = "300 Ltd";
 
-/** Cover, letter, and commercial fields that aren't part of module matching. */
+/** Cover, letter, solution, and commercial fields that aren't part of module matching. */
 export type ProposalDetails = {
   documentTitle: string;
   preparedDate: string;
@@ -25,6 +25,20 @@ export type ProposalDetails = {
   contactTeam?: string;
   contactEmail?: string;
   contactPhone?: string;
+
+  /**
+   * Section 3 (Solution Proposal) — one-page format. `problemStatementText`
+   * is an HTML string from Richtexteditor (Tiptap), not plain text; render
+   * it with dangerouslySetInnerHTML, not as a plain string. Both fields are
+   * omitted entirely (not just empty strings) when there's no problem
+   * statement — Moduleoverview.tsx checks for presence, not for "".
+   */
+  problemStatementHeading?: string;
+  problemStatementText?: string;
+  /** Module ids from lib/module-highlights.ts. Exactly 3 (with a problem
+   * statement) or 6 (without), enforced by Clientdetails2.tsx's validation
+   * at submit time — not re-validated here. */
+  selectedModules?: string[];
 };
 
 export function savePreviewLogo(logoDataUrl: string | undefined) {

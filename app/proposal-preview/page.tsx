@@ -1,5 +1,6 @@
 import PreviewCommercialTermsPage from "@/app/components/Previewcommercial";
 import PreviewLetterPage from "@/app/components/PreviewLetterPage";
+import PreviewModuleOverviewPage from "@/app/components/Previewmoduleoverviewpage";
 import PreviewPage from "@/app/components/PreviewPage";
 
 export default function ProposalPreviewPage() {
@@ -7,6 +8,7 @@ export default function ProposalPreviewPage() {
     <>
       <PreviewPage />
       <PreviewLetterPage />
+      <PreviewModuleOverviewPage />
       <PreviewCommercialTermsPage />
     </>
   );

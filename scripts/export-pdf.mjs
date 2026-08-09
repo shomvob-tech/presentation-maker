@@ -1,11 +1,16 @@
 #!/usr/bin/env node
 /**
- * Export the presentation at app/page.tsx to a 16:9 PDF.
+ * Export a presentation or proposal preview page to PDF.
+ *
+ * Supports legacy 16:9 `<section>` slides and A4 `.a4-page` proposal pages
+ * (e.g. /proposal-preview). Uses preferCSSPageSize so @page rules in
+ * globals.css control output size.
  *
  * Usage:
  *   npm run pdf
  *   npm run pdf -- --output output/client-deck.pdf
  *   npm run pdf -- --url http://localhost:3000
+ *   npm run pdf -- --url http://localhost:3000/proposal-preview --output output/proposal.pdf
  */
 
 import { spawn } from "node:child_process";
@@ -180,9 +185,19 @@ async function exportPdf(url, output) {
 
     console.log(`Loading ${url}`);
     await page.goto(url, { waitUntil: "load", timeout: 120_000 });
+
+    await page.waitForFunction(
+      () =>
+        document.querySelectorAll(".a4-page").length > 0 ||
+        document.querySelectorAll("section").length > 0,
+      undefined,
+      { timeout: 30_000 },
+    );
+
     await page.evaluate(async () => {
-      for (const section of document.querySelectorAll("section")) {
-        section.scrollIntoView();
+      const pages = document.querySelectorAll(".a4-page, section");
+      for (const pageEl of pages) {
+        pageEl.scrollIntoView();
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
       window.scrollTo(0, 0);
@@ -198,9 +213,40 @@ async function exportPdf(url, output) {
       ]);
     });
 
-    const slideCount = await page.locator("section").count();
-    if (slideCount === 0) {
-      throw new Error("No <section> slides were found on the page");
+    // Strip preview chrome when exporting A4 proposal pages.
+    const a4Count = await page.locator(".a4-page").count();
+    if (a4Count > 0) {
+      await page.addStyleTag({
+        content: `
+          @media print {
+            body {
+              background: white !important;
+              margin: 0 !important;
+              padding: 0 !important;
+            }
+            body * {
+              box-shadow: none !important;
+            }
+            body > * {
+              background: transparent !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              gap: 0 !important;
+            }
+            body > * > *:not(.a4-page):not(:has(.a4-page)) {
+              display: none !important;
+            }
+          }
+        `,
+      });
+    }
+
+    const sectionCount = await page.locator("section").count();
+    const pageCount = a4Count > 0 ? a4Count : sectionCount;
+    if (pageCount === 0) {
+      throw new Error(
+        "No <section> slides or .a4-page proposal pages were found on the page",
+      );
     }
 
     fs.mkdirSync(path.dirname(output), { recursive: true });
@@ -211,7 +257,7 @@ async function exportPdf(url, output) {
       margin: { top: 0, right: 0, bottom: 0, left: 0 },
     });
 
-    console.log(`Created ${output} (${slideCount} slides)`);
+    console.log(`Created ${output} (${pageCount} pages)`);
   } finally {
     await browser.close();
   }

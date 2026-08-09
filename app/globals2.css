@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-wheel_dark1: #182837;
+  --color-wheel_dark2: #203344;
+  --color-wheel_accent: #28a7ce;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Keep the Shomvob mark free-standing across every slide. */
+div:has(> img[alt="Shomvob HR"]) {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+img[alt="Shomvob HR"] {
+  filter:
+    drop-shadow(0 0 1px rgba(240, 255, 242, 0.95))
+    drop-shadow(0 2px 4px rgba(0, 0, 0, 0.38));
+}
+
+.text-white img[alt="Shomvob HR"] {
+  filter:
+    brightness(1.65)
+    saturate(1.2)
+    drop-shadow(0 2px 5px rgba(0, 0, 0, 0.6));
+}
+
+@media print {
+  @page {
+    size: 13.333in 7.5in;
+    margin: 0;
+  }
+
+  html,
+  body {
+    margin: 0;
+    width: 13.333in;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  section {
+    width: 13.333in !important;
+    min-width: 13.333in !important;
+    max-width: 13.333in !important;
+    height: 7.5in !important;
+    min-height: 7.5in !important;
+    max-height: 7.5in !important;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  section:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}

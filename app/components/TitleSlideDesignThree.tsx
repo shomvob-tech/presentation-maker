@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import ClientLogo from "./ClientLogo";
+import { usePresentationBranding } from "./PresentationBrandingContext";
 import { useClientName } from "./useClientName";
 
 /**
@@ -12,6 +13,7 @@ import { useClientName } from "./useClientName";
  */
 export default function TitleSlideDesignThree() {
   const clientName = useClientName();
+  const { useGenericCopy } = usePresentationBranding();
 
   return (
     <section
@@ -62,12 +64,24 @@ export default function TitleSlideDesignThree() {
               HR Ecosystem Proposal
             </span>
             <h1 className="text-5xl font-bold leading-[1.08] tracking-tight text-white lg:text-6xl">
-              Building a Smarter HR Ecosystem for {clientName}
+              {useGenericCopy
+                ? "Building a Smarter HR Ecosystem"
+                : `Building a Smarter HR Ecosystem for ${clientName}`}
             </h1>
             <div className="h-1.5 w-24 rounded-full bg-[#edb713]" />
             <p className="text-lg leading-relaxed text-white/70">
-              Mapping {clientName}&apos;s HR challenges to a single mobile-first
-              platform &mdash; built for how the team already works.
+              {useGenericCopy ? (
+                <>
+                  Bringing everyday HR operations into one mobile-first
+                  platform &mdash; built for how modern teams work.
+                </>
+              ) : (
+                <>
+                  Mapping {clientName}&apos;s HR challenges to a single
+                  mobile-first platform &mdash; built for how the team already
+                  works.
+                </>
+              )}
             </p>
           </div>
 

@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shomvob for Terraprime Hotel &amp; Resort</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0d1220;
+    --ink-2:#151c2d;
+    --ink-3:#1c2438;
+    --brass:#c6a04c;
+    --brass-light:#e6cd8a;
+    --moss:#33493c;
+    --paper:#f2ead4;
+    --paper-2:#e9dfc2;
+    --on-ink:#f2ead4;
+    --on-ink-muted:rgba(242,234,212,0.62);
+    --on-ink-faint:rgba(242,234,212,0.38);
+    --ink-text:#1a1812;
+    --ink-text-muted:rgba(26,24,18,0.62);
+    --ink-text-faint:rgba(26,24,18,0.42);
+    --radius:14px;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--ink);
+    color:var(--on-ink);
+    overflow-x:hidden;
+    scroll-snap-type:y proximity;
+    height:100vh;
+    height:100svh;
+    overflow-y:scroll;
+  }
+
+  ::selection{background:var(--brass); color:var(--ink);}
+
+  .eyebrow{
+    font-family:'Inter',sans-serif;
+    font-size:0.72rem;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:0.6em;
+  }
+  .eyebrow::before{
+    content:'';
+    display:inline-block;
+    width:22px;
+    height:2px;
+    background:var(--brass);
+  }
+
+  h1,h2,h3{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    letter-spacing:-0.01em;
+    line-height:1.05;
+  }
+
+  .section{
+    min-height:100vh;
+    min-height:100svh;
+    width:100%;
+    scroll-snap-align:start;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    position:relative;
+    padding: 7vh 9vw 7vh 12vw;
+  }
+  .section.ink{background:var(--ink); color:var(--on-ink);}
+  .section.paper{background:var(--paper); color:var(--ink-text);}
+
+  .section .tag{opacity:0; transform:translateY(18px); transition:opacity .7s var(--ease), transform .7s var(--ease);}
+  .section.in-view .tag{opacity:1; transform:translateY(0);}
+  .section .tag:nth-child(1){transition-delay:.02s;}
+  .section .tag:nth-child(2){transition-delay:.10s;}
+  .section .tag:nth-child(3){transition-delay:.18s;}
+  .section .tag:nth-child(4){transition-delay:.26s;}
+  .section .tag:nth-child(5){transition-delay:.34s;}
+
+  @media (prefers-reduced-motion: reduce){
+    .section .tag{opacity:1 !important; transform:none !important; transition:none !important;}
+    html{scroll-behavior:auto;}
+  }
+
+  /* ---------- Nav rail ---------- */
+  .rail{
+    position:fixed;
+    left:0; top:0;
+    height:100vh; height:100svh;
+    width:64px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:22px;
+    z-index:50;
+    background:linear-gradient(180deg, rgba(13,18,32,0.0), rgba(13,18,32,0.0));
+  }
+  .rail-track{
+    position:absolute;
+    left:31px; top:14%;
+    height:72%;
+    width:1px;
+    background:linear-gradient(180deg, transparent, rgba(198,160,76,0.35) 15%, rgba(198,160,76,0.35) 85%, transparent);
+  }
+  .rail-dot{
+    width:34px; height:34px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(242,234,212,0.06);
+    border:1px solid rgba(198,160,76,0.35);
+    color:var(--on-ink-muted);
+    font-size:0.62rem;
+    letter-spacing:0.05em;
+    font-weight:600;
+    cursor:pointer;
+    position:relative;
+    z-index:2;
+    transition:all .35s var(--ease);
+  }
+  .rail-dot:hover{border-color:var(--brass-light); color:var(--brass-light);}
+  .rail-dot.active{
+    background:var(--brass);
+    color:var(--ink);
+    border-color:var(--brass);
+    box-shadow:0 0 0 4px rgba(198,160,76,0.18), 0 0 18px rgba(198,160,76,0.55);
+  }
+  @media (max-width: 860px){
+    .rail{width:34px;}
+    .rail-track{left:16px;}
+    .rail-dot{width:20px; height:20px; font-size:0;}
+  }
+
+  /* ---------- Cover ---------- */
+  #cover{justify-content:center;}
+  .cover-eyebrow{color:var(--brass-light);}
+  .cover-headline{
+    font-size:clamp(2.3rem, 5.2vw, 4.6rem);
+    max-width:15ch;
+    margin:1.1rem 0 1.4rem;
+  }
+  .cover-headline em{font-style:italic; color:var(--brass-light); font-weight:400;}
+  .cover-sub{
+    max-width:46ch;
+    font-size:1.05rem;
+    color:var(--on-ink-muted);
+    line-height:1.6;
+  }
+  .cover-meta{
+    margin-top:3.2rem;
+    display:flex;
+    gap:2.4rem;
+    flex-wrap:wrap;
+    font-size:0.85rem;
+    color:var(--on-ink-faint);
+  }
+  .cover-meta strong{color:var(--on-ink); font-weight:600;}
+  .cover-modules{
+    margin-top:2.4rem;
+    display:flex;
+    gap:0.9rem;
+    flex-wrap:wrap;
+  }
+  .pill{
+    border:1px solid rgba(198,160,76,0.45);
+    border-radius:100px;
+    padding:0.5rem 1.1rem;
+    font-size:0.78rem;
+    letter-spacing:0.03em;
+    color:var(--brass-light);
+    display:flex;
+    align-items:center;
+    gap:0.5rem;
+  }
+  .pill .dot{width:6px; height:6px; border-radius:50%; background:var(--brass);}
+
+  /* ---------- Generic layout helpers ---------- */
+  .headline{
+    font-size:clamp(1.9rem, 3.6vw, 3.1rem);
+    max-width:18ch;
+    margin:1rem 0 1.3rem;
+  }
+  .lede{
+    max-width:56ch;
+    font-size:1.02rem;
+    line-height:1.65;
+  }
+  .section.ink .lede{color:var(--on-ink-muted);}
+  .section.paper .lede{color:var(--ink-text-muted);}
+
+  /* ---------- About Shomvob ---------- */
+  .about-grid{
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:4vw;
+    align-items:start;
+    margin-top:2.2rem;
+  }
+  .stat-strip{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1.6rem 1.4rem;
+    margin-top:2.4rem;
+  }
+  .stat{border-top:1px solid rgba(26,24,18,0.15); padding-top:0.8rem;}
+  .stat .num{font-family:'Fraunces',serif; font-size:2rem; font-weight:500; color:var(--moss);}
+  .stat .lbl{font-size:0.78rem; color:var(--ink-text-muted); margin-top:0.15rem;}
+
+  .strength-list{display:flex; flex-direction:column; gap:1.4rem;}
+  .strength{
+    border-left:2px solid var(--moss);
+    padding-left:1.1rem;
+  }
+  .strength .num{font-size:0.72rem; letter-spacing:0.12em; color:var(--moss); font-weight:700;}
+  .strength h4{font-family:'Inter',sans-serif; font-size:1rem; font-weight:700; margin:0.3rem 0 0.25rem;}
+  .strength p{font-size:0.88rem; color:var(--ink-text-muted); line-height:1.5;}
+
+  .logo-row{
+    margin-top:2.6rem;
+    padding-top:1.4rem;
+    border-top:1px solid rgba(26,24,18,0.15);
+  }
+  .logo-row .lbl{font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-text-faint); margin-bottom:0.9rem; display:block;}
+  .logo-chips{display:flex; flex-wrap:wrap; gap:0.6rem 0.9rem;}
+  .logo-chip{
+    font-family:'Fraunces',serif;
+    font-size:0.95rem;
+    color:var(--ink-text);
+    padding:0.35rem 0;
+    border-bottom:1px solid transparent;
+  }
+  .rec-row{display:flex; gap:1.8rem; margin-top:1rem; flex-wrap:wrap;}
+  .rec-chip{font-size:0.82rem; color:var(--moss); font-weight:600;}
+
+  /* ---------- Understanding / operations ---------- */
+  .dept-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:rgba(198,160,76,0.25);
+    margin-top:2.6rem;
+    max-width:760px;
+    border:1px solid rgba(198,160,76,0.25);
+  }
+  .dept{
+    background:var(--ink);
+    padding:1.3rem 1.2rem;
+    font-size:0.85rem;
+    color:var(--on-ink-muted);
+  }
+  .dept strong{display:block; color:var(--on-ink); font-family:'Fraunces',serif; font-size:1.05rem; font-weight:500; margin-bottom:0.3rem;}
+
+  .module-preview{
+    display:flex;
+    gap:1rem;
+    margin-top:2.6rem;
+    flex-wrap:wrap;
+  }
+  .mp-item{
+    flex:1 1 220px;
+    border:1px solid rgba(198,160,76,0.3);
+    border-radius:10px;
+    padding:1.1rem 1.2rem;
+  }
+  .mp-item .n{font-size:0.72rem; color:var(--brass-light); letter-spacing:0.1em; font-weight:700;}
+  .mp-item h4{font-family:'Fraunces',serif; font-weight:500; font-size:1.15rem; margin:0.4rem 0 0.35rem;}
+  .mp-item p{font-size:0.85rem; color:var(--on-ink-muted); line-height:1.5;}
+
+  /* ---------- Module (keycard) slides ---------- */
+  .module-wrap{
+    display:grid;
+    grid-template-columns:0.72fr 1fr;
+    gap:5vw;
+    align-items:center;
+    max-width:1180px;
+  }
+  .module-left .eyebrow{color:var(--brass-light);}
+  .module-left h2{font-size:clamp(1.9rem,3.4vw,2.9rem); margin:0.9rem 0 1.1rem; max-width:12ch;}
+  .module-left .problem{
+    font-size:0.95rem;
+    line-height:1.65;
+    color:var(--on-ink-muted);
+    max-width:36ch;
+    padding-left:1rem;
+    border-left:2px solid rgba(198,160,76,0.5);
+  }
+
+  .keycard{
+    background:var(--paper);
+    color:var(--ink-text);
+    border-radius:var(--radius);
+    padding:2.6rem 2.6rem 2.2rem;
+    position:relative;
+    box-shadow:0 40px 90px rgba(0,0,0,0.45), 0 4px 18px rgba(0,0,0,0.25);
+    clip-path:polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%);
+  }
+  .keycard::before{
+    content:'';
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:9px;
+    background:linear-gradient(180deg, var(--brass), var(--brass-light) 50%, var(--brass));
+  }
+  .keycard-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    padding-left:1.2rem;
+    border-bottom:1px solid rgba(26,24,18,0.15);
+    padding-bottom:1rem;
+    margin-bottom:1.3rem;
+  }
+  .keycard-head .id{
+    font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--ink-text-faint); font-weight:700;
+  }
+  .keycard-head .prop{
+    font-family:'Fraunces',serif; font-style:italic; font-size:0.95rem; color:var(--moss);
+  }
+  .keycard h3{
+    padding-left:1.2rem;
+    font-size:1.5rem;
+    margin-bottom:1.1rem;
+  }
+  .feature-list{
+    list-style:none;
+    display:flex;
+    flex-direction:column;
+    gap:0.85rem;
+    padding-left:1.2rem;
+  }
+  .feature-list li{
+    font-size:0.9rem;
+    line-height:1.5;
+    color:var(--ink-text-muted);
+    position:relative;
+    padding-left:1.1rem;
+  }
+  .feature-list li::before{
+    content:'';
+    position:absolute;
+    left:0;
+    top:0.5em;
+    width:7px; height:7px;
+    background:var(--moss);
+  }
+  .feature-list li b{display:block; color:var(--ink-text); font-weight:600; margin-bottom:0.2rem;}
+
+  /* ---------- Privacy slide ---------- */
+  .privacy-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:3.5vw;
+    margin-top:1.8rem;
+    max-width:1080px;
+  }
+  .privacy-col{
+    background:rgba(26,24,18,0.03);
+    border:1px solid rgba(26,24,18,0.14);
+    border-radius:10px;
+    padding:1.3rem 1.6rem;
+  }
+  .privacy-col.format{border-color:rgba(198,160,76,0.55);}
+  .privacy-col.security{border-color:var(--moss);}
+  .privacy-col .lbl{
+    font-size:0.7rem; letter-spacing:0.14em; text-transform:uppercase; font-weight:700;
+    margin-bottom:0.9rem; display:block;
+  }
+  .privacy-col.format .lbl{color:#9c7a2e;}
+  .privacy-col.security .lbl{color:var(--moss);}
+  .privacy-col ul{list-style:none; display:flex; flex-direction:column; gap:0.7rem;}
+  .privacy-col li{font-size:0.9rem; line-height:1.5; color:var(--ink-text-muted); padding-left:1.1rem; position:relative;}
+  .privacy-col.format li::before{content:'—'; position:absolute; left:0; color:#9c7a2e;}
+  .privacy-col.security li::before{content:'—'; position:absolute; left:0; color:var(--moss);}
+  .id-example{
+    margin-top:0.9rem;
+    padding:0.7rem 1.1rem;
+    background:rgba(198,160,76,0.1);
+    border-radius:8px;
+    font-family:'Fraunces',serif;
+    font-size:1.05rem;
+    letter-spacing:0.02em;
+    color:var(--ink-text);
+    display:flex;
+    align-items:center;
+    gap:0.6rem;
+    flex-wrap:wrap;
+  }
+  .id-example .seg{padding:0.15rem 0.4rem; border-radius:4px;}
+  .id-example .fixed{background:rgba(26,24,18,0.08); color:var(--ink-text-muted);}
+  .id-example .variable{background:var(--moss); color:var(--paper);}
+  .id-example .arrow{color:var(--ink-text-faint); font-family:'Inter',sans-serif; font-size:0.85rem;}
+  .privacy-note{
+    margin-top:1.3rem;
+    max-width:60ch;
+    font-size:0.9rem;
+    color:var(--ink-text-muted);
+    line-height:1.55;
+    padding:0.9rem 1.3rem;
+    border-left:2px solid var(--moss);
+    background:rgba(51,73,60,0.06);
+  }
+
+  /* ---------- Closing ---------- */
+  .closing-wrap{max-width:760px;}
+  .closing-steps{
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+    margin-top:2.2rem;
+  }
+  .cstep{display:flex; gap:1.1rem; align-items:baseline;}
+  .cstep .n{font-family:'Fraunces',serif; font-style:italic; color:var(--brass-light); font-size:1.1rem; flex:none; width:1.6rem;}
+  .cstep p{font-size:0.95rem; color:var(--on-ink-muted); line-height:1.5;}
+  .cstep b{color:var(--on-ink); font-weight:600;}
+  .contact-block{
+    margin-top:3rem;
+    padding-top:1.6rem;
+    border-top:1px solid rgba(198,160,76,0.3);
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:1.2rem;
+  }
+  .contact-block .brand{font-family:'Fraunces',serif; font-size:1.3rem;}
+  .contact-block .lines{text-align:right; font-size:0.85rem; color:var(--on-ink-muted); line-height:1.6;}
+
+  @media (max-width: 900px){
+    .section{padding:9vh 6vw 6vh 6vw;}
+    .about-grid, .module-wrap, .privacy-grid{grid-template-columns:1fr;}
+    .dept-grid{grid-template-columns:repeat(2,1fr);}
+    .stat-strip{grid-template-columns:repeat(2,1fr);}
+    .keycard{clip-path:none; border-radius:12px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="rail" aria-label="Slide navigation">
+  <div class="rail-track"></div>
+  <div class="rail-dot" data-target="cover" title="Overview">01</div>
+  <div class="rail-dot" data-target="about" title="About Shomvob">02</div>
+  <div class="rail-dot" data-target="understanding" title="Your Operation">03</div>
+  <div class="rail-dot" data-target="mod-attendance" title="Attendance">04</div>
+  <div class="rail-dot" data-target="mod-leave" title="Leave">05</div>
+  <div class="rail-dot" data-target="mod-device" title="Device Integration">06</div>
+  <div class="rail-dot" data-target="privacy" title="Mobile Number & Data Protection">07</div>
+  <div class="rail-dot" data-target="closing" title="Next Steps">08</div>
+</nav>
+
+<!-- 01 COVER -->
+<section class="section ink" id="cover">
+  <div class="tag eyebrow cover-eyebrow">Prepared for Terraprime Hotel &amp; Resort</div>
+  <h1 class="tag cover-headline">Attendance, leave, and check-in — <em>built for a floor that's always on a call.</em></h1>
+  <p class="tag cover-sub">A walkthrough of the Attendance, Leave, and Device Integration modules you've asked about — and how each one is configured around how Terraprime's sales and operations teams actually work day to day.</p>
+  <div class="tag cover-modules">
+    <div class="pill"><span class="dot"></span>Attendance</div>
+    <div class="pill"><span class="dot"></span>Leave Management</div>
+    <div class="pill"><span class="dot"></span>Device Integration</div>
+  </div>
+  <div class="tag cover-meta">
+    <span><strong>Shomvob</strong> HR &amp; Workforce Platform</span>
+    <span>Proposal for Terraprime Hotel &amp; Resort</span>
+  </div>
+</section>
+
+<!-- 02 ABOUT SHOMVOB -->
+<section class="section paper" id="about">
+  <div class="tag eyebrow" style="color:var(--moss);">Who you'd be working with</div>
+  <h2 class="tag headline">Built in the real world, not in isolation.</h2>
+  <div class="about-grid">
+    <div class="tag">
+      <p class="lede">Shomvob brings hiring, workforce management, and payroll into one connected ecosystem — shaped by hands-on experience running staffing and payroll for over 1,500 companies, not built in a lab. What you're evaluating today came out of solving these exact problems for teams that don't get to pause operations for HR admin.</p>
+      <div class="stat-strip">
+        <div class="stat"><div class="num">1,500+</div><div class="lbl">Clients across industries</div></div>
+        <div class="stat"><div class="num">4+</div><div class="lbl">Years of workforce experience</div></div>
+        <div class="stat"><div class="num">30,000+</div><div class="lbl">Job seekers placed</div></div>
+        <div class="stat"><div class="num">98%+</div><div class="lbl">Platform availability</div></div>
+        <div class="stat"><div class="num">100%</div><div class="lbl">Payroll cycles run on time</div></div>
+      </div>
+      <div class="logo-row">
+        <span class="lbl">Trusted across Bangladesh</span>
+        <div class="logo-chips">
+          <span class="logo-chip">Aarong</span>
+          <span class="logo-chip">Domino's Pizza</span>
+          <span class="logo-chip">foodpanda</span>
+          <span class="logo-chip">Pathao Food</span>
+          <span class="logo-chip">ShopUp</span>
+          <span class="logo-chip">Singer Bangladesh</span>
+          <span class="logo-chip">MH Global Group</span>
+          <span class="logo-chip">Chillox</span>
+          <span class="logo-chip">Artnature Bangladesh</span>
+        </div>
+        <div class="rec-row">
+          <span class="rec-chip">Recognized by Gates Foundation</span>
+          <span class="rec-chip">Cocoon</span>
+          <span class="rec-chip">Forbes Asia 100 to Watch</span>
+        </div>
+      </div>
+    </div>
+    <div class="tag strength-list">
+      <div class="strength">
+        <div class="num">01</div>
+        <h4>Workforce consulting</h4>
+        <p>Four-plus years solving hiring and manpower challenges across industries, including high-turnover, shift-based operations.</p>
+      </div>
+      <div class="strength">
+        <div class="num">02</div>
+        <h4>Operations at scale</h4>
+        <p>Staffing, bulk hiring, payroll, and resource augmentation built for teams that run around the clock.</p>
+      </div>
+      <div class="strength">
+        <div class="num">03</div>
+        <h4>Insight turned into product</h4>
+        <p>Real operating experience with 1,500+ companies shaped the modules you're looking at today.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 UNDERSTANDING TERRAPRIME -->
+<section class="section ink" id="understanding">
+  <div class="tag eyebrow cover-eyebrow">Why these three modules</div>
+  <h2 class="tag headline">The sales floor runs on calls, not sign-in sheets.</h2>
+  <p class="tag lede">This is for Terraprime's main office — the team handling sales calls, operations, and bookings for every property, not the properties themselves. That's a floor where people are in and out of calls and meetings all day, which is exactly the reality Attendance, Leave, and Device Integration are built to sit inside.</p>
+  <div class="tag dept-grid">
+    <div class="dept"><strong>Sales</strong>Outbound and inbound calls tracked against monthly targets</div>
+    <div class="dept"><strong>Operations</strong>Coordinating logistics and service delivery across properties</div>
+    <div class="dept"><strong>Reservations &amp; Bookings</strong>High call volume during peak booking season</div>
+    <div class="dept"><strong>Accounts &amp; Finance</strong>Month-end and quarter-end cycles need accurate records</div>
+    <div class="dept"><strong>Marketing</strong>Campaign-driven work with irregular hours around launches</div>
+    <div class="dept"><strong>Admin &amp; HR</strong>Running the office day to day, from onboarding to policy</div>
+  </div>
+  <div class="tag module-preview">
+    <div class="mp-item">
+      <div class="n">MODULE 01</div>
+      <h4>Attendance</h4>
+      <p>Clean, reliable records for a floor that's mostly on calls and in meetings.</p>
+    </div>
+    <div class="mp-item">
+      <div class="n">MODULE 02</div>
+      <h4>Leave</h4>
+      <p>Leave planning that doesn't stall around quarter-end or peak season.</p>
+    </div>
+    <div class="mp-item">
+      <div class="n">MODULE 03</div>
+      <h4>Device Integration</h4>
+      <p>Biometric clock-in at the office entrance — no personal phone required.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 04 MODULE: ATTENDANCE -->
+<section class="section ink" id="mod-attendance">
+  <div class="module-wrap">
+    <div class="module-left">
+      <div class="tag eyebrow">Module 01</div>
+      <h2 class="tag">Attendance</h2>
+      <p class="tag problem">Sales and operations staff spend most of the day on calls or in meetings, which makes a manual sign-in sheet unreliable. Late arrivals get disputed, and by month-end nobody has a clean, department-wise record of who was actually in for payroll.</p>
+    </div>
+    <div class="tag keycard">
+      <div class="keycard-head">
+        <span class="id">Access · 01</span>
+        <span class="prop">Terraprime Hotel &amp; Resort</span>
+      </div>
+      <h3>Attendance</h3>
+      <ul class="feature-list">
+        <li><b>Working-hour patterns per team</b>Set standard office hours for operations, with flexibility for sales staff on client calls outside normal hours.</li>
+        <li><b>Capacity planning</b>See who's covering the floor during a peak booking or sales push, before it becomes a gap.</li>
+        <li><b>Forget-attendance &amp; late-waiver requests</b>Staff raise it, a manager approves it, and it's timestamped — no more verbal disputes.</li>
+        <li><b>Attendance overview dashboard</b>One live view of who's in, out, or on leave across every department, updated through the day.</li>
+        <li><b>Attendance location map</b>Confirms where a check-in happened, useful if the team splits time between the office and client visits.</li>
+        <li><b>Date-range &amp; monthly reports</b>One export, ready for payroll, instead of a reconciliation exercise.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 05 MODULE: LEAVE -->
+<section class="section ink" id="mod-leave">
+  <div class="module-wrap">
+    <div class="module-left">
+      <div class="tag eyebrow">Module 02</div>
+      <h2 class="tag">Leave Management</h2>
+      <p class="tag problem">Leave requests bunch up around quarter-end and peak booking season — exactly when sales and operations can least afford to be short-handed without warning.</p>
+    </div>
+    <div class="tag keycard">
+      <div class="keycard-head">
+        <span class="id">Access · 02</span>
+        <span class="prop">Terraprime Hotel &amp; Resort</span>
+      </div>
+      <h3>Leave</h3>
+      <ul class="feature-list">
+        <li><b>Leave overview</b>Pending, current, and upcoming leave visible at a glance for every manager.</li>
+        <li><b>Configurable leave types &amp; policies</b>Set different rules for sales, operations, and support staff.</li>
+        <li><b>Holiday calendar</b>Public holidays and company off days, planned around peak booking season.</li>
+        <li><b>Bonus leave &amp; deduction ledgers</b>Balances update automatically, so HR isn't maintaining a parallel spreadsheet.</li>
+        <li><b>Approval center</b>Managers approve from their phone between calls and meetings, no paper trail to chase.</li>
+        <li><b>Leave history reports</b>A clean record for every department, ready whenever it's needed.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 06 MODULE: DEVICE INTEGRATION -->
+<section class="section ink" id="mod-device">
+  <div class="module-wrap">
+    <div class="module-left">
+      <div class="tag eyebrow">Module 03</div>
+      <h2 class="tag">Device Integration</h2>
+      <p class="tag problem">Manual sign-in sheets are easy to fudge and hard to reconcile, especially on a floor where people are constantly stepping out for calls, meetings, and client visits.</p>
+    </div>
+    <div class="tag keycard">
+      <div class="keycard-head">
+        <span class="id">Access · 03</span>
+        <span class="prop">Terraprime Hotel &amp; Resort</span>
+      </div>
+      <h3>Device Integration</h3>
+      <ul class="feature-list">
+        <li><b>Biometric device at the main office entrance</b>Fingerprint or face-based clock-in/out, no card or sheet to sign.</li>
+        <li><b>Automatic sync to Attendance</b>Every scan flows straight into the roster and reports, no manual entry.</li>
+        <li><b>Identity by Employee ID, not phone number</b>The device authenticates staff directly; no OTP, no app login required.</li>
+        <li><b>Built for a floor that moves</b>Still accurate even when staff step out for calls, meetings, or client visits during the day.</li>
+        <li><b>Tamper-resistant record</b>A biometric scan is far harder to dispute or hand off than a signature sheet.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 07 MOBILE NUMBER FIELD & DATA PROTECTION -->
+<section class="section paper" id="privacy">
+  <div class="tag eyebrow" style="color:var(--moss);">On the mobile number field</div>
+  <h2 class="tag headline">A required field, filled without using anyone's personal number.</h2>
+  <p class="tag lede">The mobile number field is part of how every employee account logs into the system, so it can't be left empty. What it holds is up to Terraprime — instead of a personal number, each employee gets a structured placeholder built from a fixed prefix and their employee ID, so the field is populated without a single real contact number ever being entered.</p>
+  <div class="tag privacy-grid">
+    <div class="privacy-col format">
+      <span class="lbl">The placeholder format</span>
+      <ul>
+        <li>Fixed prefix <b style="color:var(--ink-text);">01200000</b>, common to every Terraprime employee</li>
+        <li>Last 3 digits are the employee's own ID number</li>
+        <li>Together they form one valid, unique login number per employee</li>
+        <li>HR assigns it once at onboarding — no personal number is ever collected</li>
+      </ul>
+      <div class="id-example">
+        <span class="seg fixed">01200000</span><span class="arrow">+</span><span class="seg variable">014</span><span class="arrow">=</span><span class="seg fixed">01200000014</span>
+      </div>
+    </div>
+    <div class="privacy-col security">
+      <span class="lbl">Data protection &amp; compliance</span>
+      <ul>
+        <li>Data encrypted in transit and at rest across the platform</li>
+        <li>Role-based access — staff, department heads, and admins each see only what their role permits</li>
+        <li>Platform practices built to align with international data protection standards and applicable law</li>
+        <li>Ongoing security review as a standard part of platform operations</li>
+      </ul>
+    </div>
+  </div>
+  <p class="tag privacy-note">In practice: employees still log in the way the system expects — a mobile number and their credentials — it's just never their own. HR controls the ID-to-number mapping internally.</p>
+</section>
+
+<!-- 08 CLOSING -->
+<section class="section ink" id="closing">
+  <div class="closing-wrap">
+    <div class="tag eyebrow cover-eyebrow">Next steps</div>
+    <h2 class="tag headline">Let's put this on the floor, not just on screen.</h2>
+    <p class="tag lede">A short pilot is the fastest way to confirm this fits how Terraprime's main office actually runs — before rolling it out company-wide.</p>
+    <div class="tag closing-steps">
+      <div class="cstep"><span class="n">1</span><p><b>Confirm scope</b> — Attendance, Leave, and Device Integration, starting with one or two departments.</p></div>
+      <div class="cstep"><span class="n">2</span><p><b>Install &amp; configure</b> — a biometric device at the office entrance, working-hour patterns and leave policies set up per department.</p></div>
+      <div class="cstep"><span class="n">3</span><p><b>Onboard staff</b> — employee IDs and biometric enrollment, with placeholder login numbers assigned by HR.</p></div>
+      <div class="cstep"><span class="n">4</span><p><b>Review &amp; expand</b> — a short pilot period, then a decision on rolling out across the rest of the office.</p></div>
+    </div>
+    <div class="tag contact-block">
+      <div class="brand">Shomvob</div>
+      <div class="lines">
+        Rahat · Product Management Team<br>
+        rahatul@shomvob.com · 01990376524
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const dots = document.querySelectorAll('.rail-dot');
+  const sections = document.querySelectorAll('.section');
+
+  dots.forEach(dot=>{
+    dot.addEventListener('click',()=>{
+      document.getElementById(dot.dataset.target).scrollIntoView({behavior:'smooth'});
+    });
+  });
+
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        const id = entry.target.id;
+        dots.forEach(d=>d.classList.toggle('active', d.dataset.target===id));
+      }
+    });
+  },{threshold:0.5});
+
+  sections.forEach(s=>io.observe(s));
+
+  // keyboard navigation
+  document.addEventListener('keydown',(e)=>{
+    const arr = Array.from(sections);
+    const current = arr.findIndex(s=>s.classList.contains('in-view') && isMostVisible(s));
+    function isMostVisible(el){
+      const r = el.getBoundingClientRect();
+      return r.top <= window.innerHeight/2 && r.bottom >= window.innerHeight/2;
+    }
+    let idx = arr.findIndex(isMostVisible);
+    if(idx===-1) idx=0;
+    if(e.key==='ArrowDown' || e.key==='PageDown'){
+      e.preventDefault();
+      if(arr[idx+1]) arr[idx+1].scrollIntoView({behavior:'smooth'});
+    }
+    if(e.key==='ArrowUp' || e.key==='PageUp'){
+      e.preventDefault();
+      if(arr[idx-1]) arr[idx-1].scrollIntoView({behavior:'smooth'});
+    }
+  });
+</script>
+
+</body>
+</html>

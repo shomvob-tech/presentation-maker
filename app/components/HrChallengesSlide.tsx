@@ -94,7 +94,11 @@ function ChallengeIcon({ type }: { type: string }) {
   );
 }
 
-export default function HrChallengesSlide() {
+export default function HrChallengesSlide({
+  genericCopy = false,
+}: {
+  genericCopy?: boolean;
+}) {
   return (
     <section className="relative grid h-screen w-full grid-cols-[35%_65%] overflow-hidden bg-[#f4f1e7] text-[#092d19]">
       <aside className="relative overflow-hidden bg-[#0c3d20] px-[15%] py-[12%] text-white">
@@ -124,8 +128,9 @@ export default function HrChallengesSlide() {
             </h1>
             <div className="mt-6 h-1.5 w-20 rounded-full bg-[#edb713]" />
             <p className="mt-5 max-w-sm text-[clamp(0.72rem,0.95vw,1.05rem)] leading-relaxed text-white/60">
-              As 300 Ltd grows, disconnected processes make visibility,
-              consistency, and timely decisions harder.
+              {genericCopy
+                ? "As organizations grow, disconnected processes make visibility, consistency, and timely decisions harder."
+                : "As 300 Ltd grows, disconnected processes make visibility, consistency, and timely decisions harder."}
             </p>
           </div>
 

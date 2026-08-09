@@ -7,6 +7,7 @@ import {
   PRESENTATION_SESSION_KEY,
   type PresentationWizardSession,
 } from "@/lib/presentation-session";
+import { usePresentationBranding } from "./PresentationBrandingContext";
 
 const FALLBACK_LOGO = "/resources/300_ltd_logo.svg";
 
@@ -59,8 +60,11 @@ export default function ClientLogo({
   size = "md",
   className = "",
 }: ClientLogoProps) {
+  const { showClientBranding } = usePresentationBranding();
   const src = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const boxClassName = [SIZE_BOX[size], className].filter(Boolean).join(" ");
+
+  if (!showClientBranding) return null;
 
   return (
     <span className={`inline-flex shrink-0 items-center justify-center ${boxClassName}`}>

@@ -1,5 +1,12 @@
 import knowledgeBase from "./knowledge_base.json";
 
+/**
+ * Presentation-wizard module matching against knowledge_base.json.
+ * Proposal-builder keyword matching against notes-plans/module_list.md lives
+ * separately in lib/knowledge-base.ts (matchModulesFromKeywords) — do not
+ * silently replace this path until consolidation is intentional.
+ */
+
 export type ClientDetailsInput = {
   clientName: string;
   clientEmail: string;

@@ -13,6 +13,14 @@
   --color-wheel_dark1: #182837;
   --color-wheel_dark2: #203344;
   --color-wheel_accent: #28a7ce;
+
+  /* Shomvob proposal brand tokens — source of truth: shomvob_proposal_format.md */
+  --color-brand_green: #28a143;
+  --color-brand_green_deep: #1b7a34;
+  --color-brand_gold: #edb713;
+  --color-brand_gray: #58595b;
+  --color-brand_ink: #232323;
+  --color-brand_muted: #5b5b5b;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -48,20 +56,50 @@ img[alt="Shomvob HR"] {
     drop-shadow(0 2px 5px rgba(0, 0, 0, 0.6));
 }
 
+/* ==========================================================================
+   Proposal format (A4) — new system.
+
+   Page geometry (210mm x 297mm, mm-based spacing) lives on the component
+   itself (see CoverPage.tsx and future LetterheadFrame.tsx), not here. This
+   block only does print-environment housekeeping: page size, color fidelity,
+   and page breaks between `.a4-page` elements. If you're mid-migration and
+   still have old 16:9 slide components around, they're untouched below —
+   this only targets the new `.a4-page` class so both systems can coexist.
+   ========================================================================== */
 @media print {
   @page {
-    size: 13.333in 7.5in;
+    size: A4;
     margin: 0;
   }
 
   html,
   body {
     margin: 0;
-    width: 13.333in;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
 
+  .a4-page {
+    width: 210mm !important;
+    height: 297mm !important;
+    overflow: hidden;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .a4-page:last-of-type {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+
+/* ==========================================================================
+   Old presentation format (16:9 slides) — UNCHANGED from before, still
+   targets bare `section` elements exactly as it did previously, so your
+   current live deck keeps working untouched during migration. Once every
+   slide component has moved to `.a4-page`, delete this whole block.
+   ========================================================================== */
+@media print {
   section {
     width: 13.333in !important;
     min-width: 13.333in !important;

@@ -15,13 +15,21 @@
  * provide, once per cold start, into /tmp. That's why executablePath()
  * below takes an argument: without one, there's nothing for it to resolve.
  *
+ * The pack file is hosted on Vercel Blob storage (see resolvePackUrl below),
+ * not self-hosted in this app's own /public — self-hosting hit Vercel
+ * Deployment Protection, which intercepted the function's self-fetch the
+ * same way it would an unauthenticated visitor.
+ *
  * Setup required:
  *   npm uninstall @sparticuz/chromium   (if still installed — check package.json)
  *   npm install @sparticuz/chromium-min
- *   Download the release asset matching the EXACT installed chromium-min
+ *   Upload the release asset matching the EXACT installed chromium-min
  *   version from https://github.com/Sparticuz/chromium/releases —
- *   chromium-vX.X.X-pack.x64.tar for Vercel's default x64 runtime — and
- *   place it at public/chromium-pack.tar. Version mismatch = launch failure.
+ *   chromium-vX.X.X-pack.x64.tar for Vercel's default x64 runtime — to the
+ *   proposal-chromium Blob store, and set its public URL as CHROMIUM_PACK_URL
+ *   in Vercel's Environment Variables (Production + Preview). Version
+ *   mismatch between the installed package and the uploaded pack = launch
+ *   failure.
  */
 
 import { chromium as playwrightChromium, type Browser } from "playwright-core";
@@ -58,13 +66,24 @@ async function launchLocalBrowser(): Promise<Browser> {
 let cachedExecutablePath: string | null = null;
 
 function resolvePackUrl(): string {
-  // VERCEL_URL is set automatically by Vercel for every deployment
-  // (production and preview) — no manual configuration needed. Falls back
-  // to localhost only so this function doesn't crash if somehow called
-  // outside a Vercel deployment without VERCEL_URL set.
-  const host = process.env.VERCEL_URL ?? "localhost:3000";
-  const protocol = host.startsWith("localhost") ? "http" : "https";
-  return `${protocol}://${host}/chromium-pack.tar`;
+  // Hosted on Vercel Blob storage (a separate domain from the app itself),
+  // NOT self-hosted in /public. Self-hosting on the app's own domain hit
+  // Vercel Deployment Protection — the function's self-fetch to its own
+  // deployment got intercepted the same way an unauthenticated visitor
+  // would be, returning an HTML auth page instead of the tar file (which
+  // is what produced the "Invalid tar header" error). Blob storage has no
+  // such issue since it's not part of the app's own protected deployment.
+  const url = process.env.CHROMIUM_PACK_URL;
+
+  if (!url) {
+    throw new Error(
+      "CHROMIUM_PACK_URL is not set. Add it in Vercel Project Settings > " +
+        "Environment Variables (Production and Preview) — it should point " +
+        "to the chromium-pack.tar uploaded in the proposal-chromium Blob store.",
+    );
+  }
+
+  return url;
 }
 
 async function launchServerlessBrowser(): Promise<Browser> {

@@ -44,10 +44,10 @@ function ToolbarButton({
     <button
       type="button"
       onClick={onClick}
-      className={`rounded px-2.5 py-1 text-xs font-semibold transition ${
+      className={`grid h-[26px] min-w-[28px] place-items-center rounded-[7px] px-2 text-[13px] font-semibold transition ${
         isActive
-          ? "bg-[#137a3c]/15 text-[#137a3c]"
-          : "text-[#0c3d20]/60 hover:bg-[#0c3d20]/5 hover:text-[#0c3d20]"
+          ? "bg-[#28a143]/25 text-[#5ee08c]"
+          : "bg-white/[0.06] text-white/75 hover:bg-white/10 hover:text-white"
       }`}
     >
       {label}
@@ -69,32 +69,32 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
     editorProps: {
       attributes: {
         class:
-          "prose prose-sm max-w-none min-h-[120px] px-4 py-3 text-[#0c3d20] focus:outline-none [&_p]:my-1.5 [&_ul]:my-1.5 [&_li]:my-0.5",
+          "prose prose-sm prose-invert max-w-none min-h-[96px] px-3.5 py-3.5 text-[14px] leading-[1.6] text-white focus:outline-none [&_p]:my-1.5 [&_ul]:my-1.5 [&_li]:my-0.5 [&_p.is-editor-empty:first-child::before]:text-white/35 [&_p.is-editor-empty:first-child::before]:content-[attr(data-placeholder)] [&_p.is-editor-empty:first-child::before]:float-left [&_p.is-editor-empty:first-child::before]:pointer-events-none [&_p.is-editor-empty:first-child::before]:h-0",
       },
     },
   });
 
   if (!editor) {
     return (
-      <div className="min-h-[164px] rounded-lg border border-[#0c3d20]/15 bg-white" />
+      <div className="min-h-[140px] rounded-xl bg-white/[0.045] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]" />
     );
   }
 
   return (
-    <div className="rounded-lg border border-[#0c3d20]/15 bg-white transition focus-within:border-[#137a3c] focus-within:ring-2 focus-within:ring-[#137a3c]/20">
-      <div className="flex items-center gap-1 border-b border-[#0c3d20]/10 bg-[#f9faf9] px-2 py-1.5">
+    <div className="overflow-hidden rounded-xl bg-white/[0.045] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)] transition focus-within:bg-white/[0.075] focus-within:shadow-[inset_0_0_0_1px_rgba(61,220,127,0.65),0_0_0_3px_rgba(40,161,67,0.22)]">
+      <div className="flex items-center gap-1.5 border-b border-white/10 bg-white/[0.04] px-2.5 py-2">
         <ToolbarButton
-          label="Bold"
+          label="B"
           isActive={editor.isActive("bold")}
           onClick={() => editor.chain().focus().toggleBold().run()}
         />
         <ToolbarButton
-          label="Italic"
+          label="I"
           isActive={editor.isActive("italic")}
           onClick={() => editor.chain().focus().toggleItalic().run()}
         />
         <ToolbarButton
-          label="• List"
+          label="•"
           isActive={editor.isActive("bulletList")}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
         />

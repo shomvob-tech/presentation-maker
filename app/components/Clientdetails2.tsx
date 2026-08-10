@@ -255,6 +255,83 @@ function validateTrialEmailFields(form: FormState): FormErrors {
   return errors;
 }
 
+/* ------------------------------------------------------------------ */
+/* Dark theme primitives, matching design_template.html                */
+/* ------------------------------------------------------------------ */
+
+const FONT_HEADING = "font-['Inter_Tight',sans-serif]";
+const FONT_BODY = "font-['IBM_Plex_Sans',system-ui,sans-serif]";
+
+const inputClassName = `w-full rounded-[10px] border-0 bg-white/[0.045] px-3.5 py-3 text-[14.5px] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)] outline-none transition placeholder:text-white/45 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.2)] focus:bg-white/[0.075] focus:shadow-[inset_0_0_0_1px_rgba(61,220,127,0.65),0_0_0_3px_rgba(40,161,67,0.22)] ${FONT_BODY}`;
+
+const labelClassName = "block text-[13px] font-semibold tracking-[0.01em] text-white/90";
+
+const hintClassName = "mt-1 text-xs leading-[1.5] text-white/60";
+
+const errorClassName = "mt-1 text-xs font-medium text-[#ff9b9b]";
+
+/**
+ * Numbered section shell — dark card with an inset ring and a soft green
+ * hairline glow across the top edge, matching design_template.html exactly.
+ * Rendered inside the dark panel wrapper in the main component below.
+ */
+function SectionCard({
+  index,
+  title,
+  description,
+  children,
+}: {
+  index: number;
+  title: string;
+  description?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="relative overflow-hidden rounded-[14px] bg-white/[0.035] p-6 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.075)] sm:p-6">
+      <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-[#3ddc7f]/55 to-transparent" />
+      <header className="flex items-start gap-3.5">
+        <span
+          className={`flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[9px] bg-[#28a143]/16 text-sm font-bold text-[#5ee08c] shadow-[inset_0_0_0_1px_rgba(61,220,127,0.35)] ${FONT_HEADING}`}
+        >
+          {index}
+        </span>
+        <div className="min-w-0 pt-0.5">
+          <h3 className={`text-[19px] font-semibold tracking-[-0.01em] text-white ${FONT_HEADING}`}>
+            {title}
+          </h3>
+          {description ? (
+            <p className="mt-1.5 max-w-[70ch] text-[13px] leading-[1.55] text-white/50">
+              {description}
+            </p>
+          ) : null}
+        </div>
+      </header>
+      <div className="mt-[22px]">{children}</div>
+    </section>
+  );
+}
+
+/**
+ * Accessible custom checkbox — the real <input> stays functional and
+ * keyboard-focusable (visually hidden via sr-only), a sibling span renders
+ * the checkmark chip look from the mockup, which a native checkbox can't
+ * be restyled into directly.
+ */
+function CheckChip({ checked }: { checked: boolean }) {
+  return (
+    <span
+      aria-hidden
+      className={`grid h-[18px] w-[18px] shrink-0 place-items-center rounded-[6px] text-[11px] font-extrabold transition ${
+        checked
+          ? "bg-[#28a143] text-[#04170c]"
+          : "bg-white/[0.06] text-transparent shadow-[inset_0_0_0_1px_rgba(255,255,255,0.22)]"
+      }`}
+    >
+      {checked ? "✓" : ""}
+    </span>
+  );
+}
+
 export default function Clientdetails2() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState<FormState>(initialForm);
@@ -470,149 +547,204 @@ export default function Clientdetails2() {
     }
   }
 
-  const inputClassName =
-    "w-full rounded-lg border border-[#0c3d20]/15 bg-white px-4 py-3 text-[#0c3d20] placeholder:text-[#0c3d20]/40 outline-none transition focus:border-[#137a3c] focus:ring-2 focus:ring-[#137a3c]/20";
-
-  const labelClassName = "block text-sm font-semibold text-[#0c3d20]";
-
-  const hintClassName = "mt-1 text-xs text-[#0c3d20]/60";
-
-  const errorClassName = "mt-1 text-xs font-medium text-red-600";
-
   const problemStatementActive = hasProblemStatement(form);
   const requiredCount = requiredModuleCount(form);
   const selectedCount = form.selectedModules.length;
   const countIsCorrect = selectedCount === requiredCount;
 
   return (
-    <form onSubmit={handlePreview} className="space-y-8">
-      <div className="grid gap-6 md:grid-cols-2">
-        <div>
-          <label htmlFor="clientName" className={labelClassName}>
-            Client name
-          </label>
-          <p className={hintClassName}>
-            Company or organization this proposal is for.
-          </p>
-          <input
-            id="clientName"
-            name="clientName"
-            type="text"
-            autoComplete="organization"
-            value={form.clientName}
-            onChange={(event) => updateField("clientName", event.target.value)}
-            placeholder="e.g. Terraprime Hotels & Resorts Ltd."
-            className={`${inputClassName} mt-2`}
-          />
-          {errors.clientName ? (
-            <p className={errorClassName}>{errors.clientName}</p>
-          ) : null}
-        </div>
-
-        <div>
-          <label htmlFor="clientEmail" className={labelClassName}>
-            Client email
-          </label>
-          <p className={hintClassName}>
-            Primary contact for follow-up and delivery.
-          </p>
-          <input
-            id="clientEmail"
-            name="clientEmail"
-            type="email"
-            autoComplete="email"
-            value={form.clientEmail}
-            onChange={(event) => updateField("clientEmail", event.target.value)}
-            placeholder="hr@company.com"
-            className={`${inputClassName} mt-2`}
-          />
-          {errors.clientEmail ? (
-            <p className={errorClassName}>{errors.clientEmail}</p>
-          ) : null}
-        </div>
-      </div>
-
-      <div>
-        <label htmlFor="logo" className={labelClassName}>
-          Client logo
-        </label>
-        <p className={hintClassName}>
-          PNG, SVG, or JPG — used on the cover page. Transparent background,
-          no empty space around the mark.
-        </p>
-
-        <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-start">
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            className="flex min-h-36 flex-1 flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#137a3c]/35 bg-[#137a3c]/5 px-6 py-8 text-center transition hover:border-[#137a3c]/60 hover:bg-[#137a3c]/10"
-          >
-            <span className="text-sm font-medium text-[#0c3d20]">
-              Click to upload logo
-            </span>
-            <span className="mt-1 text-xs text-[#0c3d20]/60">
-              Recommended: square or wide logo on transparent background. Make sure the logo does not have empty space around it.
-            </span>
-          </button>
-
-          {logoPreview ? (
-            <div className="flex flex-col items-center gap-3 rounded-xl border border-[#0c3d20]/10 bg-white p-4">
-              <div className="relative flex h-24 w-40 items-center justify-center overflow-hidden rounded-lg bg-[#f4f7f5]">
-                <Image
-                  src={logoPreview}
-                  alt="Logo preview"
-                  fill
-                  unoptimized
-                  className="object-contain p-2"
-                />
-              </div>
-              <p className="max-w-40 truncate text-xs text-[#0c3d20]/70">
-                {logo?.name}
+    // Self-contained dark panel — NOT relying on a negative-margin trick
+    // against an assumed parent white card (the mockup's approach). Same
+    // visual result regardless of whatever the surrounding page does.
+    <div
+      className={`flex flex-col gap-5 rounded-2xl p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.10),inset_0_0_0_1px_rgba(255,255,255,0.08)] backdrop-blur-[20px] sm:p-8 ${FONT_BODY}`}
+      style={{
+        background:
+          "linear-gradient(180deg, rgba(12,45,28,0.92) 0%, rgba(5,22,13,0.94) 100%)",
+      }}
+    >
+      <form onSubmit={handlePreview} className="flex flex-col gap-5">
+        {/* ---------------------------------------------------------- */}
+        {/* 1. Client Info                                              */}
+        {/* ---------------------------------------------------------- */}
+        <SectionCard
+          index={1}
+          title="Client Info"
+          description="Company details and the logo used on the cover page."
+        >
+          <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
+            <div>
+              <label htmlFor="clientName" className={labelClassName}>
+                Client name *
+              </label>
+              <p className={hintClassName}>
+                Company or organization this proposal is for.
               </p>
-              <button
-                type="button"
-                onClick={clearLogo}
-                className="text-xs font-medium text-red-600 hover:text-red-700"
-              >
-                Remove logo
-              </button>
+              <input
+                id="clientName"
+                name="clientName"
+                type="text"
+                autoComplete="organization"
+                value={form.clientName}
+                onChange={(event) => updateField("clientName", event.target.value)}
+                placeholder="e.g. Terraprime Hotels & Resorts Ltd."
+                className={`${inputClassName} mt-2`}
+              />
+              {errors.clientName ? (
+                <p className={errorClassName}>{errors.clientName}</p>
+              ) : null}
             </div>
+
+            <div>
+              <label htmlFor="clientEmail" className={labelClassName}>
+                Client email *
+              </label>
+              <p className={hintClassName}>
+                Primary contact for follow-up and delivery.
+              </p>
+              <input
+                id="clientEmail"
+                name="clientEmail"
+                type="email"
+                autoComplete="email"
+                value={form.clientEmail}
+                onChange={(event) => updateField("clientEmail", event.target.value)}
+                placeholder="hr@company.com"
+                className={`${inputClassName} mt-2`}
+              />
+              {errors.clientEmail ? (
+                <p className={errorClassName}>{errors.clientEmail}</p>
+              ) : null}
+            </div>
+          </div>
+
+          <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-stretch">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="flex min-h-[132px] flex-1 flex-col items-center justify-center gap-1.5 rounded-xl border-[1.5px] border-dashed border-[#3ddc7f]/40 bg-gradient-to-b from-[#28a143]/10 to-[#28a143]/[0.03] p-6 text-center transition hover:border-[#3ddc7f]/75 hover:from-[#28a143]/[0.18] hover:to-[#28a143]/[0.06]"
+            >
+              <span className="grid h-[38px] w-[38px] place-items-center rounded-[11px] bg-[#3ddc7f]/15 text-lg text-[#5ee08c]">
+                ↑
+              </span>
+              <span className="text-sm font-semibold text-white">
+                Click to upload logo
+              </span>
+              <span className="max-w-[46ch] text-xs leading-[1.5] text-white/60">
+                Square or wide logo on a transparent background, with no
+                empty space around the mark.
+              </span>
+            </button>
+
+            {logoPreview ? (
+              <div className="flex w-full flex-col items-center gap-2.5 rounded-xl bg-white/[0.04] p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.09)] sm:w-[190px]">
+                <div className="relative grid h-[86px] w-full place-items-center overflow-hidden rounded-[9px] bg-white/90">
+                  <Image
+                    src={logoPreview}
+                    alt="Logo preview"
+                    fill
+                    unoptimized
+                    className="object-contain p-2"
+                  />
+                </div>
+                <p className="max-w-full truncate text-[11.5px] text-white/60">
+                  {logo?.name}
+                </p>
+                <button
+                  type="button"
+                  onClick={clearLogo}
+                  className="text-[11.5px] font-semibold text-[#ff9b9b] hover:text-[#ffbdbd]"
+                >
+                  Remove logo
+                </button>
+              </div>
+            ) : null}
+          </div>
+
+          <input
+            ref={fileInputRef}
+            id="logo"
+            name="logo"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(event) =>
+              handleLogoChange(event.target.files?.[0] ?? null)
+            }
+          />
+          {errors.logo ? <p className={errorClassName}>{errors.logo}</p> : null}
+        </SectionCard>
+
+        {/* ---------------------------------------------------------- */}
+        {/* 2. Module Selection                                         */}
+        {/* ---------------------------------------------------------- */}
+        <SectionCard
+          index={2}
+          title="Module Selection"
+          description="6 modules if there's no problem statement below, or 3 if there is one. Pick whichever are most relevant to this client."
+        >
+          <div
+            className={`inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold ${
+              countIsCorrect
+                ? "bg-[#28a143]/14 text-[#7ceaa4] shadow-[inset_0_0_0_1px_rgba(61,220,127,0.35)]"
+                : "bg-amber-400/15 text-amber-300 shadow-[inset_0_0_0_1px_rgba(251,191,36,0.35)]"
+            }`}
+          >
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${
+                countIsCorrect ? "bg-[#5ee08c] shadow-[0_0_10px_#5ee08c]" : "bg-amber-300"
+              }`}
+            />
+            {selectedCount} of {requiredCount} selected
+            {problemStatementActive ? " (problem statement included)" : ""}
+          </div>
+
+          <div
+            className="mt-4 grid gap-2.5"
+            style={{ gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))" }}
+          >
+            {MODULE_HIGHLIGHTS.map((module) => {
+              const checked = form.selectedModules.includes(module.id);
+              return (
+                <label
+                  key={module.id}
+                  className={`flex cursor-pointer items-center gap-2.5 rounded-[11px] px-3.5 py-3 text-[13.5px] font-medium transition ${
+                    checked
+                      ? "bg-[#28a143]/16 text-white shadow-[inset_0_0_0_1px_rgba(61,220,127,0.55),0_0_24px_-8px_rgba(61,220,127,0.6)]"
+                      : "bg-white/[0.03] text-white/80 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.09)] hover:bg-white/[0.06] hover:shadow-[inset_0_0_0_1px_rgba(61,220,127,0.35)]"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => toggleModule(module.id)}
+                    className="sr-only"
+                  />
+                  <CheckChip checked={checked} />
+                  {module.label}
+                </label>
+              );
+            })}
+          </div>
+
+          {errors.selectedModules ? (
+            <p className={`${errorClassName} mt-3`}>{errors.selectedModules}</p>
           ) : null}
-        </div>
+        </SectionCard>
 
-        <input
-          ref={fileInputRef}
-          id="logo"
-          name="logo"
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={(event) =>
-            handleLogoChange(event.target.files?.[0] ?? null)
-          }
-        />
-        {errors.logo ? <p className={errorClassName}>{errors.logo}</p> : null}
-      </div>
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Section 3 (Solution Proposal) — problem statement + modules       */}
-      {/* Replaces the old "Requirements" field, which lived here before.   */}
-      {/* ---------------------------------------------------------------- */}
-      <div>
-        <h3 className="text-base font-semibold text-[#0c3d20]">
-          Problem statement
-        </h3>
-        <p className="mt-1 text-sm text-[#0c3d20]/60">
-          Optional. If filled in, this is placed directly into the proposal
-          as a highlighted callout — write it exactly as you want the client
-          to read it. Leave both fields blank for no problem statement at all.
-        </p>
-
-        <div className="mt-4 space-y-4">
+        {/* ---------------------------------------------------------- */}
+        {/* 3. Problem Statement                                        */}
+        {/* ---------------------------------------------------------- */}
+        <SectionCard
+          index={3}
+          title="Problem Statement"
+          description="Optional. If filled in, this is placed directly into the proposal as a highlighted callout. Leave both fields blank for no problem statement at all."
+        >
           <div>
             <label htmlFor="problemStatementHeading" className={labelClassName}>
               Heading (optional)
             </label>
+            <p className={hintClassName}>Shown above the callout body.</p>
             <input
               id="problemStatementHeading"
               name="problemStatementHeading"
@@ -626,7 +758,7 @@ export default function Clientdetails2() {
             />
           </div>
 
-          <div>
+          <div className="mt-5">
             <label htmlFor="problemStatementText" className={labelClassName}>
               Body text
             </label>
@@ -642,626 +774,607 @@ export default function Clientdetails2() {
               />
             </div>
           </div>
-        </div>
+        </SectionCard>
 
-        <div className="mt-6 border-t border-[#0c3d20]/10 pt-6">
-          <h3 className="text-base font-semibold text-[#0c3d20]">
-            Module selection
-          </h3>
-          <p className="mt-1 text-sm text-[#0c3d20]/60">
-            <b>6 modules</b> if there's no problem statement above, or{" "}
-            <b>3 modules</b> if there is one. Pick whichever modules are most
-            relevant to this client — the highlights for each are already
-            finalized.
-          </p>
-
-          <div
-            className={`mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${
-              countIsCorrect
-                ? "bg-[#137a3c]/10 text-[#137a3c]"
-                : "bg-amber-100 text-amber-800"
-            }`}
-          >
-            {selectedCount} of {requiredCount} selected
-            {problemStatementActive ? " (problem statement included)" : ""}
-          </div>
-
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
-            {MODULE_HIGHLIGHTS.map((module) => {
-              const checked = form.selectedModules.includes(module.id);
-              return (
-                <label
-                  key={module.id}
-                  className={`flex cursor-pointer items-start gap-2 rounded-lg border px-3 py-2.5 text-sm transition ${
-                    checked
-                      ? "border-[#137a3c] bg-[#137a3c]/5 text-[#0c3d20]"
-                      : "border-[#0c3d20]/15 text-[#0c3d20]/80 hover:border-[#137a3c]/40"
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={checked}
-                    onChange={() => toggleModule(module.id)}
-                    className="mt-0.5 h-4 w-4 rounded border-[#0c3d20]/30 text-[#137a3c] focus:ring-[#137a3c]/30"
-                  />
-                  <span className="font-medium">{module.label}</span>
-                </label>
-              );
-            })}
-          </div>
-
-          {errors.selectedModules ? (
-            <p className={`${errorClassName} mt-3`}>{errors.selectedModules}</p>
-          ) : null}
-        </div>
-      </div>
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Section 1 (Cover) + Section 2 (COO Letter) specifics             */}
-      {/* ---------------------------------------------------------------- */}
-      <div className="border-t border-[#0c3d20]/10 pt-8">
-        <h3 className="text-base font-semibold text-[#0c3d20]">
-          Cover &amp; letter details
-        </h3>
-        <p className="mt-1 text-sm text-[#0c3d20]/60">
-          Used on the cover page and in the COO&apos;s introduction letter.
-        </p>
-
-        <div className="mt-5 grid gap-6 md:grid-cols-2">
-          <div>
-            <label htmlFor="documentTitle" className={labelClassName}>
-              Document title
-            </label>
-            <p className={hintClassName}>
-              Leave blank to use the default: &quot;{DEFAULT_DOCUMENT_TITLE}&quot;
-            </p>
-            <input
-              id="documentTitle"
-              name="documentTitle"
-              type="text"
-              value={form.documentTitle}
-              onChange={(event) => updateField("documentTitle", event.target.value)}
-              placeholder={DEFAULT_DOCUMENT_TITLE}
-              className={`${inputClassName} mt-2`}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="recipientTitle" className={labelClassName}>
-              Recipient title
-            </label>
-            <p className={hintClassName}>
-              Leave blank to use the default: &quot;{DEFAULT_RECIPIENT_TITLE}&quot;
-            </p>
-            <input
-              id="recipientTitle"
-              name="recipientTitle"
-              type="text"
-              value={form.recipientTitle}
-              onChange={(event) => updateField("recipientTitle", event.target.value)}
-              placeholder={DEFAULT_RECIPIENT_TITLE}
-              className={`${inputClassName} mt-2`}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="preparedDate" className={labelClassName}>
-              Proposal date
-            </label>
-            <p className={hintClassName}>
-              Used on the cover, the letter, and the section meta line.
-            </p>
-            <input
-              id="preparedDate"
-              name="preparedDate"
-              type="date"
-              value={form.preparedDate}
-              onChange={(event) => updateField("preparedDate", event.target.value)}
-              className={`${inputClassName} mt-2`}
-            />
-            {errors.preparedDate ? (
-              <p className={errorClassName}>{errors.preparedDate}</p>
-            ) : null}
-          </div>
-
-          <div>
-            <label htmlFor="letterAddresseeName" className={labelClassName}>
-              Letter addressee (if different from client name)
-            </label>
-            <p className={hintClassName}>
-              Leave blank to address the letter to the client name above.
-            </p>
-            <input
-              id="letterAddresseeName"
-              name="letterAddresseeName"
-              type="text"
-              value={form.letterAddresseeName}
-              onChange={(event) =>
-                updateField("letterAddresseeName", event.target.value)
-              }
-              placeholder="e.g. Terraprime Group"
-              className={`${inputClassName} mt-2`}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="meetingDateReference" className={labelClassName}>
-              Date of client meeting
-            </label>
-            <p className={hintClassName}>
-              Referenced in the COO letter body. Defaults to today.
-            </p>
-            <input
-              id="meetingDateReference"
-              name="meetingDateReference"
-              type="date"
-              value={form.meetingDateReference}
-              onChange={(event) =>
-                updateField("meetingDateReference", event.target.value)
-              }
-              className={`${inputClassName} mt-2`}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="validityDays" className={labelClassName}>
-              Proposal valid for (days)
-            </label>
-            <p className={hintClassName}>
-              Leave blank to use 30 days.
-            </p>
-            <input
-              id="validityDays"
-              name="validityDays"
-              type="number"
-              min={1}
-              inputMode="numeric"
-              value={form.validityDays}
-              onChange={(event) =>
-                updateField("validityDays", event.target.value)
-              }
-              placeholder="30"
-              className={`${inputClassName} mt-2`}
-            />
-            {errors.validityDays ? (
-              <p className={errorClassName}>{errors.validityDays}</p>
-            ) : null}
-          </div>
-        </div>
-      </div>
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Section 4 (Commercial Terms) specifics                           */}
-      {/* ---------------------------------------------------------------- */}
-      <div className="border-t border-[#0c3d20]/10 pt-8">
-        <h3 className="text-base font-semibold text-[#0c3d20]">
-          Commercial terms
-        </h3>
-        <p className="mt-1 text-sm text-[#0c3d20]/60">
-          Populates the pricing table on the final page. All figures in BDT.
-        </p>
-
-        <div className="mt-5 grid gap-6 md:grid-cols-3">
-          <div>
-            <label htmlFor="employeeCount" className={labelClassName}>
-              Number of employees
-            </label>
-            <input
-              id="employeeCount"
-              name="employeeCount"
-              type="number"
-              min={1}
-              inputMode="numeric"
-              value={form.employeeCount}
-              onChange={(event) => updateField("employeeCount", event.target.value)}
-              placeholder="e.g. 25"
-              className={`${inputClassName} mt-2`}
-            />
-            {errors.employeeCount ? (
-              <p className={errorClassName}>{errors.employeeCount}</p>
-            ) : null}
-          </div>
-
-          <div>
-            <label htmlFor="mrcFee" className={labelClassName}>
-              Monthly subscription fee (MRC)
-            </label>
-            <input
-              id="mrcFee"
-              name="mrcFee"
-              type="number"
-              min={0}
-              inputMode="numeric"
-              value={form.mrcFee}
-              onChange={(event) => updateField("mrcFee", event.target.value)}
-              placeholder="BDT, e.g. 2500"
-              className={`${inputClassName} mt-2`}
-            />
-            {errors.mrcFee ? (
-              <p className={errorClassName}>{errors.mrcFee}</p>
-            ) : null}
-          </div>
-
-          <div>
-            <label htmlFor="rolloutCharge" className={labelClassName}>
-              Software rollout charge
-            </label>
-            <input
-              id="rolloutCharge"
-              name="rolloutCharge"
-              type="number"
-              min={0}
-              inputMode="numeric"
-              value={form.rolloutCharge}
-              onChange={(event) => updateField("rolloutCharge", event.target.value)}
-              placeholder="BDT, e.g. 10000"
-              className={`${inputClassName} mt-2`}
-            />
-            {errors.rolloutCharge ? (
-              <p className={errorClassName}>{errors.rolloutCharge}</p>
-            ) : null}
-          </div>
-        </div>
-
-        <div className="mt-5 rounded-lg border border-[#0c3d20]/10 bg-[#f4f7f5] p-4">
-          <label className="flex items-center gap-2 text-sm font-medium text-[#0c3d20]">
-            <input
-              type="checkbox"
-              checked={form.includeFieldTracking}
-              onChange={(event) =>
-                updateField("includeFieldTracking", event.target.checked)
-              }
-              className="h-4 w-4 rounded border-[#0c3d20]/30 text-[#137a3c] focus:ring-[#137a3c]/30"
-            />
-            Include field employee tracking
-          </label>
-
-          {form.includeFieldTracking ? (
-            <div className="mt-3 max-w-xs">
-              <label htmlFor="fieldTrackingFee" className={labelClassName}>
-                Per-user fee (MRC)
+        {/* ---------------------------------------------------------- */}
+        {/* 4. Cover & letter details                                   */}
+        {/* ---------------------------------------------------------- */}
+        <SectionCard
+          index={4}
+          title="Cover & letter details"
+          description="Used on the cover page and in the COO's introduction letter."
+        >
+          <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
+            <div>
+              <label htmlFor="documentTitle" className={labelClassName}>
+                Document title
               </label>
+              <p className={hintClassName}>
+                Leave blank for &quot;{DEFAULT_DOCUMENT_TITLE}&quot;.
+              </p>
               <input
-                id="fieldTrackingFee"
-                name="fieldTrackingFee"
+                id="documentTitle"
+                name="documentTitle"
+                type="text"
+                value={form.documentTitle}
+                onChange={(event) => updateField("documentTitle", event.target.value)}
+                placeholder={DEFAULT_DOCUMENT_TITLE}
+                className={`${inputClassName} mt-2`}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="recipientTitle" className={labelClassName}>
+                Recipient title
+              </label>
+              <p className={hintClassName}>
+                Leave blank for &quot;{DEFAULT_RECIPIENT_TITLE}&quot;.
+              </p>
+              <input
+                id="recipientTitle"
+                name="recipientTitle"
+                type="text"
+                value={form.recipientTitle}
+                onChange={(event) => updateField("recipientTitle", event.target.value)}
+                placeholder={DEFAULT_RECIPIENT_TITLE}
+                className={`${inputClassName} mt-2`}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="preparedDate" className={labelClassName}>
+                Proposal date *
+              </label>
+              <p className={hintClassName}>
+                Used on the cover, the letter, and the section meta line.
+              </p>
+              <input
+                id="preparedDate"
+                name="preparedDate"
+                type="date"
+                value={form.preparedDate}
+                onChange={(event) => updateField("preparedDate", event.target.value)}
+                className={`${inputClassName} mt-2`}
+              />
+              {errors.preparedDate ? (
+                <p className={errorClassName}>{errors.preparedDate}</p>
+              ) : null}
+            </div>
+
+            <div>
+              <label htmlFor="letterAddresseeName" className={labelClassName}>
+                Letter addressee
+              </label>
+              <p className={hintClassName}>
+                Leave blank to address the letter to the client name above.
+              </p>
+              <input
+                id="letterAddresseeName"
+                name="letterAddresseeName"
+                type="text"
+                value={form.letterAddresseeName}
+                onChange={(event) =>
+                  updateField("letterAddresseeName", event.target.value)
+                }
+                placeholder="e.g. Terraprime Group"
+                className={`${inputClassName} mt-2`}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="meetingDateReference" className={labelClassName}>
+                Date of client meeting
+              </label>
+              <p className={hintClassName}>
+                Referenced in the COO letter body. Defaults to today.
+              </p>
+              <input
+                id="meetingDateReference"
+                name="meetingDateReference"
+                type="date"
+                value={form.meetingDateReference}
+                onChange={(event) =>
+                  updateField("meetingDateReference", event.target.value)
+                }
+                className={`${inputClassName} mt-2`}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="validityDays" className={labelClassName}>
+                Proposal valid for (days)
+              </label>
+              <p className={hintClassName}>Leave blank to use 30 days.</p>
+              <input
+                id="validityDays"
+                name="validityDays"
+                type="number"
+                min={1}
+                inputMode="numeric"
+                value={form.validityDays}
+                onChange={(event) =>
+                  updateField("validityDays", event.target.value)
+                }
+                placeholder="30"
+                className={`${inputClassName} mt-2`}
+              />
+              {errors.validityDays ? (
+                <p className={errorClassName}>{errors.validityDays}</p>
+              ) : null}
+            </div>
+          </div>
+        </SectionCard>
+
+        {/* ---------------------------------------------------------- */}
+        {/* 5. Commercial terms                                         */}
+        {/* ---------------------------------------------------------- */}
+        <SectionCard
+          index={5}
+          title="Commercial terms"
+          description="Populates the pricing table on the final page. All figures in BDT."
+        >
+          <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
+            <div>
+              <label htmlFor="employeeCount" className={labelClassName}>
+                Number of employees *
+              </label>
+              <p className={hintClassName}>Headcount covered by the subscription.</p>
+              <input
+                id="employeeCount"
+                name="employeeCount"
+                type="number"
+                min={1}
+                inputMode="numeric"
+                value={form.employeeCount}
+                onChange={(event) => updateField("employeeCount", event.target.value)}
+                placeholder="e.g. 25"
+                className={`${inputClassName} mt-2`}
+              />
+              {errors.employeeCount ? (
+                <p className={errorClassName}>{errors.employeeCount}</p>
+              ) : null}
+            </div>
+
+            <div>
+              <label htmlFor="mrcFee" className={labelClassName}>
+                Monthly subscription fee *
+              </label>
+              <p className={hintClassName}>MRC in BDT.</p>
+              <input
+                id="mrcFee"
+                name="mrcFee"
                 type="number"
                 min={0}
                 inputMode="numeric"
-                value={form.fieldTrackingFee}
-                onChange={(event) =>
-                  updateField("fieldTrackingFee", event.target.value)
-                }
-                placeholder="BDT per user, e.g. 100"
+                value={form.mrcFee}
+                onChange={(event) => updateField("mrcFee", event.target.value)}
+                placeholder="e.g. 2500"
                 className={`${inputClassName} mt-2`}
               />
-              {errors.fieldTrackingFee ? (
-                <p className={errorClassName}>{errors.fieldTrackingFee}</p>
-              ) : null}
-            </div>
-          ) : null}
-        </div>
-      </div>
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Proposal contact (Section 4 footer)                              */}
-      {/* ---------------------------------------------------------------- */}
-      <div className="border-t border-[#0c3d20]/10 pt-8">
-        <h3 className="text-base font-semibold text-[#0c3d20]">
-          Proposal contact
-        </h3>
-        <p className="mt-1 text-sm text-[#0c3d20]/60">
-          Shown in the footer of the final page.
-        </p>
-
-        <div className="mt-5 grid gap-6 md:grid-cols-2">
-          <div>
-            <label htmlFor="contactName" className={labelClassName}>
-              Prepared by (name)
-            </label>
-            <input
-              id="contactName"
-              name="contactName"
-              type="text"
-              value={form.contactName}
-              onChange={(event) => updateField("contactName", event.target.value)}
-              placeholder="e.g. Hasib Rahman"
-              className={`${inputClassName} mt-2`}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="contactTeam" className={labelClassName}>
-              Team
-            </label>
-            <input
-              id="contactTeam"
-              name="contactTeam"
-              type="text"
-              value={form.contactTeam}
-              onChange={(event) => updateField("contactTeam", event.target.value)}
-              placeholder="e.g. Sales"
-              className={`${inputClassName} mt-2`}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="contactEmail" className={labelClassName}>
-              Contact email
-            </label>
-            <input
-              id="contactEmail"
-              name="contactEmail"
-              type="email"
-              autoComplete="email"
-              value={form.contactEmail}
-              onChange={(event) =>
-                updateField("contactEmail", event.target.value)
-              }
-              placeholder="name@shomvob.com"
-              className={`${inputClassName} mt-2`}
-            />
-            {errors.contactEmail ? (
-              <p className={errorClassName}>{errors.contactEmail}</p>
-            ) : null}
-          </div>
-
-          <div>
-            <label htmlFor="contactPhone" className={labelClassName}>
-              Contact phone
-            </label>
-            <input
-              id="contactPhone"
-              name="contactPhone"
-              type="tel"
-              autoComplete="tel"
-              value={form.contactPhone}
-              onChange={(event) =>
-                updateField("contactPhone", event.target.value)
-              }
-              placeholder="+880…"
-              className={`${inputClassName} mt-2`}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Trial account email (Send mail button)                           */}
-      {/* ---------------------------------------------------------------- */}
-      <div className="border-t border-[#0c3d20]/10 pt-8">
-        <h3 className="text-base font-semibold text-[#0c3d20]">
-          Trial account email
-        </h3>
-        <p className="mt-1 text-sm text-[#0c3d20]/60">
-          Only used by the &quot;Send mail&quot; button below — not part of
-          the proposal PDF. Required to send, but won&apos;t block saving or
-          downloading the proposal.
-        </p>
-
-        <div className="mt-5 grid gap-6 md:grid-cols-2">
-          <div>
-            <label htmlFor="trialPortalUrl" className={labelClassName}>
-              Portal URL
-            </label>
-            <input
-              id="trialPortalUrl"
-              name="trialPortalUrl"
-              type="url"
-              value={form.trialPortalUrl}
-              onChange={(event) => updateField("trialPortalUrl", event.target.value)}
-              placeholder={DEFAULT_TRIAL_PORTAL_URL}
-              className={`${inputClassName} mt-2`}
-            />
-            {errors.trialPortalUrl ? (
-              <p className={errorClassName}>{errors.trialPortalUrl}</p>
-            ) : null}
-          </div>
-
-          <div>
-            <label htmlFor="trialUsername" className={labelClassName}>
-              Username
-            </label>
-            <input
-              id="trialUsername"
-              name="trialUsername"
-              type="text"
-              value={form.trialUsername}
-              onChange={(event) => updateField("trialUsername", event.target.value)}
-              placeholder="e.g. nazmul@tazahairoil.com"
-              className={`${inputClassName} mt-2`}
-            />
-            {errors.trialUsername ? (
-              <p className={errorClassName}>{errors.trialUsername}</p>
-            ) : null}
-          </div>
-
-          <div>
-            <label htmlFor="trialPassword" className={labelClassName}>
-              Password
-            </label>
-            <input
-              id="trialPassword"
-              name="trialPassword"
-              type="text"
-              value={TRIAL_ACCOUNT_PASSWORD}
-              readOnly
-              className={`${inputClassName} mt-2 bg-[#0c3d20]/5 text-[#0c3d20]/70`}
-            />
-            <p className="mt-1 text-xs text-[#0c3d20]/55">
-              Fixed for all trial accounts — included automatically in the mail.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="trialStartDate" className={labelClassName}>
-                Trial start
-              </label>
-              <input
-                id="trialStartDate"
-                name="trialStartDate"
-                type="date"
-                value={form.trialStartDate}
-                onChange={(event) =>
-                  updateField("trialStartDate", event.target.value)
-                }
-                className={`${inputClassName} mt-2`}
-              />
-              {errors.trialStartDate ? (
-                <p className={errorClassName}>{errors.trialStartDate}</p>
+              {errors.mrcFee ? (
+                <p className={errorClassName}>{errors.mrcFee}</p>
               ) : null}
             </div>
 
             <div>
-              <label htmlFor="trialEndDate" className={labelClassName}>
-                Trial end
+              <label htmlFor="rolloutCharge" className={labelClassName}>
+                Software rollout charge *
               </label>
+              <p className={hintClassName}>One-time, in BDT.</p>
               <input
-                id="trialEndDate"
-                name="trialEndDate"
-                type="date"
-                value={form.trialEndDate}
-                onChange={(event) =>
-                  updateField("trialEndDate", event.target.value)
-                }
+                id="rolloutCharge"
+                name="rolloutCharge"
+                type="number"
+                min={0}
+                inputMode="numeric"
+                value={form.rolloutCharge}
+                onChange={(event) => updateField("rolloutCharge", event.target.value)}
+                placeholder="e.g. 10000"
                 className={`${inputClassName} mt-2`}
               />
-              {errors.trialEndDate ? (
-                <p className={errorClassName}>{errors.trialEndDate}</p>
+              {errors.rolloutCharge ? (
+                <p className={errorClassName}>{errors.rolloutCharge}</p>
               ) : null}
             </div>
           </div>
-        </div>
 
-        <div className="mt-6 border-t border-[#0c3d20]/10 pt-6">
-          <h4 className="text-sm font-semibold text-[#0c3d20]">Sent from</h4>
-          <p className="mt-1 text-xs text-[#0c3d20]/60">
-            Signs off the trial email — fill in who on the team is sending this
-            one.
-          </p>
-
-          <div className="mt-3 grid gap-6 md:grid-cols-2">
-            <div>
-              <label htmlFor="trialSenderName" className={labelClassName}>
-                Name
-              </label>
+          <div className="mt-5 rounded-xl bg-white/[0.03] p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]">
+            <label className="flex cursor-pointer items-center gap-2.5 text-sm font-medium text-white/90">
               <input
-                id="trialSenderName"
-                name="trialSenderName"
+                type="checkbox"
+                checked={form.includeFieldTracking}
+                onChange={(event) =>
+                  updateField("includeFieldTracking", event.target.checked)
+                }
+                className="sr-only"
+              />
+              <CheckChip checked={form.includeFieldTracking} />
+              Include field employee tracking
+            </label>
+
+            {form.includeFieldTracking ? (
+              <div className="mt-3 max-w-xs">
+                <label htmlFor="fieldTrackingFee" className={labelClassName}>
+                  Per-user fee (MRC)
+                </label>
+                <input
+                  id="fieldTrackingFee"
+                  name="fieldTrackingFee"
+                  type="number"
+                  min={0}
+                  inputMode="numeric"
+                  value={form.fieldTrackingFee}
+                  onChange={(event) =>
+                    updateField("fieldTrackingFee", event.target.value)
+                  }
+                  placeholder="BDT per user, e.g. 100"
+                  className={`${inputClassName} mt-2`}
+                />
+                {errors.fieldTrackingFee ? (
+                  <p className={errorClassName}>{errors.fieldTrackingFee}</p>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        </SectionCard>
+
+        {/* ---------------------------------------------------------- */}
+        {/* 6. Proposal Contact                                         */}
+        {/* ---------------------------------------------------------- */}
+        <SectionCard
+          index={6}
+          title="Proposal Contact"
+          description="Shown in the footer of the final page."
+        >
+          <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
+            <div>
+              <label htmlFor="contactName" className={labelClassName}>
+                Prepared by (name)
+              </label>
+              <p className={hintClassName}>Who owns this proposal.</p>
+              <input
+                id="contactName"
+                name="contactName"
                 type="text"
-                value={form.trialSenderName}
-                onChange={(event) =>
-                  updateField("trialSenderName", event.target.value)
-                }
-                placeholder="e.g. Md. Ariful Islam Manik"
+                value={form.contactName}
+                onChange={(event) => updateField("contactName", event.target.value)}
+                placeholder="e.g. Hasib Rahman"
                 className={`${inputClassName} mt-2`}
               />
             </div>
 
             <div>
-              <label htmlFor="trialSenderTitle" className={labelClassName}>
-                Title
+              <label htmlFor="contactTeam" className={labelClassName}>
+                Team
               </label>
+              <p className={hintClassName}>Internal team name.</p>
               <input
-                id="trialSenderTitle"
-                name="trialSenderTitle"
+                id="contactTeam"
+                name="contactTeam"
                 type="text"
-                value={form.trialSenderTitle}
-                onChange={(event) =>
-                  updateField("trialSenderTitle", event.target.value)
-                }
-                placeholder="e.g. Manager – HRM Growth"
+                value={form.contactTeam}
+                onChange={(event) => updateField("contactTeam", event.target.value)}
+                placeholder="e.g. Sales"
                 className={`${inputClassName} mt-2`}
               />
             </div>
 
             <div>
-              <label htmlFor="trialSenderPhone" className={labelClassName}>
-                Phone
+              <label htmlFor="contactEmail" className={labelClassName}>
+                Contact email
               </label>
               <input
-                id="trialSenderPhone"
-                name="trialSenderPhone"
-                type="tel"
-                value={form.trialSenderPhone}
-                onChange={(event) =>
-                  updateField("trialSenderPhone", event.target.value)
-                }
-                placeholder="e.g. +880 1xxxxxxx"
-                className={`${inputClassName} mt-2`}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="trialSenderEmail" className={labelClassName}>
-                Email
-              </label>
-              <input
-                id="trialSenderEmail"
-                name="trialSenderEmail"
+                id="contactEmail"
+                name="contactEmail"
                 type="email"
                 autoComplete="email"
-                value={form.trialSenderEmail}
+                value={form.contactEmail}
                 onChange={(event) =>
-                  updateField("trialSenderEmail", event.target.value)
+                  updateField("contactEmail", event.target.value)
                 }
-                placeholder="e.g. ariful@shomvob.com"
+                placeholder="name@shomvob.com"
+                className={`${inputClassName} mt-2`}
+              />
+              {errors.contactEmail ? (
+                <p className={errorClassName}>{errors.contactEmail}</p>
+              ) : null}
+            </div>
+
+            <div>
+              <label htmlFor="contactPhone" className={labelClassName}>
+                Contact phone
+              </label>
+              <input
+                id="contactPhone"
+                name="contactPhone"
+                type="tel"
+                autoComplete="tel"
+                value={form.contactPhone}
+                onChange={(event) =>
+                  updateField("contactPhone", event.target.value)
+                }
+                placeholder="+880…"
                 className={`${inputClassName} mt-2`}
               />
             </div>
           </div>
-        </div>
-      </div>
+        </SectionCard>
 
-      <div className="rounded-xl border border-[#137a3c]/20 bg-[#137a3c]/5 px-5 py-4">
-        <p className="text-sm font-medium text-[#0c3d20]">What happens next</p>
-        <ul className="mt-2 space-y-1 text-sm text-[#0c3d20]/75">
-          <li>"Save &amp; Preview" saves input and opens in a new tab.</li>
-          <li>"Download pdf" uses the last saved version of inputs.</li>
-          <li>"Send mail" opens your mail client without attachment. (for current version)</li>
-          <li>Attach proposal PDF manually before sending.</li>
-        </ul>
-      </div>
-
-      <div className="flex flex-col-reverse gap-3 border-t border-[#0c3d20]/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-        <Link
-          href="/proposal-builder"
-          className="text-center text-sm font-medium text-[#0c3d20]/70 transition hover:text-[#0c3d20]"
+        {/* ---------------------------------------------------------- */}
+        {/* 7. Trial account email                                      */}
+        {/* ---------------------------------------------------------- */}
+        <SectionCard
+          index={7}
+          title="Trial account email"
+          description={
+            <>
+              Only used by the &quot;Send mail&quot; button — not part of the
+              proposal PDF. Required to send, but won&apos;t block saving or
+              downloading the proposal.
+            </>
+          }
         >
-          ← Back
-        </Link>
+          <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
+            <div>
+              <label htmlFor="trialPortalUrl" className={labelClassName}>
+                Portal URL *
+              </label>
+              <p className={hintClassName}>Where the client signs in.</p>
+              <input
+                id="trialPortalUrl"
+                name="trialPortalUrl"
+                type="url"
+                value={form.trialPortalUrl}
+                onChange={(event) => updateField("trialPortalUrl", event.target.value)}
+                placeholder={DEFAULT_TRIAL_PORTAL_URL}
+                className={`${inputClassName} mt-2`}
+              />
+              {errors.trialPortalUrl ? (
+                <p className={errorClassName}>{errors.trialPortalUrl}</p>
+              ) : null}
+            </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <button
-            type="button"
-            onClick={handleSendMail}
-            className="rounded-xl border border-[#0c3d20]/20 bg-white px-8 py-4 text-base font-semibold text-[#0c3d20] transition hover:border-[#0c3d20]/40 hover:bg-[#f4f7f5]"
-          >
-            Send mail
-          </button>
-          <button
-            type="button"
-            onClick={handleDownloadPdf}
-            disabled={isDownloadingPdf}
-            className="rounded-xl border border-[#0c3d20]/20 bg-white px-8 py-4 text-base font-semibold text-[#0c3d20] transition hover:border-[#0c3d20]/40 hover:bg-[#f4f7f5] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isDownloadingPdf ? "Generating PDF…" : "Download PDF"}
-          </button>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="rounded-xl bg-[#edb713] px-8 py-4 text-base font-semibold text-[#0c3d20] shadow-lg shadow-black/10 transition hover:bg-[#f5c832] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isSubmitting ? "Saving…" : "Preview Proposal"}
-          </button>
+            <div>
+              <label htmlFor="trialUsername" className={labelClassName}>
+                Username *
+              </label>
+              <p className={hintClassName}>The trial login handed to the client.</p>
+              <input
+                id="trialUsername"
+                name="trialUsername"
+                type="text"
+                value={form.trialUsername}
+                onChange={(event) => updateField("trialUsername", event.target.value)}
+                placeholder="e.g. nazmul@tazahairoil.com"
+                className={`${inputClassName} mt-2`}
+              />
+              {errors.trialUsername ? (
+                <p className={errorClassName}>{errors.trialUsername}</p>
+              ) : null}
+            </div>
+
+            <div>
+              <label htmlFor="trialPassword" className={labelClassName}>
+                Password
+              </label>
+              <input
+                id="trialPassword"
+                name="trialPassword"
+                type="text"
+                value={TRIAL_ACCOUNT_PASSWORD}
+                readOnly
+                className={`${inputClassName} mt-2 opacity-70`}
+              />
+              <p className={hintClassName}>
+                Fixed for all trial accounts — included automatically in the
+                mail.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label htmlFor="trialStartDate" className={labelClassName}>
+                  Trial start
+                </label>
+                <input
+                  id="trialStartDate"
+                  name="trialStartDate"
+                  type="date"
+                  value={form.trialStartDate}
+                  onChange={(event) =>
+                    updateField("trialStartDate", event.target.value)
+                  }
+                  className={`${inputClassName} mt-2`}
+                />
+                {errors.trialStartDate ? (
+                  <p className={errorClassName}>{errors.trialStartDate}</p>
+                ) : null}
+              </div>
+
+              <div>
+                <label htmlFor="trialEndDate" className={labelClassName}>
+                  Trial end
+                </label>
+                <input
+                  id="trialEndDate"
+                  name="trialEndDate"
+                  type="date"
+                  value={form.trialEndDate}
+                  onChange={(event) =>
+                    updateField("trialEndDate", event.target.value)
+                  }
+                  className={`${inputClassName} mt-2`}
+                />
+                {errors.trialEndDate ? (
+                  <p className={errorClassName}>{errors.trialEndDate}</p>
+                ) : null}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 border-t border-white/10 pt-5">
+            <h4 className={`text-sm font-semibold text-white ${FONT_HEADING}`}>
+              Sent from
+            </h4>
+            <p className="mt-1 text-xs text-white/60">
+              Signs off the trial email — pre-filled, change if someone else
+              on the team is sending this one.
+            </p>
+
+            <div
+              className="mt-3 grid gap-5"
+              style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}
+            >
+              <div>
+                <label htmlFor="trialSenderName" className={labelClassName}>
+                  Name
+                </label>
+                <input
+                  id="trialSenderName"
+                  name="trialSenderName"
+                  type="text"
+                  value={form.trialSenderName}
+                  onChange={(event) =>
+                    updateField("trialSenderName", event.target.value)
+                  }
+                  placeholder="e.g. Md. Ariful Islam Manik"
+                  className={`${inputClassName} mt-2`}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="trialSenderTitle" className={labelClassName}>
+                  Title
+                </label>
+                <input
+                  id="trialSenderTitle"
+                  name="trialSenderTitle"
+                  type="text"
+                  value={form.trialSenderTitle}
+                  onChange={(event) =>
+                    updateField("trialSenderTitle", event.target.value)
+                  }
+                  placeholder="e.g. Manager – HRM Growth"
+                  className={`${inputClassName} mt-2`}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="trialSenderPhone" className={labelClassName}>
+                  Phone
+                </label>
+                <input
+                  id="trialSenderPhone"
+                  name="trialSenderPhone"
+                  type="tel"
+                  value={form.trialSenderPhone}
+                  onChange={(event) =>
+                    updateField("trialSenderPhone", event.target.value)
+                  }
+                  className={`${inputClassName} mt-2`}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="trialSenderEmail" className={labelClassName}>
+                  Email
+                </label>
+                <input
+                  id="trialSenderEmail"
+                  name="trialSenderEmail"
+                  type="email"
+                  autoComplete="email"
+                  value={form.trialSenderEmail}
+                  onChange={(event) =>
+                    updateField("trialSenderEmail", event.target.value)
+                  }
+                  className={`${inputClassName} mt-2`}
+                />
+              </div>
+            </div>
+          </div>
+        </SectionCard>
+
+        {/* ---------------------------------------------------------- */}
+        {/* What happens next                                           */}
+        {/* ---------------------------------------------------------- */}
+        <div
+          className="rounded-[14px] p-5"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(237,183,19,0.12), rgba(237,183,19,0.03))",
+            boxShadow: "inset 0 0 0 1px rgba(237,183,19,0.28)",
+          }}
+        >
+          <p className={`text-[13.5px] font-bold tracking-[0.02em] text-[#f3cf5e] ${FONT_HEADING}`}>
+            What happens next
+          </p>
+          <ul className="mt-2.5 flex flex-col gap-1.5 text-[13.5px] leading-[1.5] text-white/70">
+            <li className="flex gap-2.5">
+              <span className="text-[#edb713]">—</span>
+              &quot;Preview Proposal&quot; saves input and opens it in a new tab.
+            </li>
+            <li className="flex gap-2.5">
+              <span className="text-[#edb713]">—</span>
+              &quot;Download PDF&quot; uses the last saved inputs. May take up
+              to a minute.
+            </li>
+            <li className="flex gap-2.5">
+              <span className="text-[#edb713]">—</span>
+              &quot;Send mail&quot; opens your mail client without an
+              attachment.
+            </li>
+            <li className="flex gap-2.5">
+              <span className="text-[#edb713]">—</span>
+              Attach the proposal PDF manually before sending.
+            </li>
+          </ul>
         </div>
-      </div>
 
-      {pdfError ? (
-        <p className="text-sm font-medium text-red-600" role="alert">
-          Could not generate PDF: {pdfError}
-        </p>
-      ) : null}
-    </form>
+        {/* ---------------------------------------------------------- */}
+        {/* Actions                                                     */}
+        {/* ---------------------------------------------------------- */}
+        <div className="flex flex-col-reverse gap-4 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
+          <Link
+            href="/proposal-builder"
+            className="text-center text-sm font-medium text-white/60 transition hover:text-white"
+          >
+            ← Back
+          </Link>
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <button
+              type="button"
+              onClick={handleSendMail}
+              className={`rounded-xl bg-white/5 px-6 py-[15px] text-[15px] font-semibold text-white/90 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16)] transition hover:bg-white/10 ${FONT_HEADING}`}
+            >
+              Send mail
+            </button>
+            <button
+              type="button"
+              onClick={handleDownloadPdf}
+              disabled={isDownloadingPdf}
+              className={`rounded-xl bg-white/5 px-6 py-[15px] text-[15px] font-semibold text-white/90 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16)] transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50 ${FONT_HEADING}`}
+            >
+              {isDownloadingPdf ? "Generating PDF…" : "Download PDF"}
+            </button>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className={`rounded-xl px-7 py-[15px] text-[15px] font-bold text-[#0c3d20] shadow-[0_10px_30px_-10px_rgba(237,183,19,0.75),inset_0_1px_0_rgba(255,255,255,0.62)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60 ${FONT_HEADING}`}
+              style={{ background: "linear-gradient(180deg,#f3c634,#edb713)" }}
+            >
+              {isSubmitting ? "Saving…" : "Preview Proposal"}
+            </button>
+          </div>
+        </div>
+
+        {pdfError ? (
+          <p className="text-sm font-medium text-[#ff9b9b]" role="alert">
+            Could not generate PDF: {pdfError}
+          </p>
+        ) : null}
+      </form>
+    </div>
   );
 }

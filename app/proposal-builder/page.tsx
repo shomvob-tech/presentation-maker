@@ -50,9 +50,9 @@ export default function ProposalBuilderPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow-2xl shadow-black/20 md:p-8">
+        {/* <div className="rounded-2xl bg-white p-6 shadow-2xl shadow-black/20 md:p-8"> */}
           <Clientdetails2 />
-        </div>
+        {/* </div> */}
       </div>
     </main>
   );

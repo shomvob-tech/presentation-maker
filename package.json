@@ -11,7 +11,7 @@
     "test:points": "npx --yes tsx scripts/test-point-selection.mts"
   },
   "dependencies": {
-    "@sparticuz/chromium": "^147.0.0",
+    "@sparticuz/chromium-min": "^149.0.0",
     "@tiptap/extension-placeholder": "^3.29.2",
     "@tiptap/pm": "^3.29.2",
     "@tiptap/react": "^3.29.2",

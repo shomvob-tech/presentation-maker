@@ -4,19 +4,24 @@
  * Local dev / CI: tries system Chrome/Edge first, falls back to Playwright's
  * own bundled Chromium (same behavior as scripts/export-pdf.mjs — untouched).
  *
- * Vercel (or any environment with VERCEL set, which Vercel sets
- * automatically on every deployment): system Chrome doesn't exist and
- * Playwright's bundled browser is too large for the serverless bundle. Uses
- * @sparticuz/chromium (a Chromium build packaged specifically for AWS
- * Lambda / Vercel serverless functions) via playwright-core instead.
+ * Vercel: uses @sparticuz/chromium-min, NOT the full @sparticuz/chromium
+ * package. The full package bundles the actual Chromium binary (~50-60MB),
+ * which is a documented source of "works locally, crashes on Vercel"
+ * failures — the binary can trigger a native process crash (missing shared
+ * libraries) that no JS try/catch can intercept, surfacing as Next's generic
+ * platform error page instead of a normal thrown error.
  *
- * Install:
- *   npm install playwright-core @sparticuz/chromium
+ * chromium-min ships NO binary at all — it downloads one from a URL you
+ * provide, once per cold start, into /tmp. That's why executablePath()
+ * below takes an argument: without one, there's nothing for it to resolve.
  *
- * The API route should import ONLY from this file for its browser launch —
- * don't import `chromium` from "playwright" directly in route.ts, or the
- * full (browser-bundled) package will try to get pulled into the serverless
- * function trace.
+ * Setup required:
+ *   npm uninstall @sparticuz/chromium   (if still installed — check package.json)
+ *   npm install @sparticuz/chromium-min
+ *   Download the release asset matching the EXACT installed chromium-min
+ *   version from https://github.com/Sparticuz/chromium/releases —
+ *   chromium-vX.X.X-pack.x64.tar for Vercel's default x64 runtime — and
+ *   place it at public/chromium-pack.tar. Version mismatch = launch failure.
  */
 
 import { chromium as playwrightChromium, type Browser } from "playwright-core";
@@ -47,16 +52,33 @@ async function launchLocalBrowser(): Promise<Browser> {
   );
 }
 
+// Cached across warm invocations of the same function instance — avoids
+// re-downloading and re-extracting the ~65MB pack on every request. Cold
+// starts still pay this cost once.
+let cachedExecutablePath: string | null = null;
+
+function resolvePackUrl(): string {
+  // VERCEL_URL is set automatically by Vercel for every deployment
+  // (production and preview) — no manual configuration needed. Falls back
+  // to localhost only so this function doesn't crash if somehow called
+  // outside a Vercel deployment without VERCEL_URL set.
+  const host = process.env.VERCEL_URL ?? "localhost:3000";
+  const protocol = host.startsWith("localhost") ? "http" : "https";
+  return `${protocol}://${host}/chromium-pack.tar`;
+}
+
 async function launchServerlessBrowser(): Promise<Browser> {
-  // Dynamic import: @sparticuz/chromium is a large, platform-specific
-  // package. Keeping the import inside this branch means local dev never
-  // needs it installed to run, and Next's file tracing only bundles it for
-  // the serverless build where it's actually reached.
-  const { default: chromium } = await import("@sparticuz/chromium");
+  // Dynamic import: keeps this package out of the local-dev path entirely,
+  // and out of anything Next traces for routes that don't reach this branch.
+  const { default: chromium } = await import("@sparticuz/chromium-min");
+
+  if (!cachedExecutablePath) {
+    cachedExecutablePath = await chromium.executablePath(resolvePackUrl());
+  }
 
   return await playwrightChromium.launch({
     args: chromium.args,
-    executablePath: await chromium.executablePath(),
+    executablePath: cachedExecutablePath,
     headless: true,
   });
 }

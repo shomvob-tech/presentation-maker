@@ -3,7 +3,7 @@ import Link from "next/link";
 import LightRays from "@/app/components/LightRays";
 
 const SAMPLE_PROPOSAL_PATH =
-  "/resources/Shomvob-HR-Billal-Trading-Corporation-Proposal.pdf";
+  "/resources/Sample_proposal.pdf";
 
 export default function Home() {
   return (
@@ -26,7 +26,7 @@ export default function Home() {
         />
       </div>
 
-      <header className="relative z-10 flex items-center justify-center px-8 py-8 md:justify-start md:px-12">
+      <header className="home-fade-in relative z-10 flex items-center justify-center px-8 py-8 md:justify-start md:px-12">
         <Image
           src="/resources/shomvob_hr_text.png"
           alt="Shomvob HR"
@@ -37,38 +37,38 @@ export default function Home() {
       </header>
 
       <section className="relative z-10 flex flex-1 flex-col items-center justify-center px-8 pb-20 pt-8 text-center md:px-12">
-        <p className="mb-4 inline-block rounded-full border border-[#28a143]/40 bg-[#28a143]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#5cd47e]">
+        <p className="home-fade-in home-fade-delay-1 mb-4 inline-block rounded-full border border-[#28a143]/40 bg-[#28a143]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#5cd47e]">
           Shomvob HR
         </p>
 
-        <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight md:text-6xl">
+        <h1 className="home-fade-in home-fade-delay-2 home-text-sheen max-w-3xl text-4xl font-bold leading-tight tracking-tight md:text-6xl">
           Proposal Builder
         </h1>
 
-        <p className="mt-6 max-w-xl text-lg text-white/70 md:text-xl">
+        <p className="home-fade-in home-fade-delay-3 mt-6 max-w-xl text-lg text-white/70 md:text-xl">
           Assemble a branded, client-ready proposal — cover, letter, solution,
           and commercial terms — in minutes.
         </p>
 
-        <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
+        <div className="home-fade-in home-fade-delay-4 mt-10 flex flex-col items-center gap-4 sm:flex-row">
           <Link
             href="/proposal-builder"
-            className="rounded-xl bg-[#edb713] px-8 py-4 text-base font-semibold text-[#0c3d20] shadow-lg shadow-black/20 transition hover:bg-[#f5c832] hover:shadow-xl"
+            className="home-button-sheen rounded-xl bg-[#edb713] px-8 py-4 text-base font-semibold text-[#0c3d20] shadow-lg shadow-black/20 transition hover:bg-[#f5c832] hover:shadow-xl"
           >
-            Start a new proposal
+            <span className="relative z-10">Start a new proposal</span>
           </Link>
           <a
             href={SAMPLE_PROPOSAL_PATH}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-xl border border-white/25 px-8 py-4 text-base font-medium text-white/90 transition hover:border-white/50 hover:bg-white/5"
+            className="home-button-sheen rounded-xl border border-white/25 px-8 py-4 text-base font-medium text-white/90 transition hover:border-white/50 hover:bg-white/5"
           >
-            View sample proposal
+            <span className="relative z-10">View sample proposal</span>
           </a>
         </div>
       </section>
 
-      <footer className="relative z-10 border-t border-white/10 px-8 py-6 text-center text-sm text-white/50 md:px-12">
+      <footer className="home-fade-in home-fade-delay-5 relative z-10 border-t border-white/10 px-8 py-6 text-center text-sm text-white/50 md:px-12">
         Powered by{" "}
         <span className="font-medium text-[#edb713]">Shomvob Technologies</span>
       </footer>

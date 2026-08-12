@@ -13,7 +13,7 @@ export type ProposalDetails = {
   recipientTitle: string;
   employeeCount: number;
   mrcFee: number;
-  rolloutCharge: number;
+  rolloutCharge?: number;
   fieldTrackingFee?: number;
   /** Letter "To," name — defaults to client name when omitted at save time. */
   letterAddresseeName?: string;
@@ -21,10 +21,6 @@ export type ProposalDetails = {
   meetingDateReference?: string;
   /** Days the proposal remains valid; defaults to 30. */
   validityDays?: number;
-  contactName?: string;
-  contactTeam?: string;
-  contactEmail?: string;
-  contactPhone?: string;
 
   /**
    * Section 3 (Solution Proposal) — one-page format. `problemStatementText`
@@ -35,9 +31,9 @@ export type ProposalDetails = {
    */
   problemStatementHeading?: string;
   problemStatementText?: string;
-  /** Module ids from lib/module-highlights.ts. Exactly 3 (with a problem
-   * statement) or 6 (without), enforced by Clientdetails2.tsx's validation
-   * at submit time — not re-validated here. */
+  /** Module ids from lib/module-highlights.ts. Up to 6 (with a problem
+   * statement) or 8 (without) — a ceiling, not an exact quota — enforced by
+   * Clientdetails2.tsx's validation at submit time, not re-validated here. */
   selectedModules?: string[];
 };
 

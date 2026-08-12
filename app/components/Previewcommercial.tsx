@@ -58,10 +58,6 @@ export default function PreviewCommercialTermsPage() {
           mrcFee={state.details.mrcFee}
           rolloutCharge={state.details.rolloutCharge}
           fieldTrackingFee={state.details.fieldTrackingFee}
-          contactName={state.details.contactName}
-          contactTeam={state.details.contactTeam}
-          contactEmail={state.details.contactEmail}
-          contactPhone={state.details.contactPhone}
           shomvobLogoSrc={SHOMVOB_LOGO_SRC}
         />
       </div>

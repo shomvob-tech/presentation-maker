@@ -49,15 +49,10 @@ type FormState = {
   // Section 4 (Commercial Terms)
   employeeCount: string;
   mrcFee: string;
+  includeRolloutCharge: boolean;
   rolloutCharge: string;
   includeFieldTracking: boolean;
   fieldTrackingFee: string;
-
-  // Proposal contact (Section 4 footer)
-  contactName: string;
-  contactTeam: string;
-  contactEmail: string;
-  contactPhone: string;
 
   // Trial account email (Send mail button). Kept separate from the
   // "Proposal contact" fields above — the trial invite is plausibly sent by
@@ -83,12 +78,23 @@ const DEFAULT_RECIPIENT_TITLE = "Managing Director";
  * that ever changes (e.g. staging environment for a specific client). */
 const DEFAULT_TRIAL_PORTAL_URL = "https://hr.shomvob.com/";
 
-/** Section 3 is a fixed one-page layout: 3 modules if a problem statement is
- * present (it takes up the space of the other 3), 6 modules if not. This
- * is what keeps the page from ever looking wonky — see module-highlights.ts
- * for the finalized content each checkbox pulls from. */
-const MODULE_COUNT_WITH_PROBLEM_STATEMENT = 3;
-const MODULE_COUNT_WITHOUT_PROBLEM_STATEMENT = 6;
+/** Section 3 is a fixed one-page layout. Module count is a ceiling, not an
+ * exact quota — a problem statement eats into the page's available space,
+ * so the cap drops from 8 to 6 when one is present. Zero modules is allowed
+ * (the rep may be filling this in before deciding), but the page looks best
+ * with a handful selected — see RECOMMENDED_MIN_MODULE_COUNT below. See
+ * module-highlights.ts for the finalized content each checkbox pulls from. */
+const MODULE_MAX_WITH_PROBLEM_STATEMENT = 6;
+const MODULE_MAX_WITHOUT_PROBLEM_STATEMENT = 8;
+
+/** Soft recommendation only — never blocks submission. Below this, the page
+ * still renders correctly (see Moduleoverview.tsx's odd-count handling) but
+ * tends to look sparse for a client-facing proposal. */
+const RECOMMENDED_MIN_MODULE_COUNT = 4;
+
+/** Preselected by default for every new proposal — the four modules most
+ * proposals end up including anyway. Reps can untick any of them. */
+const DEFAULT_SELECTED_MODULE_IDS = ["attendance", "leave", "payroll", "roster"];
 
 function todayAsDateInputValue(): string {
   return new Date().toISOString().slice(0, 10);
@@ -109,18 +115,14 @@ const initialForm: FormState = {
 
   problemStatementHeading: "",
   problemStatementText: "",
-  selectedModules: [],
+  selectedModules: DEFAULT_SELECTED_MODULE_IDS,
 
   employeeCount: "",
   mrcFee: "",
+  includeRolloutCharge: true,
   rolloutCharge: "",
   includeFieldTracking: false,
   fieldTrackingFee: "",
-
-  contactName: "",
-  contactTeam: "",
-  contactEmail: "",
-  contactPhone: "",
 
   trialPortalUrl: DEFAULT_TRIAL_PORTAL_URL,
   trialUsername: "",
@@ -155,10 +157,10 @@ function hasProblemStatement(form: FormState): boolean {
   return stripHtml(form.problemStatementText).length > 0;
 }
 
-function requiredModuleCount(form: FormState): number {
+function maxModuleCount(form: FormState): number {
   return hasProblemStatement(form)
-    ? MODULE_COUNT_WITH_PROBLEM_STATEMENT
-    : MODULE_COUNT_WITHOUT_PROBLEM_STATEMENT;
+    ? MODULE_MAX_WITH_PROBLEM_STATEMENT
+    : MODULE_MAX_WITHOUT_PROBLEM_STATEMENT;
 }
 
 function validateForm(form: FormState, logo: File | null): FormErrors {
@@ -188,13 +190,6 @@ function validateForm(form: FormState, logo: File | null): FormErrors {
     errors.validityDays = "Enter a positive whole number of days.";
   }
 
-  if (
-    form.contactEmail.trim() &&
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.contactEmail.trim())
-  ) {
-    errors.contactEmail = "Enter a valid email address.";
-  }
-
   if (!isPositiveNumber(form.employeeCount)) {
     errors.employeeCount = "Enter the number of employees.";
   }
@@ -203,7 +198,7 @@ function validateForm(form: FormState, logo: File | null): FormErrors {
     errors.mrcFee = "Enter the monthly subscription fee (BDT).";
   }
 
-  if (!isPositiveNumber(form.rolloutCharge)) {
+  if (form.includeRolloutCharge && !isPositiveNumber(form.rolloutCharge)) {
     errors.rolloutCharge = "Enter the software rollout charge (BDT).";
   }
 
@@ -211,17 +206,54 @@ function validateForm(form: FormState, logo: File | null): FormErrors {
     errors.fieldTrackingFee = "Enter a per-user fee, or turn this off.";
   }
 
-  // Cross-validation: module count must match the problem-statement state,
-  // exactly, so the one-page layout never has to guess how to fit content.
-  const required = requiredModuleCount(form);
+  // Cross-validation: module count is a ceiling, not an exact quota. Zero is
+  // allowed — the page still renders correctly with none selected — this
+  // only blocks going over the cap the one-page layout can fit.
+  const max = maxModuleCount(form);
   const selectedCount = form.selectedModules.length;
-  if (selectedCount !== required) {
+  if (selectedCount > max) {
     errors.selectedModules = hasProblemStatement(form)
-      ? `You've written a problem statement, so it takes the place of 3 modules on the page — select exactly ${required} modules (currently ${selectedCount} selected).`
-      : `With no problem statement, all 6 module slots are available — select exactly ${required} modules (currently ${selectedCount} selected).`;
+      ? `A problem statement takes up space on the page, so the cap drops to ${max} modules — you have ${selectedCount} selected. Remove ${selectedCount - max}, or clear the problem statement.`
+      : `Select up to ${max} modules — you have ${selectedCount} selected.`;
   }
 
   return errors;
+}
+
+/** Section ids (see the `id` prop on each SectionCard below) mapped to the
+ * error keys that belong to them, in on-page order. Used to find and scroll
+ * to the first section with a problem after a blocked submit. */
+const SECTION_ERROR_MAP: { id: string; keys: (keyof FormErrors)[] }[] = [
+  { id: "section-client-info", keys: ["clientName", "clientEmail", "logo"] },
+  { id: "section-module-selection", keys: ["selectedModules"] },
+  { id: "section-cover-letter", keys: ["preparedDate", "validityDays"] },
+  {
+    id: "section-commercial-terms",
+    keys: ["employeeCount", "mrcFee", "rolloutCharge", "fieldTrackingFee"],
+  },
+  {
+    id: "section-email-details",
+    keys: ["trialPortalUrl", "trialUsername", "trialStartDate", "trialEndDate"],
+  },
+];
+
+function sectionHasError(errors: FormErrors, keys: (keyof FormErrors)[]): boolean {
+  return keys.some((key) => Boolean(errors[key]));
+}
+
+/** Smooth-scrolls to the first section (in on-page order) that has an error,
+ * so a rep submitting a long form lands on the problem instead of having to
+ * hunt for it. Takes the freshly computed error object directly rather than
+ * reading state, since setState hasn't flushed yet when this runs. */
+function scrollToFirstErrorSection(errors: FormErrors) {
+  const firstErrored = SECTION_ERROR_MAP.find((section) =>
+    sectionHasError(errors, section.keys),
+  );
+  if (!firstErrored) return;
+
+  document
+    .getElementById(firstErrored.id)
+    ?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 /** Separate from validateForm — these only matter for the "Send mail"
@@ -274,30 +306,71 @@ const errorClassName = "mt-1 text-xs font-medium text-[#ff9b9b]";
  * Numbered section shell — dark card with an inset ring and a soft green
  * hairline glow across the top edge, matching design_template.html exactly.
  * Rendered inside the dark panel wrapper in the main component below.
+ *
+ * `hasError` swaps the whole header (top hairline, number chip, title) into
+ * a red "needs attention" state with a looping ping ring on the number chip
+ * — used when this section contains a field that failed validation. `id`
+ * lets the submit handlers scroll a specific card into view.
  */
 function SectionCard({
   index,
   title,
   description,
   children,
+  id,
+  hasError = false,
 }: {
   index: number;
   title: string;
   description?: React.ReactNode;
   children: React.ReactNode;
+  id?: string;
+  hasError?: boolean;
 }) {
   return (
-    <section className="relative overflow-hidden rounded-[14px] bg-white/[0.035] p-6 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.075)] sm:p-6">
-      <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-[#3ddc7f]/55 to-transparent" />
+    <section
+      id={id}
+      className={`relative overflow-hidden rounded-[14px] bg-white/[0.035] p-6 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.075)] transition-shadow duration-300 sm:p-6 ${
+        hasError ? "shadow-[inset_0_0_0_1.5px_rgba(255,107,107,0.6)]" : ""
+      }`}
+    >
+      <div
+        className={`absolute inset-x-6 top-0 h-px ${
+          hasError
+            ? "animate-pulse-subtle bg-gradient-to-r from-[#ff6b6b]/85 via-[#ff6b6b]/40 to-transparent"
+            : "bg-gradient-to-r from-[#3ddc7f]/55 to-transparent"
+        }`}
+      />
       <header className="flex items-start gap-3.5">
-        <span
-          className={`flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[9px] bg-[#28a143]/16 text-sm font-bold text-[#5ee08c] shadow-[inset_0_0_0_1px_rgba(61,220,127,0.35)] ${FONT_HEADING}`}
-        >
-          {index}
+        <span className="relative shrink-0">
+          {hasError ? (
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -inset-1 rounded-[11px] border-2 border-[#ff6b6b]/70 animate-ping"
+            />
+          ) : null}
+          <span
+            className={`relative flex h-[30px] w-[30px] items-center justify-center rounded-[9px] text-sm font-bold ${FONT_HEADING} ${
+              hasError
+                ? "bg-[#ff6b6b]/20 text-[#ffb3b3] shadow-[inset_0_0_0_1px_rgba(255,107,107,0.55)]"
+                : "bg-[#28a143]/16 text-[#5ee08c] shadow-[inset_0_0_0_1px_rgba(61,220,127,0.35)]"
+            }`}
+          >
+            {index}
+          </span>
         </span>
         <div className="min-w-0 pt-0.5">
-          <h3 className={`text-[19px] font-semibold tracking-[-0.01em] text-white ${FONT_HEADING}`}>
+          <h3
+            className={`flex flex-wrap items-center gap-2 text-[19px] font-semibold tracking-[-0.01em] ${FONT_HEADING} ${
+              hasError ? "text-[#ffb3b3]" : "text-white"
+            }`}
+          >
             {title}
+            {hasError ? (
+              <span className="inline-flex items-center rounded-full bg-[#ff6b6b]/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#ffb3b3] shadow-[inset_0_0_0_1px_rgba(255,107,107,0.45)]">
+                Needs attention
+              </span>
+            ) : null}
           </h3>
           {description ? (
             <p className="mt-1.5 max-w-[70ch] text-[13px] leading-[1.55] text-white/50">
@@ -308,6 +381,39 @@ function SectionCard({
       </header>
       <div className="mt-[22px]">{children}</div>
     </section>
+  );
+}
+
+/**
+ * Field label with a looping "ping" dot when its field has failed
+ * validation — pairs with the red error text already shown under each
+ * field, so the label itself (not just the message below it) signals which
+ * input is incomplete.
+ */
+function FieldLabel({
+  htmlFor,
+  hasError,
+  children,
+}: {
+  htmlFor: string;
+  hasError?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <label
+      htmlFor={htmlFor}
+      className={`flex items-center gap-1.5 text-[13px] font-semibold tracking-[0.01em] transition-colors ${
+        hasError ? "text-[#ff9b9b]" : "text-white/90"
+      }`}
+    >
+      {children}
+      {hasError ? (
+        <span className="relative flex h-2 w-2" aria-hidden>
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#ff6b6b] opacity-75" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-[#ff6b6b]" />
+        </span>
+      ) : null}
+    </label>
   );
 }
 
@@ -403,7 +509,9 @@ export default function Clientdetails2() {
       recipientTitle: form.recipientTitle.trim() || DEFAULT_RECIPIENT_TITLE,
       employeeCount: Number(form.employeeCount),
       mrcFee: Number(form.mrcFee),
-      rolloutCharge: Number(form.rolloutCharge),
+      rolloutCharge: form.includeRolloutCharge
+        ? Number(form.rolloutCharge)
+        : undefined,
       fieldTrackingFee: form.includeFieldTracking
         ? Number(form.fieldTrackingFee)
         : undefined,
@@ -413,10 +521,6 @@ export default function Clientdetails2() {
       validityDays: form.validityDays.trim()
         ? Number(form.validityDays)
         : 30,
-      contactName: form.contactName.trim() || undefined,
-      contactTeam: form.contactTeam.trim() || undefined,
-      contactEmail: form.contactEmail.trim() || undefined,
-      contactPhone: form.contactPhone.trim() || undefined,
 
       problemStatementHeading: problemStatementPresent
         ? form.problemStatementHeading.trim() || undefined
@@ -436,6 +540,7 @@ export default function Clientdetails2() {
     const nextErrors = validateForm(form, logo);
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
+      scrollToFirstErrorSection(nextErrors);
       return;
     }
 
@@ -470,6 +575,7 @@ export default function Clientdetails2() {
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors((current) => ({ ...current, ...nextErrors }));
+      scrollToFirstErrorSection(nextErrors);
       return;
     }
 
@@ -548,22 +654,39 @@ export default function Clientdetails2() {
   }
 
   const problemStatementActive = hasProblemStatement(form);
-  const requiredCount = requiredModuleCount(form);
+  const maxCount = maxModuleCount(form);
   const selectedCount = form.selectedModules.length;
-  const countIsCorrect = selectedCount === requiredCount;
+  const exceedsMax = selectedCount > maxCount;
+  const belowRecommended = selectedCount < RECOMMENDED_MIN_MODULE_COUNT;
+
+  const clientInfoHasError = sectionHasError(errors, ["clientName", "clientEmail", "logo"]);
+  const moduleSelectionHasError = sectionHasError(errors, ["selectedModules"]);
+  const coverLetterHasError = sectionHasError(errors, ["preparedDate", "validityDays"]);
+  const commercialTermsHasError = sectionHasError(errors, [
+    "employeeCount",
+    "mrcFee",
+    "rolloutCharge",
+    "fieldTrackingFee",
+  ]);
+  const emailDetailsHasError = sectionHasError(errors, [
+    "trialPortalUrl",
+    "trialUsername",
+    "trialStartDate",
+    "trialEndDate",
+  ]);
 
   return (
     // Self-contained dark panel — NOT relying on a negative-margin trick
     // against an assumed parent white card (the mockup's approach). Same
     // visual result regardless of whatever the surrounding page does.
     <div
-      className={`flex flex-col gap-5 rounded-2xl p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.10),inset_0_0_0_1px_rgba(255,255,255,0.08)] backdrop-blur-[20px] sm:p-8 ${FONT_BODY}`}
+      className={`flex w-full min-w-0 flex-col gap-5 rounded-2xl p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.10),inset_0_0_0_1px_rgba(255,255,255,0.08)] backdrop-blur-[20px] sm:p-8 ${FONT_BODY}`}
       style={{
         background:
           "linear-gradient(180deg, rgba(12,45,28,0.92) 0%, rgba(5,22,13,0.94) 100%)",
       }}
     >
-      <form onSubmit={handlePreview} className="flex flex-col gap-5">
+      <form onSubmit={handlePreview} className="flex w-full min-w-0 flex-col gap-5">
         {/* ---------------------------------------------------------- */}
         {/* 1. Client Info                                              */}
         {/* ---------------------------------------------------------- */}
@@ -571,12 +694,14 @@ export default function Clientdetails2() {
           index={1}
           title="Client Info"
           description="Company details and the logo used on the cover page."
+          id="section-client-info"
+          hasError={clientInfoHasError}
         >
           <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
             <div>
-              <label htmlFor="clientName" className={labelClassName}>
+              <FieldLabel htmlFor="clientName" hasError={Boolean(errors.clientName)}>
                 Client name *
-              </label>
+              </FieldLabel>
               <p className={hintClassName}>
                 Company or organization this proposal is for.
               </p>
@@ -596,9 +721,9 @@ export default function Clientdetails2() {
             </div>
 
             <div>
-              <label htmlFor="clientEmail" className={labelClassName}>
+              <FieldLabel htmlFor="clientEmail" hasError={Boolean(errors.clientEmail)}>
                 Client email *
-              </label>
+              </FieldLabel>
               <p className={hintClassName}>
                 Primary contact for follow-up and delivery.
               </p>
@@ -681,23 +806,42 @@ export default function Clientdetails2() {
         <SectionCard
           index={2}
           title="Module Selection"
-          description="6 modules if there's no problem statement below, or 3 if there is one. Pick whichever are most relevant to this client."
+          description={
+            <span className="animate-pulse-subtle">
+              Select up to 8 modules, or up to 6 if you&apos;re including a
+              problem statement below — pick whichever are most relevant to
+              this client. It&apos;s fine to select none, but we recommend at
+              least {RECOMMENDED_MIN_MODULE_COUNT} for a balanced-looking
+              page.
+            </span>
+          }
+          id="section-module-selection"
+          hasError={moduleSelectionHasError}
         >
           <div
             className={`inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold ${
-              countIsCorrect
-                ? "bg-[#28a143]/14 text-[#7ceaa4] shadow-[inset_0_0_0_1px_rgba(61,220,127,0.35)]"
-                : "bg-amber-400/15 text-amber-300 shadow-[inset_0_0_0_1px_rgba(251,191,36,0.35)]"
+              exceedsMax
+                ? "bg-amber-400/15 text-amber-300 shadow-[inset_0_0_0_1px_rgba(251,191,36,0.35)]"
+                : "bg-[#28a143]/14 text-[#7ceaa4] shadow-[inset_0_0_0_1px_rgba(61,220,127,0.35)]"
             }`}
           >
             <span
               className={`h-1.5 w-1.5 rounded-full ${
-                countIsCorrect ? "bg-[#5ee08c] shadow-[0_0_10px_#5ee08c]" : "bg-amber-300"
+                exceedsMax ? "bg-amber-300" : "bg-[#5ee08c] shadow-[0_0_10px_#5ee08c]"
               }`}
             />
-            {selectedCount} of {requiredCount} selected
+            {selectedCount} of up to {maxCount} selected
             {problemStatementActive ? " (problem statement included)" : ""}
           </div>
+
+          {!exceedsMax && belowRecommended ? (
+            <p className="mt-2 text-xs text-white/50">
+              {selectedCount === 0
+                ? "No modules selected — the page will show only the description with no highlights."
+                : `Fewer than ${RECOMMENDED_MIN_MODULE_COUNT} modules may leave the page looking sparse.`}{" "}
+              Consider selecting at least {RECOMMENDED_MIN_MODULE_COUNT}.
+            </p>
+          ) : null}
 
           <div
             className="mt-4 grid gap-2.5"
@@ -737,8 +881,8 @@ export default function Clientdetails2() {
         {/* ---------------------------------------------------------- */}
         <SectionCard
           index={3}
-          title="Problem Statement"
-          description="Optional. If filled in, this is placed directly into the proposal as a highlighted callout. Leave both fields blank for no problem statement at all."
+          title="Problem Statement (optional)"
+          description="If filled in, this is placed directly into the proposal as a highlighted callout. Leave both fields blank for no problem statement at all."
         >
           <div>
             <label htmlFor="problemStatementHeading" className={labelClassName}>
@@ -766,7 +910,7 @@ export default function Clientdetails2() {
               Use the toolbar for bold, italic, or a bullet list — this
               renders directly into the proposal&apos;s callout box.
             </p>
-            <div className="mt-2">
+            <div className="mt-2 w-full min-w-0">
               <Richtexteditor
                 value={form.problemStatementText}
                 onChange={(html) => updateField("problemStatementText", html)}
@@ -783,6 +927,8 @@ export default function Clientdetails2() {
           index={4}
           title="Cover & letter details"
           description="Used on the cover page and in the COO's introduction letter."
+          id="section-cover-letter"
+          hasError={coverLetterHasError}
         >
           <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
             <div>
@@ -822,9 +968,9 @@ export default function Clientdetails2() {
             </div>
 
             <div>
-              <label htmlFor="preparedDate" className={labelClassName}>
+              <FieldLabel htmlFor="preparedDate" hasError={Boolean(errors.preparedDate)}>
                 Proposal date *
-              </label>
+              </FieldLabel>
               <p className={hintClassName}>
                 Used on the cover, the letter, and the section meta line.
               </p>
@@ -881,9 +1027,9 @@ export default function Clientdetails2() {
             </div>
 
             <div>
-              <label htmlFor="validityDays" className={labelClassName}>
+              <FieldLabel htmlFor="validityDays" hasError={Boolean(errors.validityDays)}>
                 Proposal valid for (days)
-              </label>
+              </FieldLabel>
               <p className={hintClassName}>Leave blank to use 30 days.</p>
               <input
                 id="validityDays"
@@ -912,12 +1058,14 @@ export default function Clientdetails2() {
           index={5}
           title="Commercial terms"
           description="Populates the pricing table on the final page. All figures in BDT."
+          id="section-commercial-terms"
+          hasError={commercialTermsHasError}
         >
           <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
             <div>
-              <label htmlFor="employeeCount" className={labelClassName}>
+              <FieldLabel htmlFor="employeeCount" hasError={Boolean(errors.employeeCount)}>
                 Number of employees *
-              </label>
+              </FieldLabel>
               <p className={hintClassName}>Headcount covered by the subscription.</p>
               <input
                 id="employeeCount"
@@ -936,9 +1084,9 @@ export default function Clientdetails2() {
             </div>
 
             <div>
-              <label htmlFor="mrcFee" className={labelClassName}>
+              <FieldLabel htmlFor="mrcFee" hasError={Boolean(errors.mrcFee)}>
                 Monthly subscription fee *
-              </label>
+              </FieldLabel>
               <p className={hintClassName}>MRC in BDT.</p>
               <input
                 id="mrcFee"
@@ -957,23 +1105,43 @@ export default function Clientdetails2() {
             </div>
 
             <div>
-              <label htmlFor="rolloutCharge" className={labelClassName}>
-                Software rollout charge *
+              <label className="flex cursor-pointer items-center gap-2.5 text-sm font-medium text-white/90">
+                <input
+                  type="checkbox"
+                  checked={form.includeRolloutCharge}
+                  onChange={(event) => {
+                    const checked = event.target.checked;
+                    updateField("includeRolloutCharge", checked);
+                    if (!checked) {
+                      setErrors((current) => ({ ...current, rolloutCharge: undefined }));
+                    }
+                  }}
+                  className="sr-only"
+                />
+                <CheckChip checked={form.includeRolloutCharge} />
+                Include software rollout charge (optional)
               </label>
-              <p className={hintClassName}>One-time, in BDT.</p>
-              <input
-                id="rolloutCharge"
-                name="rolloutCharge"
-                type="number"
-                min={0}
-                inputMode="numeric"
-                value={form.rolloutCharge}
-                onChange={(event) => updateField("rolloutCharge", event.target.value)}
-                placeholder="e.g. 10000"
-                className={`${inputClassName} mt-2`}
-              />
-              {errors.rolloutCharge ? (
-                <p className={errorClassName}>{errors.rolloutCharge}</p>
+              {form.includeRolloutCharge ? (
+                <>
+                  <FieldLabel htmlFor="rolloutCharge" hasError={Boolean(errors.rolloutCharge)}>
+                    One-time, in BDT.
+                  </FieldLabel>
+                  {/* <p className={hintClassName}>One-time, in BDT.</p> */}
+                  <input
+                    id="rolloutCharge"
+                    name="rolloutCharge"
+                    type="number"
+                    min={0}
+                    inputMode="numeric"
+                    value={form.rolloutCharge}
+                    onChange={(event) => updateField("rolloutCharge", event.target.value)}
+                    placeholder="e.g. 10000"
+                    className={`${inputClassName} mt-2`}
+                  />
+                  {errors.rolloutCharge ? (
+                    <p className={errorClassName}>{errors.rolloutCharge}</p>
+                  ) : null}
+                </>
               ) : null}
             </div>
           </div>
@@ -994,9 +1162,9 @@ export default function Clientdetails2() {
 
             {form.includeFieldTracking ? (
               <div className="mt-3 max-w-xs">
-                <label htmlFor="fieldTrackingFee" className={labelClassName}>
+                <FieldLabel htmlFor="fieldTrackingFee" hasError={Boolean(errors.fieldTrackingFee)}>
                   Per-user fee (MRC)
-                </label>
+                </FieldLabel>
                 <input
                   id="fieldTrackingFee"
                   name="fieldTrackingFee"
@@ -1019,93 +1187,11 @@ export default function Clientdetails2() {
         </SectionCard>
 
         {/* ---------------------------------------------------------- */}
-        {/* 6. Proposal Contact                                         */}
+        {/* 6. Email details                                            */}
         {/* ---------------------------------------------------------- */}
         <SectionCard
           index={6}
-          title="Proposal Contact"
-          description="Shown in the footer of the final page."
-        >
-          <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
-            <div>
-              <label htmlFor="contactName" className={labelClassName}>
-                Prepared by (name)
-              </label>
-              <p className={hintClassName}>Who owns this proposal.</p>
-              <input
-                id="contactName"
-                name="contactName"
-                type="text"
-                value={form.contactName}
-                onChange={(event) => updateField("contactName", event.target.value)}
-                placeholder="e.g. Hasib Rahman"
-                className={`${inputClassName} mt-2`}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="contactTeam" className={labelClassName}>
-                Team
-              </label>
-              <p className={hintClassName}>Internal team name.</p>
-              <input
-                id="contactTeam"
-                name="contactTeam"
-                type="text"
-                value={form.contactTeam}
-                onChange={(event) => updateField("contactTeam", event.target.value)}
-                placeholder="e.g. Sales"
-                className={`${inputClassName} mt-2`}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="contactEmail" className={labelClassName}>
-                Contact email
-              </label>
-              <input
-                id="contactEmail"
-                name="contactEmail"
-                type="email"
-                autoComplete="email"
-                value={form.contactEmail}
-                onChange={(event) =>
-                  updateField("contactEmail", event.target.value)
-                }
-                placeholder="name@shomvob.com"
-                className={`${inputClassName} mt-2`}
-              />
-              {errors.contactEmail ? (
-                <p className={errorClassName}>{errors.contactEmail}</p>
-              ) : null}
-            </div>
-
-            <div>
-              <label htmlFor="contactPhone" className={labelClassName}>
-                Contact phone
-              </label>
-              <input
-                id="contactPhone"
-                name="contactPhone"
-                type="tel"
-                autoComplete="tel"
-                value={form.contactPhone}
-                onChange={(event) =>
-                  updateField("contactPhone", event.target.value)
-                }
-                placeholder="+880…"
-                className={`${inputClassName} mt-2`}
-              />
-            </div>
-          </div>
-        </SectionCard>
-
-        {/* ---------------------------------------------------------- */}
-        {/* 7. Trial account email                                      */}
-        {/* ---------------------------------------------------------- */}
-        <SectionCard
-          index={7}
-          title="Trial account email"
+          title="Email details"
           description={
             <>
               Only used by the &quot;Send mail&quot; button — not part of the
@@ -1113,12 +1199,14 @@ export default function Clientdetails2() {
               downloading the proposal.
             </>
           }
+          id="section-email-details"
+          hasError={emailDetailsHasError}
         >
           <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
             <div>
-              <label htmlFor="trialPortalUrl" className={labelClassName}>
+              <FieldLabel htmlFor="trialPortalUrl" hasError={Boolean(errors.trialPortalUrl)}>
                 Portal URL *
-              </label>
+              </FieldLabel>
               <p className={hintClassName}>Where the client signs in.</p>
               <input
                 id="trialPortalUrl"
@@ -1135,9 +1223,9 @@ export default function Clientdetails2() {
             </div>
 
             <div>
-              <label htmlFor="trialUsername" className={labelClassName}>
+              <FieldLabel htmlFor="trialUsername" hasError={Boolean(errors.trialUsername)}>
                 Username *
-              </label>
+              </FieldLabel>
               <p className={hintClassName}>The trial login handed to the client.</p>
               <input
                 id="trialUsername"
@@ -1173,9 +1261,9 @@ export default function Clientdetails2() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label htmlFor="trialStartDate" className={labelClassName}>
+                <FieldLabel htmlFor="trialStartDate" hasError={Boolean(errors.trialStartDate)}>
                   Trial start
-                </label>
+                </FieldLabel>
                 <input
                   id="trialStartDate"
                   name="trialStartDate"
@@ -1192,9 +1280,9 @@ export default function Clientdetails2() {
               </div>
 
               <div>
-                <label htmlFor="trialEndDate" className={labelClassName}>
+                <FieldLabel htmlFor="trialEndDate" hasError={Boolean(errors.trialEndDate)}>
                   Trial end
-                </label>
+                </FieldLabel>
                 <input
                   id="trialEndDate"
                   name="trialEndDate"

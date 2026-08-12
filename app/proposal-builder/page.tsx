@@ -36,7 +36,7 @@ export default function ProposalBuilderPage() {
         <p className="text-sm font-medium text-white/70">Proposal builder</p>
       </header>
 
-      <div className="relative z-10 mx-auto max-w-4xl px-6 pb-16 pt-4 md:px-10">
+      <div className="relative z-10 mx-auto w-full max-w-4xl px-6 pb-16 pt-4 md:px-10">
         <div className="mb-8">
           <p className="text-xs font-semibold uppercase tracking-widest text-[#edb713]">
             Proposal builder

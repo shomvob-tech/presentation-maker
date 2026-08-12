@@ -31,7 +31,8 @@ function isProposalDetails(value: unknown): value is ProposalDetails {
     typeof details.recipientTitle === "string" &&
     typeof details.employeeCount === "number" &&
     typeof details.mrcFee === "number" &&
-    typeof details.rolloutCharge === "number"
+    (details.rolloutCharge === undefined ||
+      typeof details.rolloutCharge === "number")
   );
 }
 

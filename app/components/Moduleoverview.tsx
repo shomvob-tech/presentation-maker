@@ -3,9 +3,13 @@
  *
  * Matches: shomvob_proposal_format.md, as amended by the one-page decision —
  * fixed title, fixed static description (client name is the only dynamic
- * part), and exactly 3 or 6 modules depending on whether a problem statement
- * is present. That count is enforced by Clientdetails2.tsx's validation, not
- * by this component — it trusts whatever module list it's handed.
+ * part), and up to 8 modules (or up to 6 if a problem statement is present)
+ * — a ceiling, not an exact quota. That cap is enforced by Clientdetails2.tsx's
+ * validation, not by this component — it trusts whatever module list it's
+ * handed, including an empty one.
+ *
+ * Layout is always a strict 2-column grid. Odd module counts intentionally
+ * leave the second cell of the final row empty.
  *
  * Because Section 3 is now always exactly one page, the whole document's
  * page numbering is fixed: Cover=1, Letter=2, Solution=3, Commercial=4. The
@@ -30,9 +34,10 @@ export interface ModuleoverviewProps {
   preparedDate: Date | string;
   /** Defaults to 30. */
   validityDays?: number;
-  /** Exactly 3 or 6 ids from MODULE_HIGHLIGHTS — validated upstream in the form. */
+  /** 0 to 8 ids from MODULE_HIGHLIGHTS (0 to 6 if a problem statement is
+   * present) — the cap is enforced upstream in the form, not here. */
   selectedModuleIds: string[];
-  /** Omit (or leave empty) for no problem statement — modules expand to 6. */
+  /** Omit (or leave empty) for no problem statement — module cap expands from 6 to 8. */
   problemStatementHeading?: string;
   problemStatementHtml?: string;
   /** Defaults to 3 — see note above about fixed page numbering. */
@@ -73,11 +78,6 @@ export default function Moduleoverview({
     problemStatementHtml && stripHtml(problemStatementHtml).length > 0
   );
 
-  // 3 modules -> single row, 3 columns (avoids the 2-column orphan row).
-  // 6 modules -> 2 columns, 3 rows. These are the only two counts the form
-  // ever produces, so no need for a more generic column-count function.
-  const gridColsClass = modules.length === 3 ? "grid-cols-3" : "grid-cols-2";
-
   return (
     <LetterheadFrame clientName={clientName} pageNumber={pageNumber} shomvobLogoSrc={shomvobLogoSrc}>
       <div className="mb-[3.5mm] text-[8.6pt] font-bold uppercase tracking-[0.16em] text-brand_green">
@@ -102,7 +102,7 @@ export default function Moduleoverview({
         Module Highlights
       </h2>
 
-      <div className={`grid gap-x-[7mm] ${gridColsClass}`}>
+      <div className="grid grid-cols-2 gap-x-[7mm]">
         {modules.map((module) => (
           <div key={module.id} className="mb-[4mm]">
             <h3 className="mb-[1.8mm] text-[9.8pt] font-bold text-brand_ink">

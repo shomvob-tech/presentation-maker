@@ -12,11 +12,10 @@
  *     assembles the final document has to compute this page's real number
  *     and pass it in. There's no safe default to guess.
  *
- *  2. Per spec, the final page's footer replaces "Shomvob Technologies Ltd"
- *     with the sales contact's details. This component always passes
- *     `footerContact` through to Letterheadframe (never omits it), falling
- *     back to Letterheadframe's own default label only if no contact fields
- *     were provided at all.
+ *  2. The footer always shows Letterheadframe's default "Shomvob Technologies
+ *     Ltd" label — this component intentionally never passes `footerContact`.
+ *     A per-proposal sales contact used to be collected for this footer, but
+ *     that information isn't needed in the PDF and was removed.
  *
  * `addresseeName` vs `clientName`: same split as Letterfromcoo. The
  * commercial table's "Client Name" row and the intro paragraph use
@@ -39,16 +38,12 @@ export interface CommercialTermsProps {
 
   employeeCount: number;
   mrcFee: number;
-  rolloutCharge: number;
+  /** Omit entirely to hide the "Software Rollout Charge" row. */
+  rolloutCharge?: number;
   /** Omit entirely to hide the "Field Employee Tracking" row. */
   fieldTrackingFee?: number;
   /** Defaults to 5. */
   vatPercent?: number;
-
-  contactName?: string;
-  contactTeam?: string;
-  contactEmail?: string;
-  contactPhone?: string;
 
   /** Override the intro paragraph. Omit to use the canonical text. */
   introParagraph?: string;
@@ -72,10 +67,6 @@ export default function Commercialterms({
   rolloutCharge,
   fieldTrackingFee,
   vatPercent = DEFAULT_VAT_PERCENT,
-  contactName,
-  contactTeam,
-  contactEmail,
-  contactPhone,
   introParagraph,
   shomvobLogoSrc,
 }: CommercialTermsProps) {
@@ -87,18 +78,11 @@ export default function Commercialterms({
     "Any additional features or modules requested after the trial-and-error period will be subject to additional charges, based on scope and requirements.",
   ];
 
-  const hasContact = Boolean(contactName || contactTeam || contactEmail || contactPhone);
-
   return (
     <LetterheadFrame
       clientName={clientName}
       pageNumber={pageNumber}
       shomvobLogoSrc={shomvobLogoSrc}
-      footerContact={
-        hasContact
-          ? { name: contactName ?? "", team: contactTeam, email: contactEmail, phone: contactPhone }
-          : undefined
-      }
     >
       <div className="mb-[3.5mm] text-[8.6pt] font-bold uppercase tracking-[0.16em] text-brand_green">
         Proposed Financial
@@ -144,14 +128,16 @@ export default function Commercialterms({
               {formatBdt(mrcFee)}
             </td>
           </tr>
-          <tr>
-            <td className="border-b border-[#dcdcdc] px-[4mm] py-[2.8mm] align-top text-[9pt] font-bold text-brand_ink">
-              Software Rollout Charge
-            </td>
-            <td className="border-b border-[#dcdcdc] px-[4mm] py-[2.8mm] align-top text-[9pt] font-bold text-brand_green_deep">
-              {formatBdt(rolloutCharge)}
-            </td>
-          </tr>
+          {rolloutCharge !== undefined ? (
+            <tr>
+              <td className="border-b border-[#dcdcdc] px-[4mm] py-[2.8mm] align-top text-[9pt] font-bold text-brand_ink">
+                Software Rollout Charge
+              </td>
+              <td className="border-b border-[#dcdcdc] px-[4mm] py-[2.8mm] align-top text-[9pt] font-bold text-brand_green_deep">
+                {formatBdt(rolloutCharge)}
+              </td>
+            </tr>
+          ) : null}
           <tr>
             <td className="border-b border-[#dcdcdc] px-[4mm] py-[2.8mm] align-top text-[9pt] font-bold text-brand_ink">
               Support

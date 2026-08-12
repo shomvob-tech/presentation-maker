@@ -63,12 +63,12 @@ export default function PreviewPage() {
   return (
     <div className="flex flex-col items-center bg-[#e5e5e5] pt-10 pb-6">
       <div className="mb-6 flex w-full max-w-[210mm] items-center justify-between px-4">
-        <Link
+        {/* <Link
           href="/proposal-builder"
           className="text-sm font-medium text-[#0c3d20]/70 transition hover:text-[#0c3d20]"
         >
           ← Edit details
-        </Link>
+        </Link> */}
         <p className="text-xs font-semibold uppercase tracking-widest text-[#0c3d20]/50">
           Cover preview
         </p>

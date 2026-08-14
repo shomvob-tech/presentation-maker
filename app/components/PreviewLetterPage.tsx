@@ -14,7 +14,7 @@ import {
 } from "@/lib/presentation-session";
 import { useEffect, useState } from "react";
 
-const SHOMVOB_LOGO_SRC = "/resources/shomvob_hr_text.png";
+const SHOMVOB_LOGO_SRC = "/resources/shomvob_hr_logo.png";
 const SIGNATURE_SRC = "/resources/hasib_bhai_sig.png";
 
 type PreviewState = {
@@ -53,6 +53,7 @@ export default function PreviewLetterPage() {
           meetingDateReference={
             state.details.meetingDateReference || state.details.preparedDate
           }
+          includeRolloutCharge={state.details.rolloutCharge !== undefined}
           shomvobLogoSrc={SHOMVOB_LOGO_SRC}
           signatureSrc={SIGNATURE_SRC}
         />

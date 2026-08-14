@@ -19,7 +19,7 @@ import {
 } from "@/lib/presentation-session";
 import { useEffect, useState } from "react";
 
-const SHOMVOB_LOGO_SRC = "/resources/shomvob_hr_text.png";
+const SHOMVOB_LOGO_SRC = "/resources/shomvob_hr_logo.png";
 const PLACEHOLDER_PAGE_NUMBER = 4;
 
 type PreviewState = {

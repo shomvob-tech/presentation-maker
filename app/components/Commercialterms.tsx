@@ -84,15 +84,16 @@ export default function Commercialterms({
       pageNumber={pageNumber}
       shomvobLogoSrc={shomvobLogoSrc}
     >
-      <div className="mb-[3.5mm] text-[8.6pt] font-bold uppercase tracking-[0.16em] text-brand_green">
-        Proposed Financial
-      </div>
+      <div className="font-sans">
+        <div className="mb-[3.5mm] text-[8.6pt] font-bold uppercase tracking-[0.16em] text-brand_green">
+          Proposed Financial
+        </div>
 
-      <h1 className="mb-[4mm] text-[16pt] font-extrabold text-brand_ink">
-        Commercial Terms &amp; Conditions
-      </h1>
+        <h1 className="mb-[4mm] text-[16pt] font-extrabold text-brand_ink">
+          Commercial Terms &amp; Conditions
+        </h1>
 
-      <p className="mb-[5mm] text-[9.8pt] leading-[1.62] text-[#3a3a3a]">{intro}</p>
+        <p className="mb-[5mm] text-[9.8pt] leading-[1.62] text-[#3a3a3a]">{intro}</p>
 
       <table className="mb-[6mm] w-full border-collapse">
         <tbody>
@@ -172,16 +173,17 @@ export default function Commercialterms({
       <h2 className="mb-[3.5mm] text-[12.5pt] font-bold text-brand_green">
         Terms and Conditions
       </h2>
-      <ol className="text-[9pt] leading-[1.6] text-[#333]">
-        {termsAndConditions.map((text, index) => (
-          <li key={index} className="relative mb-[2.5mm] pl-[5mm]">
-            <span className="absolute left-0 font-bold text-brand_green_deep">
-              {index + 1}.
-            </span>
-            {text}
-          </li>
-        ))}
-      </ol>
+        <ol className="text-[9pt] leading-[1.6] text-[#333]">
+          {termsAndConditions.map((text, index) => (
+            <li key={index} className="relative mb-[2.5mm] pl-[5mm]">
+              <span className="absolute left-0 font-bold text-brand_green_deep">
+                {index + 1}.
+              </span>
+              {text}
+            </li>
+          ))}
+        </ol>
+      </div>
     </LetterheadFrame>
   );
 }

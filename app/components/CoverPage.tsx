@@ -15,7 +15,7 @@
  */
 
 const DEFAULT_TITLE = "Workforce Management Ecosystem";
-const SHOMVOB_LOGO_SRC = "/shomvob-hr-logo.png";
+const SHOMVOB_LOGO_SRC = "/resources/shomvob_hr_logo.png";
 
 const DEFAULT_STATS: CoverStat[] = [
   { value: "25+", label: "Organizations Served" },
@@ -71,7 +71,7 @@ export default function CoverPage({
   const dateLabel = formatProposalDate(preparedDate);
 
   return (
-    <div className="a4-page relative h-[297mm] w-[210mm] overflow-hidden bg-white">
+    <div className="a4-page relative h-[297mm] w-[210mm] overflow-hidden bg-transparent">
       {/* Left letterhead bar — mirrors every interior page */}
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-[7mm]">
         <div className="absolute inset-0 bg-brand_gray" />
@@ -85,7 +85,7 @@ export default function CoverPage({
       </div>
 
       {/* Content column */}
-      <div className="relative z-20 flex h-full flex-col items-center justify-between pb-[26mm] pt-[38mm]">
+      <div className="relative z-20 flex h-full flex-col items-center justify-between pb-[26mm] pt-[38mm] font-sans">
         <div className="flex flex-col items-center px-[30mm] text-center">
           <img
             src={clientLogoSrc}
@@ -135,7 +135,10 @@ export default function CoverPage({
         </div>
 
         <div className="flex flex-col items-center">
-          <img src={shomvobLogoSrc} alt="Shomvob HR" className="mb-[2mm] h-[11mm]" />
+          <div className="mb-[0.5mm] flex items-end gap-[3mm]">
+            <img src={shomvobLogoSrc} alt="Shomvob HR" className="h-[11mm] w-auto !filter-none" />
+            <span className="font-sans text-[17pt] font-bold text-[#0f623b]">Shomvob HR</span>
+          </div>
           <span className="text-[8pt] text-[#9a9a9a]">Shomvob Technologies Limited</span>
         </div>
       </div>

@@ -12,7 +12,7 @@
  * footer. You only need to supply the content and footer identity info.
  */
 
-const SHOMVOB_LOGO_SRC = "/shomvob-hr-logo.png";
+const SHOMVOB_LOGO_SRC = "/resources/shomvob_hr_logo.png";
 
 export interface FooterContact {
   name: string;
@@ -83,11 +83,10 @@ export default function LetterheadFrame({
 
       <TopRightDecoration />
 
-      <img
-        src={shomvobLogoSrc}
-        alt="Shomvob HR"
-        className="absolute left-[20mm] top-[14mm] z-20 h-[11mm]"
-      />
+      <div className="absolute left-[20mm] top-[14mm] z-20 flex items-end gap-[3mm]">
+        <img src={shomvobLogoSrc} alt="Shomvob HR" className="h-[11mm] w-auto !filter-none" />
+        <span className="font-sans text-[17pt] font-bold text-[#0f623b]">Shomvob HR</span>
+      </div>
 
       <div className="absolute bottom-[16mm] left-[20mm] right-[16mm] top-[34mm] z-20">
         {children}

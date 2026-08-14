@@ -48,11 +48,12 @@ export interface LetterFromCooProps {
   signatureSrc?: string;
   /** Escape hatch if the Shomvob logo path differs per-deployment. */
   shomvobLogoSrc?: string;
+  /** Hides the "No Upfront Cost" section when a rollout charge is included. */
+  includeRolloutCharge?: boolean;
 
   // Optional overrides — omit any of these to use the original letter text.
   openingParagraph?: string;
   solutionOverviewParagraph?: string;
-  solutionBullet?: string;
   noUpfrontCostsParagraph?: string;
   ongoingSupportParagraph?: string;
   closingParagraph?: string;
@@ -81,9 +82,6 @@ function defaultSolutionOverviewParagraph(addresseeName: string, meetingDateLabe
   return `Following our meeting on ${meetingDateLabel}, we are excited to propose a fully managed, cloud-based HRIS solution for ${addresseeName}. Our SaaS HRIS system is designed for seamless access from anywhere, minimizing IT infrastructure requirements while ensuring robust, secure, and real-time access to your HR and payroll data.`;
 }
 
-const DEFAULT_SOLUTION_BULLET =
-  "Effortlessly manage leave, attendance, and employee information.";
-
 const DEFAULT_NO_UPFRONT_COSTS_PARAGRAPH =
   "As a SaaS offering, our HRIS solution is hosted on the cloud, meaning there are no upfront costs for hardware or infrastructure. You only pay for what you use, with predictable subscription fees. This model ensures scalability as your organization grows, with the flexibility to add or reduce features based on your evolving needs.";
 
@@ -103,9 +101,9 @@ export default function LetterFromCoo({
   pageNumber = 2,
   signatureSrc = DEFAULT_SIGNATURE_SRC,
   shomvobLogoSrc,
+  includeRolloutCharge = false,
   openingParagraph,
   solutionOverviewParagraph,
-  solutionBullet,
   noUpfrontCostsParagraph,
   ongoingSupportParagraph,
   closingParagraph,
@@ -115,7 +113,6 @@ export default function LetterFromCoo({
   const opening = openingParagraph ?? defaultOpeningParagraph();
   const solutionOverview =
     solutionOverviewParagraph ?? defaultSolutionOverviewParagraph(addresseeName, meetingDateLabel);
-  const bullet = solutionBullet ?? DEFAULT_SOLUTION_BULLET;
   const noUpfrontCosts = noUpfrontCostsParagraph ?? DEFAULT_NO_UPFRONT_COSTS_PARAGRAPH;
   const ongoingSupport = ongoingSupportParagraph ?? DEFAULT_ONGOING_SUPPORT_PARAGRAPH;
   const closing = closingParagraph ?? defaultClosingParagraph(addresseeName);
@@ -151,14 +148,15 @@ export default function LetterFromCoo({
           Solution Overview
         </h4>
         <p className="mb-[4mm] text-justify">{solutionOverview}</p>
-        <ul className="mb-[4mm] pl-[4mm]">
-          <li className="mb-[1mm] text-[9.6pt] leading-[1.6]">{bullet}</li>
-        </ul>
 
-        <h4 className="mb-[2mm] mt-[5mm] text-[9.8pt] font-bold text-brand_green_deep">
-          No Upfront Costs &amp; Scalable Solution
-        </h4>
-        <p className="mb-[4mm] text-justify">{noUpfrontCosts}</p>
+        {!includeRolloutCharge ? (
+          <>
+            <h4 className="mb-[2mm] mt-[5mm] text-[9.8pt] font-bold text-brand_green_deep">
+              No Upfront Cost
+            </h4>
+            <p className="mb-[4mm] text-justify">{noUpfrontCosts}</p>
+          </>
+        ) : null}
 
         <h4 className="mb-[2mm] mt-[5mm] text-[9.8pt] font-bold text-brand_green_deep">
           Ongoing Support &amp; Updates

@@ -80,63 +80,65 @@ export default function Moduleoverview({
 
   return (
     <LetterheadFrame clientName={clientName} pageNumber={pageNumber} shomvobLogoSrc={shomvobLogoSrc}>
-      <div className="mb-[3.5mm] text-[8.6pt] font-bold uppercase tracking-[0.16em] text-brand_green">
-        Proposal — Shomvob HR Management
-      </div>
-
-      <h1 className="text-[20pt] font-extrabold leading-[1.18] text-brand_ink">
-        {PAGE_TITLE}
-      </h1>
-
-      <div className="mb-[4mm] mt-[4mm] border-b-[1.5pt] border-brand_green pb-[4mm] text-[9.3pt] text-brand_muted">
-        Prepared for: <b className="text-brand_ink">{clientName}</b> &nbsp;
-        Date: <b className="text-brand_ink">{formatMetaDate(preparedDate)}</b> &nbsp;
-        Valid for: <b className="text-brand_ink">{validityDays} days</b>
-      </div>
-
-      <p className="mb-[5mm] text-justify text-[9.8pt] leading-[1.62] text-[#3a3a3a]">
-        {defaultDescription(clientName)}
-      </p>
-
-      <h2 className="mb-[3.5mm] text-[12.5pt] font-bold text-brand_green">
-        Module Highlights
-      </h2>
-
-      <div className="grid grid-cols-2 gap-x-[7mm]">
-        {modules.map((module) => (
-          <div key={module.id} className="mb-[4mm]">
-            <h3 className="mb-[1.8mm] text-[9.8pt] font-bold text-brand_ink">
-              {module.label}
-            </h3>
-            <ul>
-              {module.bullets.map((bullet, i) => (
-                <li
-                  key={i}
-                  className="relative mb-[1.4mm] pl-[3mm] text-[8.6pt] leading-[1.45] text-[#444]"
-                >
-                  <span className="absolute left-0 top-0 font-bold text-brand_green">•</span>
-                  {bullet}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      {hasProblemStatement ? (
-        <div className="mt-[3mm]">
-          {problemStatementHeading ? (
-            <h2 className="mb-[3.5mm] text-[12.5pt] font-bold text-brand_green">
-              {problemStatementHeading}
-            </h2>
-          ) : null}
-          <div
-            className="border-l-[3pt] border-brand_green bg-[#eef6ef] px-[5mm] py-[4mm] text-[9pt] leading-[1.55] text-[#333] [&_li]:ml-[4mm] [&_li]:list-disc [&_p]:mb-[2mm] [&_p:last-child]:mb-0 [&_strong]:text-brand_ink [&_ul]:mb-[2mm]"
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: problemStatementHtml! }}
-          />
+      <div className="font-sans">
+        <div className="mb-[3.5mm] text-[8.6pt] font-bold uppercase tracking-[0.16em] text-brand_green">
+          Proposal — Shomvob HR Management
         </div>
-      ) : null}
+
+        <h1 className="text-[20pt] font-extrabold leading-[1.18] text-brand_ink">
+          {PAGE_TITLE}
+        </h1>
+
+        <div className="mb-[4mm] mt-[4mm] border-b-[1.5pt] border-brand_green pb-[4mm] text-[9.3pt] text-brand_muted">
+          Prepared for: <b className="text-brand_ink">{clientName}</b> &nbsp;
+          Date: <b className="text-brand_ink">{formatMetaDate(preparedDate)}</b> &nbsp;
+          Valid for: <b className="text-brand_ink">{validityDays} days</b>
+        </div>
+
+        <p className="mb-[5mm] text-justify text-[9.8pt] leading-[1.62] text-[#3a3a3a]">
+          {defaultDescription(clientName)}
+        </p>
+
+        <h2 className="mb-[3.5mm] text-[12.5pt] font-bold text-brand_green">
+          Module Highlights
+        </h2>
+
+        <div className="grid grid-cols-2 gap-x-[7mm]">
+          {modules.map((module) => (
+            <div key={module.id} className="mb-[4mm]">
+              <h3 className="mb-[1.8mm] text-[9.8pt] font-bold text-brand_ink">
+                {module.label}
+              </h3>
+              <ul>
+                {module.bullets.map((bullet, i) => (
+                  <li
+                    key={i}
+                    className="relative mb-[1.4mm] pl-[3mm] text-[8.6pt] leading-[1.45] text-[#444]"
+                  >
+                    <span className="absolute left-0 top-0 font-bold text-brand_green">•</span>
+                    {bullet}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {hasProblemStatement ? (
+          <div className="mt-[3mm]">
+            {problemStatementHeading ? (
+              <h2 className="mb-[3.5mm] text-[12.5pt] font-bold text-brand_green">
+                {problemStatementHeading}
+              </h2>
+            ) : null}
+            <div
+              className="border-l-[3pt] border-brand_green bg-[#eef6ef] px-[5mm] py-[4mm] text-[9pt] leading-[1.55] text-[#333] [&_li]:ml-[4mm] [&_li]:list-disc [&_p]:mb-[2mm] [&_p:last-child]:mb-0 [&_strong]:text-brand_ink [&_ul]:mb-[2mm]"
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{ __html: problemStatementHtml! }}
+            />
+          </div>
+        ) : null}
+      </div>
     </LetterheadFrame>
   );
 }

@@ -15,7 +15,7 @@ import {
   type ProposalDetails,
 } from "@/lib/presentation-session";
 
-const SHOMVOB_LOGO_SRC = "/resources/shomvob_hr_text.png";
+const SHOMVOB_LOGO_SRC = "/resources/shomvob_hr_logo.png";
 
 type PreviewState = {
   clientName: string;

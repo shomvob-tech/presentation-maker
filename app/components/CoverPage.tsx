@@ -29,6 +29,13 @@ export type CoverStat = {
   label: string;
 };
 
+export type PreparedByContact = {
+  name?: string;
+  title?: string;
+  phone?: string;
+  email?: string;
+};
+
 export interface CoverPageProps {
   /** Client's full legal/display name, e.g. "Terraprime Hotels & Resorts Ltd." */
   clientName: string;
@@ -42,6 +49,12 @@ export interface CoverPageProps {
   stats?: CoverStat[];
   /** Escape hatch if Shomvob's own logo path differs per-deployment. */
   shomvobLogoSrc?: string;
+  /**
+   * When provided, replaces "Shomvob Technologies Limited" with a named
+   * contact block (name, title, phone, email). Any subset of the four fields
+   * may be populated — only non-blank values are rendered.
+   */
+  preparedBy?: PreparedByContact;
 }
 
 function formatProposalDate(date: Date | string): string {
@@ -66,6 +79,7 @@ export default function CoverPage({
   preparedDate,
   stats = DEFAULT_STATS,
   shomvobLogoSrc = SHOMVOB_LOGO_SRC,
+  preparedBy,
 }: CoverPageProps) {
   const title = documentTitle?.trim() || DEFAULT_TITLE;
   const dateLabel = formatProposalDate(preparedDate);
@@ -109,9 +123,29 @@ export default function CoverPage({
             <div>
               Prepared for: <b className="text-brand_ink">{clientName}</b>
             </div>
-            <div>
-              Prepared by: <b className="text-brand_ink">Shomvob Technologies Limited</b>
-            </div>
+            {preparedBy ? (
+              <div className="mt-[1mm] flex flex-col gap-0">
+                <div>
+                  Prepared by:{" "}
+                  <b className="text-brand_ink">
+                    {preparedBy.name || "Shomvob Technologies Limited"}
+                  </b>
+                </div>
+                {preparedBy.title ? (
+                  <div className="text-[8.8pt] text-brand_muted">{preparedBy.title}</div>
+                ) : null}
+                {preparedBy.phone || preparedBy.email ? (
+                  <div className="text-[8.8pt] text-brand_muted">
+                    {[preparedBy.phone, preparedBy.email].filter(Boolean).join("  ·  ")}
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <div>
+                Prepared by:{" "}
+                <b className="text-brand_ink">Shomvob Technologies Limited</b>
+              </div>
+            )}
             <div>
               Date: <b className="text-brand_ink">{dateLabel}</b>
             </div>

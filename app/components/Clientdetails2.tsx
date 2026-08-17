@@ -46,6 +46,12 @@ type FormState = {
   problemStatementText: string; // HTML from Richtexteditor, not plain text
   selectedModules: string[]; // module ids from MODULE_HIGHLIGHTS
 
+  // Prepared-by contact shown on the cover page (all optional)
+  preparedByName: string;
+  preparedByTitle: string;
+  preparedByPhone: string;
+  preparedByEmail: string;
+
   // Section 4 (Commercial Terms)
   employeeCount: string;
   mrcFee: string;
@@ -116,6 +122,11 @@ const initialForm: FormState = {
   problemStatementHeading: "",
   problemStatementText: "",
   selectedModules: DEFAULT_SELECTED_MODULE_IDS,
+
+  preparedByName: "",
+  preparedByTitle: "",
+  preparedByPhone: "",
+  preparedByEmail: "",
 
   employeeCount: "",
   mrcFee: "",
@@ -529,6 +540,11 @@ export default function Clientdetails2() {
         ? form.problemStatementText
         : undefined,
       selectedModules: form.selectedModules,
+
+      preparedByName: form.preparedByName.trim() || undefined,
+      preparedByTitle: form.preparedByTitle.trim() || undefined,
+      preparedByPhone: form.preparedByPhone.trim() || undefined,
+      preparedByEmail: form.preparedByEmail.trim() || undefined,
     });
 
     return clientDetails;
@@ -580,12 +596,13 @@ export default function Clientdetails2() {
     }
 
     // Dates are passed as raw "YYYY-MM-DD"; reformatted to DD-MM-YYYY inside
-    // the template. Password is always TRIAL_ACCOUNT_PASSWORD (demo@1234).
+    // the template. Password comes from the form (pre-filled with demo@1234).
     window.location.href = buildClientMailtoUrl({
       clientName,
       clientEmail,
       trialPortalUrl: form.trialPortalUrl.trim(),
       trialUsername: form.trialUsername.trim(),
+      trialPassword: form.trialPassword.trim(),
       trialStartDate: form.trialStartDate,
       trialEndDate: form.trialEndDate,
       senderName: form.trialSenderName.trim(),
@@ -593,6 +610,26 @@ export default function Clientdetails2() {
       senderPhone: form.trialSenderPhone.trim(),
       senderEmail: form.trialSenderEmail.trim(),
     });
+  }
+
+  /**
+   * Browser-native PDF path: opens /proposal-preview and auto-triggers
+   * window.print(). User chooses "Save as PDF" in the print dialog.
+   * Independent of /api/export-pdf — no Chromium on Vercel.
+   */
+  function handlePrintPdf() {
+    const logoDataUrl = loadPreviewLogo();
+    const details = loadProposalDetails();
+
+    if (!logoDataUrl || !details) {
+      setPdfError(
+        'No saved proposal found. Click "Preview Proposal" first, then print the PDF.',
+      );
+      return;
+    }
+
+    setPdfError(null);
+    window.open("/proposal-preview?print=1", "_blank", "noopener,noreferrer");
   }
 
   /**
@@ -1049,6 +1086,79 @@ export default function Clientdetails2() {
               ) : null}
             </div>
           </div>
+
+          <div className="mt-5 border-t border-white/10 pt-5">
+            <p className={`mb-1 text-sm font-semibold text-white/80 ${FONT_HEADING}`}>
+              Prepared by
+            </p>
+            <p className={hintClassName}>
+              Appears on the cover page. Leave blank to show &quot;Shomvob Technologies
+              Limited&quot;.
+            </p>
+            <div className="mt-3 grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
+              <div>
+                <label htmlFor="preparedByName" className={labelClassName}>
+                  Name
+                </label>
+                <input
+                  id="preparedByName"
+                  name="preparedByName"
+                  type="text"
+                  value={form.preparedByName}
+                  onChange={(event) => updateField("preparedByName", event.target.value)}
+                  placeholder="e.g. Hasibul Islam"
+                  className={`${inputClassName} mt-2`}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="preparedByTitle" className={labelClassName}>
+                  Title
+                </label>
+                <input
+                  id="preparedByTitle"
+                  name="preparedByTitle"
+                  type="text"
+                  value={form.preparedByTitle}
+                  onChange={(event) => updateField("preparedByTitle", event.target.value)}
+                  placeholder="e.g. Chief Operating Officer"
+                  className={`${inputClassName} mt-2`}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="preparedByPhone" className={labelClassName}>
+                  Phone
+                </label>
+                <input
+                  id="preparedByPhone"
+                  name="preparedByPhone"
+                  type="tel"
+                  autoComplete="tel"
+                  value={form.preparedByPhone}
+                  onChange={(event) => updateField("preparedByPhone", event.target.value)}
+                  placeholder="e.g. +880 1234 567890"
+                  className={`${inputClassName} mt-2`}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="preparedByEmail" className={labelClassName}>
+                  Email
+                </label>
+                <input
+                  id="preparedByEmail"
+                  name="preparedByEmail"
+                  type="email"
+                  autoComplete="email"
+                  value={form.preparedByEmail}
+                  onChange={(event) => updateField("preparedByEmail", event.target.value)}
+                  placeholder="e.g. hasib@shomvob.com"
+                  className={`${inputClassName} mt-2`}
+                />
+              </div>
+            </div>
+          </div>
         </SectionCard>
 
         {/* ---------------------------------------------------------- */}
@@ -1249,14 +1359,10 @@ export default function Clientdetails2() {
                 id="trialPassword"
                 name="trialPassword"
                 type="text"
-                value={TRIAL_ACCOUNT_PASSWORD}
-                readOnly
-                className={`${inputClassName} mt-2 opacity-70`}
+                value={form.trialPassword}
+                onChange={(event) => updateField("trialPassword", event.target.value)}
+                className={`${inputClassName} mt-2`}
               />
-              <p className={hintClassName}>
-                Fixed for all trial accounts — included automatically in the
-                mail.
-              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
@@ -1404,17 +1510,14 @@ export default function Clientdetails2() {
             </li>
             <li className="flex gap-2.5">
               <span className="text-[#edb713]">—</span>
-              &quot;Download PDF&quot; uses the last saved inputs. May take up
-              to a minute.
+              &quot;Print as PDF&quot; opens the preview with a print dialog.
+              Choose &quot;Save as PDF&quot;, enable background graphics, then
+              save.
             </li>
             <li className="flex gap-2.5">
               <span className="text-[#edb713]">—</span>
-              &quot;Send mail&quot; opens your mail client without an
-              attachment.
-            </li>
-            <li className="flex gap-2.5">
-              <span className="text-[#edb713]">—</span>
-              Attach the proposal PDF manually before sending.
+              &quot;Send mail&quot; opens your mail client with a pre-filled
+              message. Attach the saved PDF before sending.
             </li>
           </ul>
         </div>
@@ -1440,11 +1543,10 @@ export default function Clientdetails2() {
             </button>
             <button
               type="button"
-              onClick={handleDownloadPdf}
-              disabled={isDownloadingPdf}
-              className={`rounded-xl bg-white/5 px-6 py-[15px] text-[15px] font-semibold text-white/90 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16)] transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50 ${FONT_HEADING}`}
+              onClick={handlePrintPdf}
+              className={`rounded-xl bg-white/5 px-6 py-[15px] text-[15px] font-semibold text-white/90 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16)] transition hover:bg-white/10 ${FONT_HEADING}`}
             >
-              {isDownloadingPdf ? "Generating PDF…" : "Download PDF"}
+              Print as PDF
             </button>
             <button
               type="submit"

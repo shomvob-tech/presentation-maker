@@ -46,11 +46,11 @@ export default function PreviewModuleOverviewPage() {
   const selectedModuleIds = state.details.selectedModules ?? [];
 
   return (
-    <div className="flex flex-col items-center bg-[#e5e5e5] pb-16">
-      <p className="mb-6 text-xs font-semibold uppercase tracking-widest text-[#0c3d20]/50">
+    <div className="print-stage flex flex-col items-center bg-[#e5e5e5] pb-16">
+      <p className="print-hide mb-6 text-xs font-semibold uppercase tracking-widest text-[#0c3d20]/50">
         Module Overview
       </p>
-      <div className="shadow-2xl shadow-black/30">
+      <div className="print-stage shadow-2xl shadow-black/30">
         <Moduleoverview
           clientName={state.clientName}
           preparedDate={state.details.preparedDate}

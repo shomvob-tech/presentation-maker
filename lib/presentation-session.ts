@@ -35,6 +35,15 @@ export type ProposalDetails = {
    * statement) or 8 (without) — a ceiling, not an exact quota — enforced by
    * Clientdetails2.tsx's validation at submit time, not re-validated here. */
   selectedModules?: string[];
+
+  /**
+   * Optional prepared-by contact for the cover page.
+   * When all four are blank, CoverPage falls back to "Shomvob Technologies Limited".
+   */
+  preparedByName?: string;
+  preparedByTitle?: string;
+  preparedByPhone?: string;
+  preparedByEmail?: string;
 };
 
 export function savePreviewLogo(logoDataUrl: string | undefined) {

@@ -34,6 +34,8 @@ export interface LetterheadFrameProps {
   footerContact?: FooterContact;
   /** Escape hatch if the Shomvob logo path differs per-deployment. */
   shomvobLogoSrc?: string;
+  /** Extra classes on the A4 root — used for `.a4-page-last` on the final page. */
+  className?: string;
   children: React.ReactNode;
 }
 
@@ -71,10 +73,13 @@ export default function LetterheadFrame({
   pageNumber,
   footerContact,
   shomvobLogoSrc = SHOMVOB_LOGO_SRC,
+  className,
   children,
 }: LetterheadFrameProps) {
   return (
-    <div className="a4-page relative h-[297mm] w-[210mm] overflow-hidden bg-white">
+    <div
+      className={`a4-page relative h-[297mm] w-[210mm] overflow-hidden bg-white ${className ?? ""}`}
+    >
       {/* Left sidebar bar — interior pages only get the left one */}
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-[7mm]">
         <div className="absolute inset-0 bg-brand_gray" />

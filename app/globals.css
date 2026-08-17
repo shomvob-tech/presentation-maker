@@ -198,20 +198,41 @@ img[alt="Shomvob HR"] {
 
   html,
   body {
-    margin: 0;
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+  }
+
+  .print-hide {
+    display: none !important;
+  }
+
+  .print-stage {
+    display: block !important;
+    width: 210mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
   }
 
   .a4-page {
     width: 210mm !important;
     height: 297mm !important;
     overflow: hidden;
+    box-shadow: none !important;
     break-after: page;
     page-break-after: always;
   }
 
-  .a4-page:last-of-type {
+  /* `:last-of-type` cannot be used here — each `.a4-page` is nested in its
+     own wrapper, so every page would match and page-breaks would disappear. */
+  .a4-page.a4-page-last {
     break-after: auto;
     page-break-after: auto;
   }

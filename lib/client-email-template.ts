@@ -1,4 +1,4 @@
-/** Trial invite password is fixed for all accounts today. */
+/** Default trial invite password — pre-filled in the form, editable per proposal. */
 export const TRIAL_ACCOUNT_PASSWORD = "demo@1234";
 
 export type ClientEmailTemplateInput = {
@@ -7,6 +7,7 @@ export type ClientEmailTemplateInput = {
   /** When set with the other trial fields, builds the trial-account invite. */
   trialPortalUrl?: string;
   trialUsername?: string;
+  trialPassword?: string;
   /** "YYYY-MM-DD" from <input type="date"> — reformatted in the body. */
   trialStartDate?: string;
   trialEndDate?: string;
@@ -46,6 +47,7 @@ function resolveTrialFields(input: ClientEmailTemplateInput) {
   return {
     portalUrl: input.trialPortalUrl!.trim(),
     username: input.trialUsername!.trim(),
+    password: input.trialPassword?.trim() || TRIAL_ACCOUNT_PASSWORD,
     start: formatTrialDate(input.trialStartDate!),
     end: formatTrialDate(input.trialEndDate!),
     senderName: input.senderName?.trim() || "Md. Ariful Islam Manik",
@@ -89,7 +91,7 @@ export function buildClientEmailBody(input: ClientEmailTemplateInput): string {
   const clientName = input.clientName.trim();
 
   if (isTrialInvite(input)) {
-    const { portalUrl, username, start, end, senderName, senderTitle, senderPhone, senderEmail } =
+    const { portalUrl, username, password, start, end, senderName, senderTitle, senderPhone, senderEmail } =
       resolveTrialFields(input);
 
     return [
@@ -103,7 +105,7 @@ export function buildClientEmailBody(input: ClientEmailTemplateInput): string {
       "",
       `• Portal: ${portalUrl}`,
       `• Username: ${username}`,
-      `• Password: ${TRIAL_ACCOUNT_PASSWORD}`,
+      `• Password: ${password}`,
       `• Trial Period: [${start}] to [${end}]`,
       "",
       "During the trial period, you will have the opportunity to explore the system's features and evaluate how it can support your daily operations. Our team will be available to assist you with account setup, training, and any questions you may have throughout the trial.",
@@ -146,7 +148,7 @@ export function buildClientEmailHtml(input: ClientEmailTemplateInput): string {
   const clientName = escapeHtml(input.clientName.trim());
 
   if (isTrialInvite(input)) {
-    const { portalUrl, username, start, end, senderName, senderTitle, senderPhone, senderEmail } =
+    const { portalUrl, username, password, start, end, senderName, senderTitle, senderPhone, senderEmail } =
       resolveTrialFields(input);
 
     return [
@@ -158,7 +160,7 @@ export function buildClientEmailHtml(input: ClientEmailTemplateInput): string {
       '<ul style="padding-left:20px;margin:0 0 16px;">',
       `<li><strong>Portal:</strong> <a href="${escapeHtml(portalUrl)}">${escapeHtml(portalUrl)}</a></li>`,
       `<li><strong>Username:</strong> ${escapeHtml(username)}</li>`,
-      `<li><strong>Password:</strong> ${TRIAL_ACCOUNT_PASSWORD}</li>`,
+      `<li><strong>Password:</strong> ${escapeHtml(password)}</li>`,
       `<li><strong>Trial Period:</strong> [${start}] to [${end}]</li>`,
       "</ul>",
       `<p>During the trial period, you will have the opportunity to explore the system's features and evaluate how it can support your daily operations. Our team will be available to assist you with account setup, training, and any questions you may have throughout the trial.</p>`,

@@ -83,6 +83,7 @@ export default function Commercialterms({
       clientName={clientName}
       pageNumber={pageNumber}
       shomvobLogoSrc={shomvobLogoSrc}
+      className="a4-page-last"
     >
       <div className="font-sans">
         <div className="mb-[3.5mm] text-[8.6pt] font-bold uppercase tracking-[0.16em] text-brand_green">

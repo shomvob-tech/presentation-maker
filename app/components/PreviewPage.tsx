@@ -23,6 +23,13 @@ type PreviewState = {
   details: ProposalDetails | null;
 };
 
+export type PreparedBy = {
+  name?: string;
+  title?: string;
+  phone?: string;
+  email?: string;
+};
+
 export default function PreviewPage() {
   const [state, setState] = useState<PreviewState | null>(null);
 
@@ -61,8 +68,8 @@ export default function PreviewPage() {
   }
 
   return (
-    <div className="flex flex-col items-center bg-[#e5e5e5] pt-10 pb-6">
-      <div className="mb-6 flex w-full max-w-[210mm] items-center justify-between px-4">
+    <div className="print-stage flex flex-col items-center bg-[#e5e5e5] pt-10 pb-6">
+      <div className="print-hide mb-6 flex w-full max-w-[210mm] items-center justify-between px-4">
         {/* <Link
           href="/proposal-builder"
           className="text-sm font-medium text-[#0c3d20]/70 transition hover:text-[#0c3d20]"
@@ -74,13 +81,26 @@ export default function PreviewPage() {
         </p>
       </div>
 
-      <div className="shadow-2xl shadow-black/30">
+      <div className="print-stage shadow-2xl shadow-black/30">
         <CoverPage
           clientName={state.clientName}
           clientLogoSrc={state.clientLogoSrc}
           documentTitle={state.details.documentTitle}
           preparedDate={state.details.preparedDate}
           shomvobLogoSrc={SHOMVOB_LOGO_SRC}
+          preparedBy={
+            state.details.preparedByName ||
+            state.details.preparedByTitle ||
+            state.details.preparedByPhone ||
+            state.details.preparedByEmail
+              ? {
+                  name: state.details.preparedByName,
+                  title: state.details.preparedByTitle,
+                  phone: state.details.preparedByPhone,
+                  email: state.details.preparedByEmail,
+                }
+              : undefined
+          }
         />
       </div>
     </div>

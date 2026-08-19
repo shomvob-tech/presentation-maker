@@ -4,6 +4,14 @@ export const TRIAL_ACCOUNT_PASSWORD = "demo@1234";
 export type ClientEmailTemplateInput = {
   clientName: string;
   clientEmail: string;
+  /**
+   * Explicit template switch from the proposal-builder form.
+   * `true`  → trial-account invite (requires the trial fields below).
+   * `false` → proposal-only follow-up (niceties, no credentials).
+   * omitted → inferred from whether the trial fields are filled, so older
+   *           callers (e.g. ValidateOptionsForm) keep their current behaviour.
+   */
+  includeTrialAccountDetails?: boolean;
   /** When set with the other trial fields, builds the trial-account invite. */
   trialPortalUrl?: string;
   trialUsername?: string;
@@ -33,13 +41,93 @@ function formatTrialDate(isoDate: string): string {
   return `${day}-${month}-${year}`;
 }
 
-function isTrialInvite(input: ClientEmailTemplateInput): boolean {
+function trialFieldsAreFilled(input: ClientEmailTemplateInput): boolean {
   return Boolean(
     input.trialPortalUrl?.trim() &&
       input.trialUsername?.trim() &&
       input.trialStartDate &&
       input.trialEndDate,
   );
+}
+
+function isTrialInvite(input: ClientEmailTemplateInput): boolean {
+  if (input.includeTrialAccountDetails === false) return false;
+  if (input.includeTrialAccountDetails === true) return true;
+  return trialFieldsAreFilled(input);
+}
+
+function isProposalOnly(input: ClientEmailTemplateInput): boolean {
+  return input.includeTrialAccountDetails === false;
+}
+
+const DEFAULT_SENDER_NAME = "Shomvob Technologies Ltd.";
+const DEFAULT_SENDER_PHONE = "09638-885588";
+
+type ResolvedSender = {
+  senderName: string;
+  senderTitle: string;
+  senderPhone: string;
+  senderEmail: string;
+  isCompanyDefault: boolean;
+};
+
+function resolveSender(input: ClientEmailTemplateInput): ResolvedSender {
+  const senderName = input.senderName?.trim() ?? "";
+  const senderTitle = input.senderTitle?.trim() ?? "";
+  const senderPhone = input.senderPhone?.trim() ?? "";
+  const senderEmail = input.senderEmail?.trim() ?? "";
+
+  if (!senderName && !senderTitle && !senderPhone && !senderEmail) {
+    return {
+      senderName: DEFAULT_SENDER_NAME,
+      senderTitle: "",
+      senderPhone: DEFAULT_SENDER_PHONE,
+      senderEmail: "",
+      isCompanyDefault: true,
+    };
+  }
+
+  return {
+    senderName,
+    senderTitle,
+    senderPhone,
+    senderEmail,
+    isCompanyDefault: false,
+  };
+}
+
+function formatSenderSignOffPlain(sender: ResolvedSender): string[] {
+  if (sender.isCompanyDefault) {
+    return [sender.senderName, sender.senderPhone];
+  }
+
+  const lines = [
+    sender.senderName,
+    sender.senderTitle,
+    "Shomvob Technologies Limited",
+  ].filter(Boolean);
+
+  if (sender.senderPhone) lines.push(`📞 ${sender.senderPhone}`);
+  if (sender.senderEmail) lines.push(`📧 ${sender.senderEmail}`);
+  return lines;
+}
+
+function formatSenderSignOffHtml(sender: ResolvedSender): string {
+  if (sender.isCompanyDefault) {
+    return `<p style="margin:0;"><strong>${escapeHtml(sender.senderName)}</strong><br>${escapeHtml(sender.senderPhone)}</p>`;
+  }
+
+  const lines: string[] = [];
+  if (sender.senderName) lines.push(`<strong>${escapeHtml(sender.senderName)}</strong>`);
+  if (sender.senderTitle) lines.push(escapeHtml(sender.senderTitle));
+  lines.push("Shomvob Technologies Limited");
+  if (sender.senderPhone) lines.push(`📞 ${escapeHtml(sender.senderPhone)}`);
+  if (sender.senderEmail) {
+    lines.push(
+      `📧 <a href="mailto:${escapeHtml(sender.senderEmail)}">${escapeHtml(sender.senderEmail)}</a>`,
+    );
+  }
+  return `<p style="margin:0;">${lines.join("<br>")}</p>`;
 }
 
 /** Shared so the plain-text and HTML builders can't drift apart on values. */
@@ -50,10 +138,7 @@ function resolveTrialFields(input: ClientEmailTemplateInput) {
     password: input.trialPassword?.trim() || TRIAL_ACCOUNT_PASSWORD,
     start: formatTrialDate(input.trialStartDate!),
     end: formatTrialDate(input.trialEndDate!),
-    senderName: input.senderName?.trim() || "Md. Ariful Islam Manik",
-    senderTitle: input.senderTitle?.trim() || "Manager – HRM Growth",
-    senderPhone: input.senderPhone?.trim() || "+880 1404-071418",
-    senderEmail: input.senderEmail?.trim() || "ariful@shomvob.com",
+    ...resolveSender(input),
   };
 }
 
@@ -76,6 +161,10 @@ export function buildClientEmailSubject(input: ClientEmailTemplateInput | string
     return `Your Shomvob HR Trial Account is Ready — ${clientName}`;
   }
 
+  if (isProposalOnly(input)) {
+    return `Shomvob HR Proposal for ${clientName}`;
+  }
+
   return `Following up on our conversation — Shomvob HR & ${clientName}`;
 }
 
@@ -91,7 +180,7 @@ export function buildClientEmailBody(input: ClientEmailTemplateInput): string {
   const clientName = input.clientName.trim();
 
   if (isTrialInvite(input)) {
-    const { portalUrl, username, password, start, end, senderName, senderTitle, senderPhone, senderEmail } =
+    const { portalUrl, username, password, start, end, ...sender } =
       resolveTrialFields(input);
 
     return [
@@ -115,11 +204,28 @@ export function buildClientEmailBody(input: ClientEmailTemplateInput): string {
       `We appreciate the opportunity to work with ${clientName} and look forward to your valuable feedback.`,
       "",
       "Best regards,",
-      senderName,
-      senderTitle,
-      "Shomvob Technologies Limited",
-      `📞 ${senderPhone}`,
-      `📧 ${senderEmail}`,
+      ...formatSenderSignOffPlain(sender),
+    ].join("\n");
+  }
+
+  if (isProposalOnly(input)) {
+    const sender = resolveSender(input);
+
+    return [
+      "Dear Concern,",
+      "",
+      "Greetings!",
+      "",
+      `Thank you for the opportunity to present Shomvob HR to ${clientName}. As discussed, we have prepared a proposal for your review.`,
+      "",
+      "Please find the proposal attached. Kindly go through the document at your convenience. Should you wish to proceed, we would be glad to set up a trial account so your team can evaluate the system first-hand.",
+      "",
+      "If you have any questions or would like a walkthrough of the proposal, please feel free to contact us.",
+      "",
+      `We look forward to your feedback and the opportunity to work with ${clientName}.`,
+      "",
+      "Best regards,",
+      ...formatSenderSignOffPlain(sender),
     ].join("\n");
   }
 
@@ -148,7 +254,7 @@ export function buildClientEmailHtml(input: ClientEmailTemplateInput): string {
   const clientName = escapeHtml(input.clientName.trim());
 
   if (isTrialInvite(input)) {
-    const { portalUrl, username, password, start, end, senderName, senderTitle, senderPhone, senderEmail } =
+    const { portalUrl, username, password, start, end, ...sender } =
       resolveTrialFields(input);
 
     return [
@@ -167,7 +273,24 @@ export function buildClientEmailHtml(input: ClientEmailTemplateInput): string {
       "<p>If you require any assistance or would like to schedule a walkthrough session, please feel free to contact us.</p>",
       `<p>We appreciate the opportunity to work with ${clientName} and look forward to your valuable feedback.</p>`,
       "<p>Best regards,</p>",
-      `<p style="margin:0;"><strong>${escapeHtml(senderName)}</strong><br>${escapeHtml(senderTitle)}<br>Shomvob Technologies Limited<br>📞 ${escapeHtml(senderPhone)}<br>📧 <a href="mailto:${escapeHtml(senderEmail)}">${escapeHtml(senderEmail)}</a></p>`,
+      formatSenderSignOffHtml(sender),
+      "</div>",
+    ].join("");
+  }
+
+  if (isProposalOnly(input)) {
+    const sender = resolveSender(input);
+
+    return [
+      '<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1a1a1a;line-height:1.5;">',
+      "<p>Dear Concern,</p>",
+      "<p>Greetings!</p>",
+      `<p>Thank you for the opportunity to present Shomvob HR to ${clientName}. As discussed, we have prepared a proposal for your review.</p>`,
+      "<p>Please find the proposal attached. Kindly go through the document at your convenience. Should you wish to proceed, we would be glad to set up a trial account so your team can evaluate the system first-hand.</p>",
+      "<p>If you have any questions or would like a walkthrough of the proposal, please feel free to contact us.</p>",
+      `<p>We look forward to your feedback and the opportunity to work with ${clientName}.</p>`,
+      "<p>Best regards,</p>",
+      formatSenderSignOffHtml(sender),
       "</div>",
     ].join("");
   }

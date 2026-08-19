@@ -136,7 +136,7 @@ const initialForm: FormState = {
   includeFieldTracking: false,
   fieldTrackingFee: "",
 
-  includeTrialAccountDetails: false,
+  includeTrialAccountDetails: true,
   trialPortalUrl: DEFAULT_TRIAL_PORTAL_URL,
   trialUsername: "",
   trialPassword: TRIAL_ACCOUNT_PASSWORD,
@@ -589,7 +589,9 @@ export default function Clientdetails2() {
       nextErrors.clientEmail = "Enter a valid email address.";
     }
 
-    Object.assign(nextErrors, validateTrialEmailFields(form));
+    if (form.includeTrialAccountDetails) {
+      Object.assign(nextErrors, validateTrialEmailFields(form));
+    }
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors((current) => ({ ...current, ...nextErrors }));
@@ -598,15 +600,21 @@ export default function Clientdetails2() {
     }
 
     // Dates are passed as raw "YYYY-MM-DD"; reformatted to DD-MM-YYYY inside
-    // the template. Password comes from the form (pre-filled with demo@1234).
+    // the trial template. Password comes from the form (pre-filled with
+    // demo@1234). The checkbox picks trial vs proposal-only wording.
     window.location.href = buildClientMailtoUrl({
       clientName,
       clientEmail,
-      trialPortalUrl: form.trialPortalUrl.trim(),
-      trialUsername: form.trialUsername.trim(),
-      trialPassword: form.trialPassword.trim(),
-      trialStartDate: form.trialStartDate,
-      trialEndDate: form.trialEndDate,
+      includeTrialAccountDetails: form.includeTrialAccountDetails,
+      ...(form.includeTrialAccountDetails
+        ? {
+            trialPortalUrl: form.trialPortalUrl.trim(),
+            trialUsername: form.trialUsername.trim(),
+            trialPassword: form.trialPassword.trim(),
+            trialStartDate: form.trialStartDate,
+            trialEndDate: form.trialEndDate,
+          }
+        : {}),
       senderName: form.trialSenderName.trim(),
       senderTitle: form.trialSenderTitle.trim(),
       senderPhone: form.trialSenderPhone.trim(),
@@ -719,7 +727,7 @@ export default function Clientdetails2() {
     // against an assumed parent white card (the mockup's approach). Same
     // visual result regardless of whatever the surrounding page does.
     <div
-      className={`flex w-full min-w-0 flex-col gap-5 rounded-2xl p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.10),inset_0_0_0_1px_rgba(255,255,255,0.08)] backdrop-blur-[20px] sm:p-8 ${FONT_BODY}`}
+      className={`flex w-full min-w-0 flex-col gap-5 rounded-2xl p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.10),inset_0_0_0_1px_rgba(255,255,255,0.08)] sm:p-8 ${FONT_BODY}`}
       style={{
         background:
           "linear-gradient(180deg, rgba(12,45,28,0.92) 0%, rgba(5,22,13,0.94) 100%)",
@@ -1107,7 +1115,7 @@ export default function Clientdetails2() {
                   type="text"
                   value={form.preparedByName}
                   onChange={(event) => updateField("preparedByName", event.target.value)}
-                  placeholder="e.g. Hasibul Islam"
+                  placeholder="Shomvob Technologies Ltd."
                   className={`${inputClassName} mt-2`}
                 />
               </div>
@@ -1122,7 +1130,7 @@ export default function Clientdetails2() {
                   type="text"
                   value={form.preparedByTitle}
                   onChange={(event) => updateField("preparedByTitle", event.target.value)}
-                  placeholder="e.g. Chief Operating Officer"
+                  placeholder="e.g. Manager – HRM Growth"
                   className={`${inputClassName} mt-2`}
                 />
               </div>
@@ -1138,7 +1146,7 @@ export default function Clientdetails2() {
                   autoComplete="tel"
                   value={form.preparedByPhone}
                   onChange={(event) => updateField("preparedByPhone", event.target.value)}
-                  placeholder="e.g. +880 1234 567890"
+                  placeholder="09638-885588"
                   className={`${inputClassName} mt-2`}
                 />
               </div>
@@ -1154,7 +1162,7 @@ export default function Clientdetails2() {
                   autoComplete="email"
                   value={form.preparedByEmail}
                   onChange={(event) => updateField("preparedByEmail", event.target.value)}
-                  placeholder="e.g. hasib@shomvob.com"
+                  placeholder="e.g. hello@shomvob.com"
                   className={`${inputClassName} mt-2`}
                 />
               </div>
@@ -1305,9 +1313,10 @@ export default function Clientdetails2() {
           title="Email details"
           description={
             <>
-              Only used by the &quot;Send mail&quot; button — not part of the
-              proposal PDF. Required to send, but won&apos;t block saving or
-              downloading the proposal.
+              Used by the &quot;Send mail&quot; button — not part of the
+              proposal PDF. Tick &quot;Include Trial Account Details&quot; to
+              send a trial invite; leave it off to send the proposal only.
+              Neither option blocks saving or downloading the proposal.
             </>
           }
           id="section-email-details"
@@ -1363,7 +1372,7 @@ export default function Clientdetails2() {
                 type="text"
                 value={form.trialUsername}
                 onChange={(event) => updateField("trialUsername", event.target.value)}
-                placeholder="e.g. nazmul@tazahairoil.com"
+                placeholder="e.g. rahatul@shomvob.com"
                 className={`${inputClassName} mt-2`}
               />
               {errors.trialUsername ? (
@@ -1431,8 +1440,8 @@ export default function Clientdetails2() {
               Sent from
             </h4>
             <p className="mt-1 text-xs text-white/60">
-              Signs off the trial email — pre-filled, change if someone else
-              on the team is sending this one.
+              Signs off the email. Leave blank to use &quot;Shomvob Technologies
+              Ltd.&quot; and 09638-885588.
             </p>
 
             <div
@@ -1451,7 +1460,7 @@ export default function Clientdetails2() {
                   onChange={(event) =>
                     updateField("trialSenderName", event.target.value)
                   }
-                  placeholder="e.g. Md. Ariful Islam Manik"
+                  placeholder="Shomvob Technologies Ltd."
                   className={`${inputClassName} mt-2`}
                 />
               </div>
@@ -1485,6 +1494,7 @@ export default function Clientdetails2() {
                   onChange={(event) =>
                     updateField("trialSenderPhone", event.target.value)
                   }
+                  placeholder="09638-885588"
                   className={`${inputClassName} mt-2`}
                 />
               </div>
@@ -1502,6 +1512,7 @@ export default function Clientdetails2() {
                   onChange={(event) =>
                     updateField("trialSenderEmail", event.target.value)
                   }
+                  placeholder="e.g. hello@shomvob.com"
                   className={`${inputClassName} mt-2`}
                 />
               </div>

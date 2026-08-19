@@ -63,6 +63,7 @@ type FormState = {
   // Trial account email (Send mail button). Kept separate from the
   // "Proposal contact" fields above — the trial invite is plausibly sent by
   // a different team member than whoever's listed on the proposal PDF.
+  includeTrialAccountDetails: boolean;
   trialPortalUrl: string;
   trialUsername: string;
   trialPassword: string;
@@ -135,6 +136,7 @@ const initialForm: FormState = {
   includeFieldTracking: false,
   fieldTrackingFee: "",
 
+  includeTrialAccountDetails: false,
   trialPortalUrl: DEFAULT_TRIAL_PORTAL_URL,
   trialUsername: "",
   trialPassword: TRIAL_ACCOUNT_PASSWORD,
@@ -844,13 +846,13 @@ export default function Clientdetails2() {
           index={2}
           title="Module Selection"
           description={
-            <span className="animate-pulse-subtle">
+            <>
               Select up to 8 modules, or up to 6 if you&apos;re including a
               problem statement below — pick whichever are most relevant to
               this client. It&apos;s fine to select none, but we recommend at
               least {RECOMMENDED_MIN_MODULE_COUNT} for a balanced-looking
               page.
-            </span>
+            </>
           }
           id="section-module-selection"
           hasError={moduleSelectionHasError}
@@ -923,7 +925,7 @@ export default function Clientdetails2() {
         >
           <div>
             <label htmlFor="problemStatementHeading" className={labelClassName}>
-              Heading (optional)
+              Notes heading (optional)
             </label>
             <p className={hintClassName}>Shown above the callout body.</p>
             <input
@@ -941,11 +943,10 @@ export default function Clientdetails2() {
 
           <div className="mt-5">
             <label htmlFor="problemStatementText" className={labelClassName}>
-              Body text
+              Details
             </label>
             <p className={hintClassName}>
-              Use the toolbar for bold, italic, or a bullet list — this
-              renders directly into the proposal&apos;s callout box.
+              Explain in details about your note — use the toolbar for <b>bold</b>, <i>italic</i>, or a bullet list.
             </p>
             <div className="mt-2 w-full min-w-0">
               <Richtexteditor
@@ -1312,6 +1313,25 @@ export default function Clientdetails2() {
           id="section-email-details"
           hasError={emailDetailsHasError}
         >
+          <div className="mb-5 rounded-xl bg-white/[0.03] p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]">
+            <label className="flex cursor-pointer items-center gap-2.5 text-sm font-medium text-white/90">
+              <input
+                type="checkbox"
+                name="includeTrialAccountDetails"
+                checked={form.includeTrialAccountDetails}
+                onChange={(event) =>
+                  updateField(
+                    "includeTrialAccountDetails",
+                    event.target.checked,
+                  )
+                }
+                className="sr-only"
+              />
+              <CheckChip checked={form.includeTrialAccountDetails} />
+              Include Trial Account Details
+            </label>
+          </div>
+
           <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
             <div>
               <FieldLabel htmlFor="trialPortalUrl" hasError={Boolean(errors.trialPortalUrl)}>

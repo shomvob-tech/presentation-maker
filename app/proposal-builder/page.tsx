@@ -1,28 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
 import Clientdetails2 from "../components/Clientdetails2";
-import LightRays from "@/app/components/LightRays";
 
 export default function ProposalBuilderPage() {
   return (
     <main className="relative flex min-h-screen flex-col overflow-hidden bg-[#03110a] text-white">
-      {/* Animated background — sits behind everything, ignores pointer events */}
-      <div className="absolute inset-0 z-0">
-        <LightRays
-          raysOrigin="top-center"
-          raysColor="#28a143"
-          raysSpeed={0.7}
-          lightSpread={0.9}
-          rayLength={2}
-          followMouse
-          mouseInfluence={0.2}
-          noiseAmount={0}
-          distortion={0}
-          pulsating={false}
-          fadeDistance={1.3}
-          saturation={1.1}
-        />
-      </div>
+      {/* Static gradient background */}
+      <div
+        className="absolute inset-0 z-0 pointer-events-none"
+        aria-hidden="true"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 50% at 50% 0%, #1a4d2e 0%, #0a2318 40%, #03110a 100%)",
+        }}
+      />
       <header className="relative z-10 flex items-center justify-between px-6 py-6 md:px-10">
         <Link href="/proposal-builder" className="inline-flex items-center gap-3">
           <Image

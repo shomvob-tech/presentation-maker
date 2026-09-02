@@ -23,17 +23,17 @@ export type ProposalDetails = {
   validityDays?: number;
 
   /**
-   * Section 3 (Solution Proposal) — one-page format. `problemStatementText`
-   * is an HTML string from Richtexteditor (Tiptap), not plain text; render
-   * it with dangerouslySetInnerHTML, not as a plain string. Both fields are
-   * omitted entirely (not just empty strings) when there's no problem
-   * statement — Moduleoverview.tsx checks for presence, not for "".
+   * Section 3 (Solution Proposal). `problemStatementText` is an HTML string
+   * from Richtexteditor (Tiptap), not plain text; render it with
+   * dangerouslySetInnerHTML, not as a plain string. Both fields are omitted
+   * entirely (not just empty strings) when there's no problem statement —
+   * the renderers check for presence, not for "".
    */
   problemStatementHeading?: string;
   problemStatementText?: string;
-  /** Module ids from lib/module-highlights.ts. Up to 6 (with a problem
-   * statement) or 8 (without) — a ceiling, not an exact quota — enforced by
-   * Clientdetails2.tsx's validation at submit time, not re-validated here. */
+  /** Module ids from lib/module-highlights.ts — any number of them. Section 3
+   * runs onto a second page when they no longer fit one; lib/module-page-layout.ts
+   * decides the split at render time, nothing is capped at save time. */
   selectedModules?: string[];
 
   /**

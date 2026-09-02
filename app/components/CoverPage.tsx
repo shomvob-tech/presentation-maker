@@ -14,14 +14,18 @@
  * footer. Everything client-specific is a prop.
  */
 
+import { COMPANY_STATS } from "@/lib/company-stats";
+
 const DEFAULT_TITLE = "Workforce Management Ecosystem";
 const SHOMVOB_LOGO_SRC = "/resources/shomvob_hr_logo.png";
 
+/** Values come from company-stats.ts so the cover strip and the COO letter
+ * can never quote different numbers. */
 const DEFAULT_STATS: CoverStat[] = [
-  { value: "25+", label: "Organizations Served" },
-  { value: "98%+", label: "Platform Availability" },
-  { value: "4+", label: "Years Experience" },
-  { value: "100%", label: "Payroll On Time" },
+  { value: COMPANY_STATS.organizationsServed, label: "Organizations Served" },
+  { value: COMPANY_STATS.platformAvailability, label: "Platform Availability" },
+  { value: COMPANY_STATS.yearsExperience, label: "Years Experience" },
+  { value: COMPANY_STATS.payrollOnTime, label: "Payroll On Time" },
 ];
 
 export type CoverStat = {
@@ -39,8 +43,9 @@ export type PreparedByContact = {
 export interface CoverPageProps {
   /** Client's full legal/display name, e.g. "Terraprime Hotels & Resorts Ltd." */
   clientName: string;
-  /** Client logo — data URL or public path. Transparent background recommended. */
-  clientLogoSrc: string;
+  /** Client logo — data URL or public path. Transparent background recommended.
+   * Optional: when omitted the cover simply opens on the gold rule instead. */
+  clientLogoSrc?: string;
   /** Defaults to "Workforce Management Ecosystem" when omitted or blank. */
   documentTitle?: string;
   /** Proposal date. Accepts a Date or an already-formatted string. */
@@ -101,11 +106,13 @@ export default function CoverPage({
       {/* Content column */}
       <div className="relative z-20 flex h-full flex-col items-center justify-between pb-[26mm] pt-[38mm] font-sans">
         <div className="flex flex-col items-center px-[30mm] text-center">
-          <img
-            src={clientLogoSrc}
-            alt={`${clientName} logo`}
-            className="mb-[9mm] max-h-[62mm] max-w-[80mm] object-contain"
-          />
+          {clientLogoSrc ? (
+            <img
+              src={clientLogoSrc}
+              alt={`${clientName} logo`}
+              className="mb-[9mm] max-h-[62mm] max-w-[80mm] object-contain"
+            />
+          ) : null}
 
           <div className="mb-[5mm] h-[2pt] w-[18mm] bg-brand_gold" />
 

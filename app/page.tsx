@@ -3,7 +3,9 @@ import Link from "next/link";
 import LightRays from "@/app/components/LightRays";
 
 const SAMPLE_PROPOSAL_PATH =
-  "/resources/Sample_proposal.pdf";
+  "/resources/Sample_prop.pdf";
+const SAMPLE_SLA_PATH =
+  "/resources/Sample_sla.pdf";
 
 export default function Home() {
   return (
@@ -50,21 +52,39 @@ export default function Home() {
           and commercial terms — in minutes.
         </p>
 
-        <div className="home-fade-in home-fade-delay-4 mt-10 flex flex-col items-center gap-4 sm:flex-row">
-          <Link
-            href="/proposal-builder"
-            className="home-button-sheen rounded-xl bg-[#edb713] px-8 py-4 text-base font-semibold text-[#0c3d20] shadow-lg shadow-black/20 transition hover:bg-[#f5c832] hover:shadow-xl"
-          >
-            <span className="relative z-10">Start a new proposal</span>
-          </Link>
-          <a
-            href={SAMPLE_PROPOSAL_PATH}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="home-button-sheen rounded-xl border border-white/25 px-8 py-4 text-base font-medium text-white/90 transition hover:border-white/50 hover:bg-white/5"
-          >
-            <span className="relative z-10">View sample proposal</span>
-          </a>
+        <div className="home-fade-in home-fade-delay-4 mt-10 flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-4 sm:flex-row">
+            <Link
+              href="/proposal-builder"
+              className="home-button-sheen rounded-xl bg-[#edb713] px-8 py-4 text-base font-semibold text-[#0c3d20] shadow-lg shadow-black/20 transition hover:bg-[#f5c832] hover:shadow-xl"
+            >
+              <span className="relative z-10">Start a new proposal</span>
+            </Link>
+            <a
+              href={SAMPLE_PROPOSAL_PATH}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="home-button-sheen rounded-xl border border-white/25 px-8 py-4 text-base font-medium text-white/90 transition hover:border-white/50 hover:bg-white/5"
+            >
+              <span className="relative z-10">View sample proposal</span>
+            </a>
+          </div>
+          <div className="flex flex-col items-center gap-4 sm:flex-row">
+            <Link
+              href="/sla-builder"
+              className="home-button-sheen rounded-xl border border-[#5cd47e]/50 bg-[#28a143]/10 px-8 py-4 text-base font-semibold text-[#8be9a5] transition hover:border-[#5cd47e] hover:bg-[#28a143]/20"
+            >
+              <span className="relative z-10">Start an SLA</span>
+            </Link>
+            <a
+              href={SAMPLE_SLA_PATH}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="home-button-sheen rounded-xl border border-white/25 px-8 py-4 text-base font-medium text-white/90 transition hover:border-white/50 hover:bg-white/5"
+            >
+              <span className="relative z-10">View sample SLA</span>
+            </a>
+          </div>
         </div>
       </section>
 

@@ -4,7 +4,7 @@
  * values in page components.
  */
 export const COMPANY_STATS = {
-  organizationsServed: "25+",
+  organizationsServed: "100+",
   foundedYear: 2024,
   platformAvailability: "98%+",
   yearsExperience: "4+",

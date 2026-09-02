@@ -1,19 +1,23 @@
 "use client";
 
 /**
- * Module overview preview — loads wizard inputs from localStorage and
- * renders Moduleoverview at true A4 size. Same pattern as
- * PreviewLetterPage.tsx / PreviewCommercialTermsPage.tsx.
+ * Module overview preview — loads wizard inputs from localStorage and renders
+ * Section 3 at true A4 size. Same pattern as PreviewLetterPage.tsx /
+ * PreviewCommercialTermsPage.tsx.
  *
- * pageNumber is hardcoded to 3 here, and this is no longer a placeholder —
- * now that Section 3 is a fixed one-page format, the whole document's page
- * count is fixed too: Cover=1, Letter=2, Solution=3, Commercial=4, always.
- * (Worth updating PreviewCommercialTermsPage.tsx's pageNumber comment to
- * reflect this too — it was written when Section 3's length was still
- * variable and treated 4 as a guess.)
+ * The section is one or two pages depending on how many modules are selected
+ * and whether there's a problem statement — splitModulesAcrossPages() owns
+ * that decision (see lib/module-page-layout.ts), this component just renders
+ * what it returns. Sections after this one shift down by a page when it
+ * overflows; PreviewCommercialTermsPage.tsx derives its number the same way.
  */
 
 import Moduleoverview from "@/app/components/Moduleoverview";
+import {
+  hasProblemStatementContent,
+  MODULE_SECTION_START_PAGE,
+  splitModulesAcrossPages,
+} from "@/lib/module-page-layout";
 import {
   loadClientName,
   loadProposalDetails,
@@ -22,7 +26,6 @@ import {
 import { useEffect, useState } from "react";
 
 const SHOMVOB_LOGO_SRC = "/resources/shomvob_hr_logo.png";
-const PAGE_NUMBER = 3;
 
 type PreviewState = {
   clientName: string;
@@ -43,7 +46,22 @@ export default function PreviewModuleOverviewPage() {
     return null;
   }
 
-  const selectedModuleIds = state.details.selectedModules ?? [];
+  const { details } = state;
+  const selectedModuleIds = details.selectedModules ?? [];
+  const problemStatementPresent = hasProblemStatementContent(
+    details.problemStatementText,
+  );
+  const split = splitModulesAcrossPages(
+    selectedModuleIds,
+    problemStatementPresent,
+  );
+
+  const sharedProps = {
+    clientName: state.clientName,
+    preparedDate: details.preparedDate,
+    validityDays: details.validityDays,
+    shomvobLogoSrc: SHOMVOB_LOGO_SRC,
+  };
 
   return (
     <div className="print-stage flex flex-col items-center bg-[#e5e5e5] pb-16">
@@ -52,16 +70,34 @@ export default function PreviewModuleOverviewPage() {
       </p>
       <div className="print-stage shadow-2xl shadow-black/30">
         <Moduleoverview
-          clientName={state.clientName}
-          preparedDate={state.details.preparedDate}
-          validityDays={state.details.validityDays}
-          selectedModuleIds={selectedModuleIds}
-          problemStatementHeading={state.details.problemStatementHeading}
-          problemStatementHtml={state.details.problemStatementText}
-          pageNumber={PAGE_NUMBER}
-          shomvobLogoSrc={SHOMVOB_LOGO_SRC}
+          {...sharedProps}
+          selectedModuleIds={split.firstPageModuleIds}
+          problemStatementHeading={
+            split.problemStatementOnSecondPage
+              ? undefined
+              : details.problemStatementHeading
+          }
+          problemStatementHtml={
+            split.problemStatementOnSecondPage
+              ? undefined
+              : details.problemStatementText
+          }
+          pageNumber={MODULE_SECTION_START_PAGE}
         />
       </div>
+
+      {split.pageCount === 2 ? (
+        <div className="print-stage mt-16 shadow-2xl shadow-black/30">
+          <Moduleoverview
+            {...sharedProps}
+            variant="continued"
+            selectedModuleIds={split.secondPageModuleIds}
+            problemStatementHeading={details.problemStatementHeading}
+            problemStatementHtml={details.problemStatementText}
+            pageNumber={MODULE_SECTION_START_PAGE + 1}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

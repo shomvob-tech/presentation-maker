@@ -1,20 +1,24 @@
 /**
- * Moduleoverview — Section 3 of the Shomvob proposal format, one-page only.
+ * Moduleoverview — Section 3 of the Shomvob proposal format. Renders exactly
+ * ONE A4 page; the section itself may run to two of them.
  *
- * Matches: shomvob_proposal_format.md, as amended by the one-page decision —
- * fixed title, fixed static description (client name is the only dynamic
- * part), and up to 8 modules (or up to 6 if a problem statement is present)
- * — a ceiling, not an exact quota. That cap is enforced by Clientdetails2.tsx's
- * validation, not by this component — it trusts whatever module list it's
- * handed, including an empty one.
+ * Matches: shomvob_proposal_format.md — fixed title, fixed static description
+ * (client name is the only dynamic part), then the module grid.
+ *
+ * This component does no pagination of its own: it renders whatever module
+ * list it's handed, including an empty one. Which modules belong on which
+ * page — and which page carries the problem statement — is decided by
+ * lib/module-page-layout.ts and applied by the caller
+ * (Previewmoduleoverviewpage.tsx). Set `variant="continued"` for the second
+ * page: it drops the title, meta line, and intro paragraph, keeping only the
+ * eyebrow and a "(continued)" module heading.
  *
  * Layout is always a strict 2-column grid. Odd module counts intentionally
  * leave the second cell of the final row empty.
  *
- * Because Section 3 is now always exactly one page, the whole document's
- * page numbering is fixed: Cover=1, Letter=2, Solution=3, Commercial=4. The
- * `pageNumber` prop still exists (defaults to 3) rather than being hardcoded
- * internally, in case that ever changes.
+ * Page numbering is no longer fixed document-wide, since this section is 1 or
+ * 2 pages: Cover=1, Letter=2, Solution=3(–4), Commercial=4 or 5. Sections
+ * after this one derive their number from moduleSectionPageCount().
  *
  * `problemStatementHtml` is rendered via dangerouslySetInnerHTML — it comes
  * from Richtexteditor (Tiptap) in Clientdetails2.tsx, entered by your own
@@ -34,15 +38,21 @@ export interface ModuleoverviewProps {
   preparedDate: Date | string;
   /** Defaults to 30. */
   validityDays?: number;
-  /** 0 to 8 ids from MODULE_HIGHLIGHTS (0 to 6 if a problem statement is
-   * present) — the cap is enforced upstream in the form, not here. */
+  /** Up to MODULE_MAX_PER_PAGE ids from MODULE_HIGHLIGHTS — the ones belonging
+   * on THIS page. The caller splits the full selection; see module-page-layout.ts. */
   selectedModuleIds: string[];
-  /** Omit (or leave empty) for no problem statement — module cap expands from 6 to 8. */
+  /** Omit (or leave empty) to render no callout on this page. */
   problemStatementHeading?: string;
   problemStatementHtml?: string;
-  /** Defaults to 3 — see note above about fixed page numbering. */
+  /** Defaults to 3 — the section's first page. A continuation page is 4. */
   pageNumber?: number;
   shomvobLogoSrc?: string;
+  /**
+   * "primary" (default) renders the section's full header — title, meta line,
+   * and intro paragraph. "continued" is the compact second page: eyebrow plus
+   * a "(continued)" module heading, leaving the space for content.
+   */
+  variant?: "primary" | "continued";
 }
 
 function formatMetaDate(date: Date | string): string {
@@ -69,7 +79,9 @@ export default function Moduleoverview({
   problemStatementHtml,
   pageNumber = 3,
   shomvobLogoSrc,
+  variant = "primary",
 }: ModuleoverviewProps) {
+  const isContinued = variant === "continued";
   const modules = selectedModuleIds
     .map((id) => MODULE_HIGHLIGHTS.find((m) => m.id === id))
     .filter((m): m is (typeof MODULE_HIGHLIGHTS)[number] => Boolean(m));
@@ -85,44 +97,58 @@ export default function Moduleoverview({
           Proposal — Shomvob HR Management
         </div>
 
-        <h1 className="text-[20pt] font-extrabold leading-[1.18] text-brand_ink">
-          {PAGE_TITLE}
-        </h1>
+        {isContinued ? null : (
+          <>
+            <h1 className="text-[20pt] font-extrabold leading-[1.18] text-brand_ink">
+              {PAGE_TITLE}
+            </h1>
 
-        <div className="mb-[4mm] mt-[4mm] border-b-[1.5pt] border-brand_green pb-[4mm] text-[9.3pt] text-brand_muted">
-          Prepared for: <b className="text-brand_ink">{clientName}</b> &nbsp;
-          Date: <b className="text-brand_ink">{formatMetaDate(preparedDate)}</b> &nbsp;
-          Valid for: <b className="text-brand_ink">{validityDays} days</b>
-        </div>
-
-        <p className="mb-[5mm] text-justify text-[9.8pt] leading-[1.62] text-[#3a3a3a]">
-          {defaultDescription(clientName)}
-        </p>
-
-        <h2 className="mb-[3.5mm] text-[12.5pt] font-bold text-brand_green">
-          Module Highlights
-        </h2>
-
-        <div className="grid grid-cols-2 gap-x-[7mm]">
-          {modules.map((module) => (
-            <div key={module.id} className="mb-[4mm]">
-              <h3 className="mb-[1.8mm] text-[9.8pt] font-bold text-brand_ink">
-                {module.label}
-              </h3>
-              <ul>
-                {module.bullets.map((bullet, i) => (
-                  <li
-                    key={i}
-                    className="relative mb-[1.4mm] pl-[3mm] text-[8.6pt] leading-[1.45] text-[#444]"
-                  >
-                    <span className="absolute left-0 top-0 font-bold text-brand_green">•</span>
-                    {bullet}
-                  </li>
-                ))}
-              </ul>
+            <div className="mb-[4mm] mt-[4mm] border-b-[1.5pt] border-brand_green pb-[4mm] text-[9.3pt] text-brand_muted">
+              Prepared for: <b className="text-brand_ink">{clientName}</b> &nbsp;
+              Date: <b className="text-brand_ink">{formatMetaDate(preparedDate)}</b> &nbsp;
+              Valid for: <b className="text-brand_ink">{validityDays} days</b>
             </div>
-          ))}
-        </div>
+
+            <p className="mb-[5mm] text-justify text-[9.8pt] leading-[1.62] text-[#3a3a3a]">
+              {defaultDescription(clientName)}
+            </p>
+          </>
+        )}
+
+        {modules.length > 0 ? (
+          <>
+            <h2
+              className={`mb-[3.5mm] text-[12.5pt] font-bold text-brand_green ${
+                isContinued
+                  ? "border-b-[1.5pt] border-brand_green pb-[3.5mm]"
+                  : ""
+              }`}
+            >
+              {isContinued ? "Module Highlights (continued)" : "Module Highlights"}
+            </h2>
+
+            <div className="grid grid-cols-2 gap-x-[7mm]">
+              {modules.map((module) => (
+                <div key={module.id} className="mb-[4mm]">
+                  <h3 className="mb-[1.8mm] text-[9.8pt] font-bold text-brand_ink">
+                    {module.label}
+                  </h3>
+                  <ul>
+                    {module.bullets.map((bullet, i) => (
+                      <li
+                        key={i}
+                        className="relative mb-[1.4mm] pl-[3mm] text-[8.6pt] leading-[1.45] text-[#444]"
+                      >
+                        <span className="absolute left-0 top-0 font-bold text-brand_green">•</span>
+                        {bullet}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : null}
 
         {hasProblemStatement ? (
           <div className="mt-[3mm]">

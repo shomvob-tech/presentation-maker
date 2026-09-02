@@ -26,7 +26,11 @@ const DEFAULT_RECIPIENT_TITLE = "Managing Director";
 const DEFAULT_SIGNATURE_SRC = "/hasib-rahman-signature.png";
 
 export interface LetterFromCooProps {
-  /** Used only in the footer ("Proposal for [clientName] — Page N"). */
+  /**
+   * The client/company name from the first part of the form (cover page).
+   * Used in the footer ("Proposal for [clientName] — Page N") and always
+   * used for the "Subject:" line, regardless of `addresseeName`.
+   */
   clientName: string;
   /**
    * Who the letter is addressed to. This is deliberately separate from
@@ -136,7 +140,7 @@ export default function LetterFromCoo({
       </div>
 
       <div className="mb-[6mm] text-[9.8pt] font-bold text-brand_ink">
-        Subject: Proposal for SaaS Based Human Resource Information System for {addresseeName}.
+        Subject: Proposal for SaaS Based Human Resource Information System for {clientName}.
       </div>
 
       <div className="text-[9.6pt] leading-[1.68] text-[#333]">

@@ -49,13 +49,13 @@ export default function PreviewPage() {
     );
   }
 
-  if (!state.details || !state.clientLogoSrc) {
+  // A client logo is optional — only the saved form details are required.
+  if (!state.details) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#e5e5e5] px-6 text-center text-[#0c3d20]">
         <p className="text-lg font-semibold">No proposal details to preview</p>
         <p className="max-w-md text-sm text-[#0c3d20]/70">
-          Fill in the proposal builder form (including a client logo) first,
-          then continue to preview.
+          Fill in the proposal builder form first, then continue to preview.
         </p>
         <Link
           href="/proposal-builder"
@@ -84,7 +84,7 @@ export default function PreviewPage() {
       <div className="print-stage shadow-2xl shadow-black/30">
         <CoverPage
           clientName={state.clientName}
-          clientLogoSrc={state.clientLogoSrc}
+          clientLogoSrc={state.clientLogoSrc ?? undefined}
           documentTitle={state.details.documentTitle}
           preparedDate={state.details.preparedDate}
           shomvobLogoSrc={SHOMVOB_LOGO_SRC}

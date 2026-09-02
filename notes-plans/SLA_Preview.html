@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Service Level Agreement — Template Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#111111;
+    --ink-soft:#333333;
+    --muted:#666666;
+    --rule:#B9B9B9;
+    --field-bg:#EDEDED;
+    --paper:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  html,body{background:#E9E9E4;}
+  body{
+    margin:0;
+    color:var(--ink);
+    font-family:'Source Serif 4', Georgia, 'Times New Roman', serif;
+    font-size:15.5px;
+    line-height:1.68;
+    padding:40px 16px 90px;
+  }
+
+  .note{
+    max-width:720px;
+    margin:0 auto 18px;
+    text-align:center;
+    font-size:12.5px;
+    color:var(--muted);
+    font-style:italic;
+  }
+
+  .doc{
+    max-width:720px;
+    margin:0 auto;
+    background:var(--paper);
+    border:1px solid #D4D4D0;
+    padding:0;
+  }
+
+  /* ---------------- Cover page ---------------- */
+  .cover{
+    min-height:640px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:60px 50px;
+    page-break-after:always;
+  }
+  .cover .doctitle{
+    font-size:22px;
+    font-weight:700;
+    letter-spacing:.02em;
+    margin-bottom:6px;
+  }
+  .cover .doctitle .abbr{font-weight:600;font-size:16px;}
+  .cover .with{
+    margin:26px 0 10px;
+    font-style:italic;
+    color:var(--ink-soft);
+    font-size:15px;
+  }
+  .cover .partyname{
+    font-size:19px;
+    font-weight:700;
+    letter-spacing:.01em;
+  }
+  .cover .and{
+    margin:22px 0 10px;
+    font-style:italic;
+    color:var(--ink-soft);
+    font-size:15px;
+  }
+
+  /* generic shaded merge-field, like a Word field */
+  .ph{
+    background:var(--field-bg);
+    font-style:italic;
+    padding:0 5px;
+    border-radius:2px;
+    white-space:nowrap;
+  }
+  .cover .ph{
+    font-size:19px;
+    font-weight:700;
+    font-style:italic;
+    padding:2px 10px;
+  }
+
+  hr.pagebreak{
+    border:none;
+    border-top:1px dashed var(--rule);
+    margin:0 50px;
+  }
+
+  /* ---------------- Body ---------------- */
+  .body{
+    padding:44px 50px 10px;
+  }
+
+  h1.doc-heading{
+    text-align:center;
+    font-size:19px;
+    font-weight:700;
+    letter-spacing:.03em;
+    margin:0 0 30px;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--ink);
+  }
+
+  p{margin:0 0 14px; text-align:justify; hyphens:auto;}
+
+  .preamble p{color:var(--ink-soft);}
+  .andline{
+    text-align:center;
+    font-style:italic;
+    color:var(--muted);
+    margin:2px 0 14px;
+  }
+
+  section.article{
+    padding:22px 0 4px;
+  }
+  section.article + section.article{
+    border-top:1px solid #DDDDDD;
+  }
+
+  h2.article-title{
+    font-size:16px;
+    font-weight:700;
+    margin:0 0 12px;
+  }
+  h2.article-title .num{margin-right:8px;}
+
+  h3.sub{
+    font-size:14.5px;
+    font-weight:700;
+    font-style:italic;
+    margin:16px 0 8px;
+  }
+
+  ul.clauses{
+    margin:0 0 6px;
+    padding-left:22px;
+  }
+  ul.clauses li{
+    margin-bottom:9px;
+    color:var(--ink-soft);
+    text-align:justify;
+  }
+  ul.clauses ul{
+    margin:8px 0 2px;
+    padding-left:22px;
+    list-style:circle;
+  }
+  ul.clauses li strong{color:var(--ink);}
+
+  .featurenote{
+    font-size:13px;
+    font-style:italic;
+    color:var(--muted);
+    margin:-2px 0 12px;
+  }
+
+  /* ---------------- Fee table ---------------- */
+  table.fees{
+    width:100%;
+    border-collapse:collapse;
+    margin:10px 0 14px;
+    font-size:14.5px;
+  }
+  table.fees th{
+    background:var(--ink);
+    color:#fff;
+    font-weight:700;
+    font-size:12px;
+    letter-spacing:.03em;
+    text-align:left;
+    padding:9px 12px;
+    border:1px solid var(--ink);
+  }
+  table.fees th.num, table.fees td.num{text-align:right;}
+  table.fees td{
+    padding:10px 12px;
+    border:1px solid #cfcfcf;
+    color:var(--ink-soft);
+  }
+  table.fees tr.total td{
+    font-weight:700;
+    color:var(--ink);
+    background:#F4F4F2;
+  }
+  .note-inline{
+    font-size:13px;
+    color:var(--muted);
+    font-style:italic;
+    margin-top:-4px;
+  }
+
+  /* ---------------- Signatures ---------------- */
+  .sign-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0 40px;
+    margin:16px 0 4px;
+  }
+  .sign-col .party{
+    font-weight:700;
+    font-size:13.5px;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    margin-bottom:30px;
+  }
+  .sign-line{
+    border-top:1px solid var(--ink);
+    padding-top:7px;
+    margin-bottom:30px;
+  }
+  .sign-line .role{
+    font-size:13px;
+    color:var(--muted);
+    font-style:italic;
+    margin-top:2px;
+  }
+
+  .doc-footer{
+    padding:20px 50px 40px;
+    text-align:center;
+    font-size:12px;
+    color:var(--muted);
+    border-top:1px solid #DDDDDD;
+  }
+
+  @media (max-width:600px){
+    .cover, .body, .doc-footer{padding-left:22px;padding-right:22px;}
+    hr.pagebreak{margin:0 22px;}
+    .sign-grid{grid-template-columns:1fr;gap:22px;}
+  }
+
+  @media print{
+    html,body{background:#fff;}
+    body{padding:0;}
+    .note{display:none;}
+    .doc{border:none;}
+    .cover{page-break-after:always;}
+  }
+</style>
+</head>
+<body>
+
+  <p class="note">Template preview — shaded text marks fields that will be filled in automatically. Everything else is fixed wording.</p>
+
+  <div class="doc">
+
+    <!-- ============ COVER PAGE ============ -->
+    <div class="cover">
+      <div class="doctitle">SERVICE LEVEL AGREEMENT <span class="abbr">(SLA)</span></div>
+      <div class="with">With</div>
+      <div class="partyname">Shomvob Technologies Limited</div>
+      <div class="and">And</div>
+      <div class="partyname"><span class="ph">Client Name</span></div>
+    </div>
+
+    <hr class="pagebreak">
+
+    <!-- ============ BODY ============ -->
+    <div class="body">
+
+      <h1 class="doc-heading">SERVICE LEVEL AGREEMENT</h1>
+
+      <div class="preamble">
+        <p>This Service Level Agreement (“SLA”) is entered into on <span class="ph">Agreement Date</span> at Dhaka, Bangladesh by and between:</p>
+        <p><strong>Shomvob Technologies Ltd</strong>, a company incorporated under the Companies Act of Bangladesh, with company registration number TRAD/DSCC/045324/2021, and having its operational headquarters at House 486, Road 08, Baridhara DOHS, Dhaka‑1206, Bangladesh, represented by its Managing Director, hereinafter referred to as the “First Party,” which expression shall, where the context admits, include its successors and assigns, OF THE ONE PART.</p>
+        <p class="andline">AND</p>
+        <p><span class="ph">Client Name</span>, a company incorporated under the Companies Act of Bangladesh, having its operational headquarters at <span class="ph">Client Address</span>, hereinafter referred to as the “Second Party,” which expression shall, where the context admits, include its successors and assigns, OF THE OTHER PART.</p>
+      </div>
+
+      <section class="article">
+        <h2 class="article-title"><span class="num">1.</span>Scope of Services</h2>
+        <p>Shomvob Technologies Limited will provide the following services:</p>
+        <ul class="clauses">
+          <li><strong>System Access</strong> — the Client will be granted access to the cloud-based HRIS platform, scoped to the HR functions selected under <em>System Features</em> below.</li>
+          <li><strong>Deployment</strong> — the SaaS HRIS system will be deployed and configured according to the agreed-upon specifications.</li>
+          <li>
+            <strong>System Features</strong> — the following modules are included for this Client:
+            <ul>
+              <li><span class="ph">Feature 1</span></li>
+              <li><span class="ph">Feature 2</span></li>
+              <li><span class="ph">Feature 3</span></li>
+              <li><span class="ph">Feature …</span></li>
+            </ul>
+            <div class="featurenote">Rendered as a bullet list from the modules selected for this Client (e.g., payroll, attendance, leave, reporting, third-party integrations).</div>
+          </li>
+          <li><strong>Updates &amp; Enhancements</strong> — the Provider will regularly update the system, adding new features and security patches as required.</li>
+        </ul>
+      </section>
+
+      <section class="article">
+        <h2 class="article-title"><span class="num">2.</span>Service Availability</h2>
+        <ul class="clauses">
+          <li><strong>System Uptime</strong> — the SaaS HRIS system will be available 99.5% of the time per calendar month, excluding scheduled maintenance periods.</li>
+          <li><strong>Scheduled Maintenance</strong> — performed during non-business hours; the Provider will notify the Client at least 48 hours in advance.</li>
+        </ul>
+      </section>
+
+      <section class="article">
+        <h2 class="article-title"><span class="num">3.</span>Performance Metrics</h2>
+        <h3 class="sub">Response Time</h3>
+        <ul class="clauses">
+          <li>Critical issues (e.g., system downtime) will be addressed within 2 hours.</li>
+          <li>Non-critical issues (e.g., minor bugs) will be addressed within 24 hours.</li>
+        </ul>
+        <h3 class="sub">Resolution Time</h3>
+        <ul class="clauses">
+          <li>For critical issues, the system will be restored to normal functionality within 12 hours.</li>
+          <li>For non-critical issues, resolution will occur within 48 hours.</li>
+        </ul>
+      </section>
+
+      <section class="article">
+        <h2 class="article-title"><span class="num">4.</span>Data Security &amp; Compliance</h2>
+        <ul class="clauses">
+          <li><strong>Data Encryption</strong> — all sensitive data stored in the system will be encrypted both in transit and at rest.</li>
+          <li><strong>Data Backup</strong> — regular backups of the Client's data will be performed and retained for up to 30 days.</li>
+          <li><strong>Compliance</strong> — the system will comply with applicable data protection laws, including GDPR where applicable.</li>
+          <li><strong>Hosting</strong> — the Provider's solution is hosted on AWS under standard security protocols; no on-premises servers are used for data storage.</li>
+          <li><strong>Access Control</strong> — the Provider will not access Client accounts without the Client's permission.</li>
+          <li><strong>Data Retention on Exit</strong> — data is deleted per the Client's instruction, or automatically after 6 months if no instruction is given.</li>
+          <li><strong>Backup Schedule</strong> — scheduled backups occur twice daily for data recovery purposes.</li>
+          <li><strong>Data Portability</strong> — following discontinuation of service, the Client may request a data transfer within 2 months, free of charge.</li>
+          <li><strong>Liability</strong> — the Client may pursue legal action against the Provider if data is lost as a result of the Provider's operational negligence.</li>
+          <li><strong>Transport Security</strong> — data transfers are secured using SSL/TLS (HTTPS) with a DV certificate reissued every 90 days; passwords are protected using the Provider's proprietary encryption mechanism.</li>
+        </ul>
+      </section>
+
+      <section class="article">
+        <h2 class="article-title"><span class="num">5.</span>Support Services</h2>
+        <p><strong>Helpdesk Support</strong> — available 9:00 AM to 11:00 PM, Saturday to Thursday.</p>
+        <h3 class="sub">Support Response Time</h3>
+        <ul class="clauses">
+          <li>Critical issues will be responded to within 2 hours.</li>
+          <li>Non-critical issues will be responded to within 1 business day.</li>
+        </ul>
+        <p><strong>Support Channels</strong> — email, phone, or an online ticketing system.</p>
+      </section>
+
+      <section class="article">
+        <h2 class="article-title"><span class="num">6.</span>Client Responsibilities</h2>
+        <ul class="clauses">
+          <li><strong>User Training</strong> — the Client will ensure relevant personnel are trained on the SaaS HRIS system.</li>
+          <li><strong>User Access</strong> — the Client is responsible for managing user access so that only authorized personnel reach sensitive HR data.</li>
+          <li><strong>Infrastructure Requirements</strong> — the Client must maintain an internet connection and any necessary hardware.</li>
+        </ul>
+      </section>
+
+      <section class="article">
+        <h2 class="article-title"><span class="num">7.</span>Fees &amp; Payment Terms</h2>
+        <p>The Client will pay a recurring subscription fee for the SaaS HRIS system, as set out below:</p>
+        <table class="fees">
+          <thead>
+            <tr><th>Sl.&nbsp;No</th><th>Item Description</th><th class="num">Per Month Costing</th><th class="num">Monthly Costing</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>HRMS software for <span class="ph">Employee Count</span> employees</td>
+              <td class="num"><span class="ph">Monthly Fee</span> BDT</td>
+              <td class="num"><span class="ph">Monthly Fee</span> BDT</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>One-time charges for software rollout &amp; training</td>
+              <td class="num">—</td>
+              <td class="num"><span class="ph">One-Time Fee</span> BDT</td>
+            </tr>
+            <tr class="total">
+              <td>3</td>
+              <td>Net price (VAT excluded)</td>
+              <td class="num">—</td>
+              <td class="num"><span class="ph">Net Price</span> BDT</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="note-inline">VAT of <span class="ph">VAT %</span> applies in addition to the amounts above. If the number of employees increases beyond the contracted tier, the package must be upgraded accordingly.</p>
+        <h3 class="sub">Payment Terms</h3>
+        <ul class="clauses">
+          <li>Payment is due on an annual or monthly basis, as agreed in this contract.</li>
+          <li>All payments must be made within 30 days of the invoice date.</li>
+        </ul>
+      </section>
+
+      <section class="article">
+        <h2 class="article-title"><span class="num">8.</span>Confidentiality</h2>
+        <p>Both parties agree to maintain the confidentiality of any proprietary information or data shared during the course of this Agreement, including but not limited to employee data and business operations.</p>
+      </section>
+
+      <section class="article">
+        <h2 class="article-title"><span class="num">9.</span>Dispute Resolution</h2>
+        <p>In the event of a dispute, both parties agree to attempt to resolve the issue through negotiation or mediation. If the issue cannot be resolved through these methods, it will be resolved through arbitration in accordance with the laws of Bangladesh.</p>
+      </section>
+
+      <section class="article">
+        <h2 class="article-title"><span class="num">10.</span>Limitation of Liability</h2>
+        <p>The liability of the Provider will be limited to the amount paid by the Client for the SaaS HRIS solution over the preceding 12-month period. The Provider will not be liable for any indirect, incidental, or consequential damages, including but not limited to loss of profits, revenue, or data.</p>
+      </section>
+
+      <section class="article">
+        <h2 class="article-title"><span class="num">11.</span>Termination &amp; Renewal</h2>
+        <ul class="clauses">
+          <li><strong>Termination</strong> — either party may terminate this Agreement by providing 30 days' written notice.</li>
+          <li><strong>Renewal</strong> — this Agreement will automatically renew unless either party provides written notice of non-renewal at least 30 days before the end of the current term.</li>
+        </ul>
+      </section>
+
+      <section class="article">
+        <h2 class="article-title"><span class="num">12.</span>Entire Agreement &amp; Authorization</h2>
+        <p>This Agreement contains the full understanding between both parties regarding the matters covered in it and supersedes all previous discussions, agreements, or understandings, whether written or verbal. Any changes to this Agreement will only be valid if made in writing and signed by authorized representatives of both parties.</p>
+      </section>
+
+      <section class="article">
+        <h2 class="article-title"><span class="num">13.</span>Execution</h2>
+        <p>IN WITNESS WHEREOF, the parties hereto have executed this Agreement on the dates set forth below. Each individual signing this Agreement hereby represents and warrants that they are duly authorized to execute and deliver this Agreement on behalf of the respective organization and to bind such organization to its terms and conditions.</p>
+
+        <div class="sign-grid">
+          <div class="sign-col">
+            <div class="party">For the Client</div>
+            <div class="sign-line"><span class="ph">Client CEO Name</span><div class="role"><span class="ph">Client CEO Title</span></div></div>
+            <div class="sign-line"><span class="ph">Client HR Head Name</span><div class="role"><span class="ph">Client HR Head Title</span></div></div>
+          </div>
+          <div class="sign-col">
+            <div class="party">For Shomvob Technologies Ltd</div>
+            <div class="sign-line">Hasib Rahman<div class="role">Co-founder &amp; COO</div></div>
+            <div class="sign-line"><span class="ph">Shomvob POC</span><div class="role"><span class="ph">Shomvob POC Title</span></div></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="doc-footer">
+      Shomvob Technologies Limited · House 486, Road 08, Baridhara DOHS, Dhaka‑1206, Bangladesh
+    </div>
+
+  </div>
+
+</body>
+</html>

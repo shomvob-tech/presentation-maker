@@ -10,7 +10,12 @@ import {
   buildSuggestedProposalPdfFileName,
   TRIAL_ACCOUNT_PASSWORD,
 } from "@/lib/client-email-template";
-import { MODULE_HIGHLIGHTS } from "@/lib/module-highlights";
+import {
+  hasProblemStatementContent,
+  MODULE_MAX_PER_PAGE,
+  SELECTABLE_MODULES,
+  splitModulesAcrossPages,
+} from "@/lib/module-page-layout";
 import Richtexteditor from "@/app/components/Richtexteditor";
 import {
   fileToDataUrl,
@@ -85,14 +90,13 @@ const DEFAULT_RECIPIENT_TITLE = "Managing Director";
  * that ever changes (e.g. staging environment for a specific client). */
 const DEFAULT_TRIAL_PORTAL_URL = "https://hr.shomvob.com/";
 
-/** Section 3 is a fixed one-page layout. Module count is a ceiling, not an
- * exact quota — a problem statement eats into the page's available space,
- * so the cap drops from 8 to 6 when one is present. Zero modules is allowed
- * (the rep may be filling this in before deciding), but the page looks best
- * with a handful selected — see RECOMMENDED_MIN_MODULE_COUNT below. See
- * module-highlights.ts for the finalized content each checkbox pulls from. */
-const MODULE_MAX_WITH_PROBLEM_STATEMENT = 6;
-const MODULE_MAX_WITHOUT_PROBLEM_STATEMENT = 8;
+/** Section 3 has no module cap any more: everything on offer can be selected,
+ * and the section runs onto a continuation page when it no longer fits one.
+ * lib/module-page-layout.ts owns that split — this form only reports it back
+ * to the rep. Zero modules is still allowed (the rep may be filling this in
+ * before deciding), but the page looks best with a handful selected — see
+ * RECOMMENDED_MIN_MODULE_COUNT below. See module-highlights.ts for the
+ * finalized content each checkbox pulls from. */
 
 /** Soft recommendation only — never blocks submission. Below this, the page
  * still renders correctly (see Moduleoverview.tsx's odd-count handling) but
@@ -160,20 +164,8 @@ function isPositiveInteger(value: string): boolean {
   return Number.isInteger(n) && n > 0;
 }
 
-/** Tiptap reports an empty editor as "<p></p>", not "" — strip tags before
- * checking for real content, or an empty editor would count as "has text". */
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "").trim();
-}
-
 function hasProblemStatement(form: FormState): boolean {
-  return stripHtml(form.problemStatementText).length > 0;
-}
-
-function maxModuleCount(form: FormState): number {
-  return hasProblemStatement(form)
-    ? MODULE_MAX_WITH_PROBLEM_STATEMENT
-    : MODULE_MAX_WITHOUT_PROBLEM_STATEMENT;
+  return hasProblemStatementContent(form.problemStatementText);
 }
 
 function validateForm(form: FormState, logo: File | null): FormErrors {
@@ -189,9 +181,9 @@ function validateForm(form: FormState, logo: File | null): FormErrors {
     errors.clientEmail = "Enter a valid email address.";
   }
 
-  if (!logo) {
-    errors.logo = "Client logo is required for the cover page.";
-  } else if (!logo.type.startsWith("image/")) {
+  // The logo is optional — the cover page renders without one. Only validate
+  // the file type when the rep actually picked something.
+  if (logo && !logo.type.startsWith("image/")) {
     errors.logo = "Logo must be an image file.";
   }
 
@@ -219,16 +211,9 @@ function validateForm(form: FormState, logo: File | null): FormErrors {
     errors.fieldTrackingFee = "Enter a per-user fee, or turn this off.";
   }
 
-  // Cross-validation: module count is a ceiling, not an exact quota. Zero is
-  // allowed — the page still renders correctly with none selected — this
-  // only blocks going over the cap the one-page layout can fit.
-  const max = maxModuleCount(form);
-  const selectedCount = form.selectedModules.length;
-  if (selectedCount > max) {
-    errors.selectedModules = hasProblemStatement(form)
-      ? `A problem statement takes up space on the page, so the cap drops to ${max} modules — you have ${selectedCount} selected. Remove ${selectedCount - max}, or clear the problem statement.`
-      : `Select up to ${max} modules — you have ${selectedCount} selected.`;
-  }
+  // Module selection has nothing left to validate — any count from zero to
+  // the full catalogue lays out correctly (see lib/module-page-layout.ts).
+  // The `selectedModules` error key stays wired up for future use.
 
   return errors;
 }
@@ -628,10 +613,10 @@ export default function Clientdetails2() {
    * Independent of /api/export-pdf — no Chromium on Vercel.
    */
   function handlePrintPdf() {
-    const logoDataUrl = loadPreviewLogo();
     const details = loadProposalDetails();
 
-    if (!logoDataUrl || !details) {
+    // No logo is fine — only the saved proposal details are required.
+    if (!details) {
       setPdfError(
         'No saved proposal found. Click "Preview Proposal" first, then print the PDF.',
       );
@@ -653,7 +638,8 @@ export default function Clientdetails2() {
     const clientName =
       form.clientName.trim() || details?.letterAddresseeName || "Client";
 
-    if (!logoDataUrl || !details) {
+    // No logo is fine — only the saved proposal details are required.
+    if (!details) {
       setPdfError(
         'No saved proposal found. Click "Preview Proposal" first, then download the PDF.',
       );
@@ -701,10 +687,19 @@ export default function Clientdetails2() {
   }
 
   const problemStatementActive = hasProblemStatement(form);
-  const maxCount = maxModuleCount(form);
   const selectedCount = form.selectedModules.length;
-  const exceedsMax = selectedCount > maxCount;
   const belowRecommended = selectedCount < RECOMMENDED_MIN_MODULE_COUNT;
+  const moduleSplit = splitModulesAcrossPages(
+    form.selectedModules,
+    problemStatementActive,
+  );
+  const runsToTwoPages = moduleSplit.pageCount === 2;
+  /** Mirrors exactly what the preview will do with the current selection. */
+  const moduleLayoutSummary = runsToTwoPages
+    ? `${moduleSplit.firstPageModuleIds.length} on page 1, ${moduleSplit.secondPageModuleIds.length}${
+        moduleSplit.problemStatementOnSecondPage ? " + problem statement" : ""
+      } on page 2`
+    : `fits on one page${problemStatementActive ? " with the problem statement" : ""}`;
 
   const clientInfoHasError = sectionHasError(errors, ["clientName", "clientEmail", "logo"]);
   const moduleSelectionHasError = sectionHasError(errors, ["selectedModules"]);
@@ -800,11 +795,16 @@ export default function Clientdetails2() {
                 ↑
               </span>
               <span className="text-sm font-semibold text-white">
-                Click to upload logo
+                Click to upload logo{" "}
+                <span className="font-medium text-white/50">(optional)</span>
               </span>
               <span className="max-w-[46ch] text-xs leading-[1.5] text-white/60">
                 Square or wide logo on a transparent background, with no
                 empty space around the mark.
+              </span>
+              <span className="max-w-[46ch] text-xs leading-[1.5] text-[#8be9a5]">
+                Optional, but strongly recommended — the cover page looks far
+                more like the client&apos;s own document with their logo on it.
               </span>
             </button>
 
@@ -853,35 +853,24 @@ export default function Clientdetails2() {
         <SectionCard
           index={2}
           title="Module Selection"
-          description={
-            <>
-              Select up to 8 modules, or up to 6 if you&apos;re including a
-              problem statement below — pick whichever are most relevant to
-              this client. It&apos;s fine to select none, but we recommend at
-              least {RECOMMENDED_MIN_MODULE_COUNT} for a balanced-looking
-              page.
-            </>
-          }
+          description={`Select as many modules as are relevant to this client — up to ${MODULE_MAX_PER_PAGE} fit on one page, and anything beyond that continues on a second page. It's fine to select none, but we recommend at least ${RECOMMENDED_MIN_MODULE_COUNT} for a balanced-looking page.`}
           id="section-module-selection"
           hasError={moduleSelectionHasError}
         >
-          <div
-            className={`inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold ${
-              exceedsMax
-                ? "bg-amber-400/15 text-amber-300 shadow-[inset_0_0_0_1px_rgba(251,191,36,0.35)]"
-                : "bg-[#28a143]/14 text-[#7ceaa4] shadow-[inset_0_0_0_1px_rgba(61,220,127,0.35)]"
-            }`}
-          >
-            <span
-              className={`h-1.5 w-1.5 rounded-full ${
-                exceedsMax ? "bg-amber-300" : "bg-[#5ee08c] shadow-[0_0_10px_#5ee08c]"
-              }`}
-            />
-            {selectedCount} of up to {maxCount} selected
-            {problemStatementActive ? " (problem statement included)" : ""}
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#28a143]/14 px-3.5 py-1.5 text-xs font-semibold text-[#7ceaa4] shadow-[inset_0_0_0_1px_rgba(61,220,127,0.35)]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#5ee08c] shadow-[0_0_10px_#5ee08c]" />
+            {selectedCount} of {SELECTABLE_MODULES.length} selected —{" "}
+            {moduleLayoutSummary}
           </div>
 
-          {!exceedsMax && belowRecommended ? (
+          {runsToTwoPages ? (
+            <p className="mt-2 text-xs text-white/50">
+              The module section will run to two pages, so the commercial terms
+              move to page 5.
+            </p>
+          ) : null}
+
+          {belowRecommended ? (
             <p className="mt-2 text-xs text-white/50">
               {selectedCount === 0
                 ? "No modules selected — the page will show only the description with no highlights."
@@ -894,7 +883,7 @@ export default function Clientdetails2() {
             className="mt-4 grid gap-2.5"
             style={{ gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))" }}
           >
-            {MODULE_HIGHLIGHTS.map((module) => {
+            {SELECTABLE_MODULES.map((module) => {
               const checked = form.selectedModules.includes(module.id);
               return (
                 <label

@@ -5,13 +5,18 @@
  * renders Commercialterms at true A4 size. Meant to sit below the letter in
  * /proposal-preview, same pattern as PreviewLetterPage.tsx.
  *
- * `pageNumber` is hardcoded to 4 here since this is a standalone preview and
- * Section 3 doesn't exist yet to compute a real page count from. Once the
- * solution section is wired up, replace this with whatever the assembled
- * proposal calculates as this page's actual position.
+ * This is the proposal's last page, so its number depends on how long Section
+ * 3 ran: 4 when the module overview fits one page, 5 when it overflows onto a
+ * continuation page. Both this and Previewmoduleoverviewpage.tsx read that
+ * from lib/module-page-layout.ts rather than passing state between previews.
  */
 
 import Commercialterms from "@/app/components/Commercialterms";
+import {
+  hasProblemStatementContent,
+  MODULE_SECTION_START_PAGE,
+  moduleSectionPageCount,
+} from "@/lib/module-page-layout";
 import {
   loadClientName,
   loadProposalDetails,
@@ -20,7 +25,6 @@ import {
 import { useEffect, useState } from "react";
 
 const SHOMVOB_LOGO_SRC = "/resources/shomvob_hr_logo.png";
-const PLACEHOLDER_PAGE_NUMBER = 4;
 
 type PreviewState = {
   clientName: string;
@@ -44,6 +48,13 @@ export default function PreviewCommercialTermsPage() {
   const addresseeName =
     state.details.letterAddresseeName?.trim() || state.clientName;
 
+  const pageNumber =
+    MODULE_SECTION_START_PAGE +
+    moduleSectionPageCount(
+      state.details.selectedModules ?? [],
+      hasProblemStatementContent(state.details.problemStatementText),
+    );
+
   return (
     <div className="print-stage flex flex-col items-center bg-[#e5e5e5] pb-16">
       <p className="print-hide mb-6 text-xs font-semibold uppercase tracking-widest text-[#0c3d20]/50">
@@ -53,7 +64,7 @@ export default function PreviewCommercialTermsPage() {
         <Commercialterms
           clientName={state.clientName}
           addresseeName={addresseeName}
-          pageNumber={PLACEHOLDER_PAGE_NUMBER}
+          pageNumber={pageNumber}
           employeeCount={state.details.employeeCount}
           mrcFee={state.details.mrcFee}
           rolloutCharge={state.details.rolloutCharge}

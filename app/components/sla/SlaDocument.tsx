@@ -10,6 +10,13 @@ type SlaDocumentProps = {
   details: SlaDetails;
 };
 
+/**
+ * Total signature lines (both sides combined) past which Article 13 gets a
+ * page of its own in print, instead of trailing whatever fits at the bottom of
+ * the previous page. The rule itself lives in app/sla-preview/sla-print.css.
+ */
+const SIGNATORIES_BEFORE_OWN_PAGE = 4;
+
 function formatAgreementDate(value: string): string {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
   const [year, month, day] = value.split("-").map(Number);
@@ -25,6 +32,9 @@ export default function SlaDocument({ details }: SlaDocumentProps) {
   const employeeTrackingTotal = details.includeEmployeeTracking
     ? trackingTotal(details.employeeCount, details.trackingFeePerEmployee)
     : 0;
+  const signatoryCount =
+    details.clientSignatories.length + details.shomvobSignatories.length;
+  const executionOnOwnPage = signatoryCount > SIGNATORIES_BEFORE_OWN_PAGE;
   const total = netPrice({
     monthlyFee: details.monthlyFee,
     oneTimeFee: details.oneTimeFee,
@@ -127,7 +137,6 @@ export default function SlaDocument({ details }: SlaDocumentProps) {
         <h2><span>4.</span> Data Security &amp; Compliance</h2>
         <ul className="sla-clauses">
           <li><strong>Data Encryption</strong> — all sensitive data stored in the system will be encrypted both in transit and at rest.</li>
-          <li><strong>Data Backup</strong> — regular backups of the Client&apos;s data will be performed and retained for up to 30 days.</li>
           <li><strong>Compliance</strong> — the system will comply with applicable data protection laws, including GDPR where applicable.</li>
           <li><strong>Hosting</strong> — the Provider&apos;s solution is hosted on AWS under standard security protocols; no on-premises servers are used for data storage.</li>
           <li><strong>Access Control</strong> — the Provider will not access Client accounts without the Client&apos;s permission.</li>
@@ -239,19 +248,31 @@ export default function SlaDocument({ details }: SlaDocumentProps) {
         <p>This Agreement contains the full understanding between both parties regarding the matters covered in it and supersedes all previous discussions, agreements, or understandings, whether written or verbal. Any changes to this Agreement will only be valid if made in writing and signed by authorized representatives of both parties.</p>
       </section>
 
-      <section className="sla-article sla-execution">
+      <section
+        className={`sla-article sla-execution${
+          executionOnOwnPage ? " sla-execution-own-page" : ""
+        }`}
+      >
         <h2><span>13.</span> Execution</h2>
         <p>IN WITNESS WHEREOF, the parties hereto have executed this Agreement on the dates set forth below. Each individual signing this Agreement hereby represents and warrants that they are duly authorized to execute and deliver this Agreement on behalf of the respective organization and to bind such organization to its terms and conditions.</p>
         <div className="sla-sign-grid">
           <div className="sla-sign-column">
             <div className="sla-sign-party">For the Client</div>
-            <div className="sla-sign-line">{details.clientCeoName}<div>{details.clientCeoTitle}</div></div>
-            <div className="sla-sign-line">{details.clientHrHeadName}<div>{details.clientHrHeadTitle}</div></div>
+            {details.clientSignatories.map((signatory, index) => (
+              <div key={`client-${index}`} className="sla-sign-line">
+                {signatory.name}
+                <div>{signatory.title}</div>
+              </div>
+            ))}
           </div>
           <div className="sla-sign-column">
             <div className="sla-sign-party">For Shomvob Technologies Ltd</div>
-            <div className="sla-sign-line">Hasib Rahman<div>Co-founder &amp; COO</div></div>
-            <div className="sla-sign-line">{details.shomvobPocName}<div>{details.shomvobPocTitle}</div></div>
+            {details.shomvobSignatories.map((signatory, index) => (
+              <div key={`shomvob-${index}`} className="sla-sign-line">
+                {signatory.name}
+                <div>{signatory.title}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

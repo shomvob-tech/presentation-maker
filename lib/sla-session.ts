@@ -1,5 +1,17 @@
 export const SLA_DETAILS_KEY = "shomvob-sla-details";
 
+/** One person signing the agreement — rendered as a signature line in Article 13. */
+export type SlaSignatory = {
+  name: string;
+  title: string;
+};
+
+/** Shomvob's default first signatory. Editable and removable in the builder. */
+export const DEFAULT_SHOMVOB_SIGNATORY: SlaSignatory = {
+  name: "Hasib Rahman",
+  title: "Co-founder & COO",
+};
+
 export type SlaDetails = {
   clientName: string;
   clientAddress: string;
@@ -11,13 +23,24 @@ export type SlaDetails = {
   vatPercent: number;
   includeEmployeeTracking: boolean;
   trackingFeePerEmployee?: number;
-  clientCeoName: string;
-  clientCeoTitle: string;
-  clientHrHeadName: string;
-  clientHrHeadTitle: string;
-  shomvobPocName: string;
-  shomvobPocTitle: string;
+  /** At least one each — the number of representatives per side is up to the rep. */
+  clientSignatories: SlaSignatory[];
+  shomvobSignatories: SlaSignatory[];
 };
+
+function isSignatoryList(value: unknown): value is SlaSignatory[] {
+  return (
+    Array.isArray(value) &&
+    value.length > 0 &&
+    value.every(
+      (entry) =>
+        Boolean(entry) &&
+        typeof entry === "object" &&
+        typeof (entry as SlaSignatory).name === "string" &&
+        typeof (entry as SlaSignatory).title === "string",
+    )
+  );
+}
 
 export function isSlaDetails(value: unknown): value is SlaDetails {
   if (!value || typeof value !== "object") return false;
@@ -46,13 +69,39 @@ export function isSlaDetails(value: unknown): value is SlaDetails {
       (typeof details.trackingFeePerEmployee === "number" &&
         Number.isFinite(details.trackingFeePerEmployee) &&
         details.trackingFeePerEmployee > 0)) &&
-    typeof details.clientCeoName === "string" &&
-    typeof details.clientCeoTitle === "string" &&
-    typeof details.clientHrHeadName === "string" &&
-    typeof details.clientHrHeadTitle === "string" &&
-    typeof details.shomvobPocName === "string" &&
-    typeof details.shomvobPocTitle === "string"
+    isSignatoryList(details.clientSignatories) &&
+    isSignatoryList(details.shomvobSignatories)
   );
+}
+
+/**
+ * Signatories used to be six flat fields (client CEO, client HR head, Shomvob
+ * POC) with Hasib Rahman hardcoded into the document. Anything saved by that
+ * version is reshaped here so an in-progress draft survives the update.
+ */
+function migrateLegacySignatories(
+  raw: Record<string, unknown>,
+): Record<string, unknown> {
+  if ("clientSignatories" in raw || "shomvobSignatories" in raw) return raw;
+
+  const text = (value: unknown): string =>
+    typeof value === "string" ? value.trim() : "";
+  const pair = (name: unknown, title: unknown): SlaSignatory[] => {
+    const entry = { name: text(name), title: text(title) };
+    return entry.name || entry.title ? [entry] : [];
+  };
+
+  return {
+    ...raw,
+    clientSignatories: [
+      ...pair(raw.clientCeoName, raw.clientCeoTitle),
+      ...pair(raw.clientHrHeadName, raw.clientHrHeadTitle),
+    ],
+    shomvobSignatories: [
+      DEFAULT_SHOMVOB_SIGNATORY,
+      ...pair(raw.shomvobPocName, raw.shomvobPocTitle),
+    ],
+  };
 }
 
 export function saveSlaDetails(details: SlaDetails): void {
@@ -67,7 +116,10 @@ export function loadSlaDetails(): SlaDetails | null {
 
   try {
     const parsed: unknown = JSON.parse(raw);
-    return isSlaDetails(parsed) ? parsed : null;
+    if (!parsed || typeof parsed !== "object") return null;
+
+    const migrated = migrateLegacySignatories(parsed as Record<string, unknown>);
+    return isSlaDetails(migrated) ? migrated : null;
   } catch {
     return null;
   }

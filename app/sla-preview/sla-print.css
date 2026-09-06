@@ -101,6 +101,14 @@
     page-break-inside: avoid;
   }
 
+  /* Once both sides together carry more than four signature lines, Article 13
+     starts a fresh page rather than trailing the article above it. The count
+     lives in SlaDocument.tsx, which adds this class. */
+  .sla-execution-own-page {
+    break-before: page;
+    page-break-before: always;
+  }
+
   .sla-doc-footer {
     margin-right: 0;
     margin-left: 0;

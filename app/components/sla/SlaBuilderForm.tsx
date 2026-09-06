@@ -1,12 +1,47 @@
 "use client";
 
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { MODULE_HIGHLIGHTS } from "@/lib/module-highlights";
 import {
   buildSuggestedSlaPdfFileName,
+  DEFAULT_SHOMVOB_SIGNATORY,
   saveSlaDetails,
   type SlaDetails,
 } from "@/lib/sla-session";
+
+/** A signatory row in the form. `id` is a stable React key + input-id prefix,
+ * so adding or removing a row never shuffles focus into the wrong input. */
+type SignatoryRow = {
+  id: string;
+  name: string;
+  title: string;
+};
+
+type SignatorySide = "client" | "shomvob";
+type SignatoryField = "name" | "title";
+
+/** Each side keeps at least one representative and no more than this — the
+ * document's two-column signature grid has to stay on a single page. */
+const MIN_SIGNATORIES = 1;
+const MAX_SIGNATORIES = 4;
+
+const SIDE_FIELD: Record<SignatorySide, "clientSignatories" | "shomvobSignatories"> = {
+  client: "clientSignatories",
+  shomvob: "shomvobSignatories",
+};
+
+/** Rows added at runtime continue past the fixed ids below. Initial ids are
+ * hardcoded rather than generated so server and client markup match. */
+let signatoryIdSeed = 2;
+
+function nextSignatoryId(side: SignatorySide): string {
+  signatoryIdSeed += 1;
+  return `${side}-${signatoryIdSeed}`;
+}
+
+function emptyRow(side: SignatorySide): SignatoryRow {
+  return { id: nextSignatoryId(side), name: "", title: "" };
+}
 
 type FormState = {
   clientName: string;
@@ -19,15 +54,13 @@ type FormState = {
   vatPercent: string;
   includeEmployeeTracking: boolean;
   trackingFeePerEmployee: string;
-  clientCeoName: string;
-  clientCeoTitle: string;
-  clientHrHeadName: string;
-  clientHrHeadTitle: string;
-  shomvobPocName: string;
-  shomvobPocTitle: string;
+  clientSignatories: SignatoryRow[];
+  shomvobSignatories: SignatoryRow[];
 };
 
 type FormErrors = Partial<Record<keyof FormState, string>>;
+/** Keyed by row id — row ids are unique across both sides. */
+type SignatoryErrors = Record<string, Partial<Record<SignatoryField, string>>>;
 
 const DEFAULT_FEATURES = MODULE_HIGHLIGHTS.slice(0, 4).map(({ label }) => label);
 
@@ -42,12 +75,14 @@ const initialForm: FormState = {
   vatPercent: "5",
   includeEmployeeTracking: false,
   trackingFeePerEmployee: "",
-  clientCeoName: "",
-  clientCeoTitle: "",
-  clientHrHeadName: "",
-  clientHrHeadTitle: "",
-  shomvobPocName: "",
-  shomvobPocTitle: "",
+  clientSignatories: [
+    { id: "client-1", name: "", title: "" },
+    { id: "client-2", name: "", title: "" },
+  ],
+  shomvobSignatories: [
+    { id: "shomvob-1", ...DEFAULT_SHOMVOB_SIGNATORY },
+    { id: "shomvob-2", name: "", title: "" },
+  ],
 };
 
 const inputClass =
@@ -104,18 +139,15 @@ function isPositive(value: string): boolean {
   return value.trim() !== "" && Number.isFinite(number) && number > 0;
 }
 
-function validate(form: FormState): FormErrors {
+function validate(form: FormState): {
+  errors: FormErrors;
+  signatoryErrors: SignatoryErrors;
+} {
   const errors: FormErrors = {};
   const requiredText: (keyof FormState)[] = [
     "clientName",
     "clientAddress",
     "agreementDate",
-    "clientCeoName",
-    "clientCeoTitle",
-    "clientHrHeadName",
-    "clientHrHeadTitle",
-    "shomvobPocName",
-    "shomvobPocTitle",
   ];
 
   for (const key of requiredText) {
@@ -149,18 +181,211 @@ function validate(form: FormState): FormErrors {
     errors.trackingFeePerEmployee = "Enter a positive per-employee tracking fee.";
   }
 
-  return errors;
+  // Every row that exists has to be filled in — a rep who doesn't need a
+  // second signatory removes the row rather than leaving it blank.
+  const signatoryErrors: SignatoryErrors = {};
+  for (const row of [...form.clientSignatories, ...form.shomvobSignatories]) {
+    const rowErrors: Partial<Record<SignatoryField, string>> = {};
+    if (!row.name.trim()) rowErrors.name = "Name is required.";
+    if (!row.title.trim()) rowErrors.title = "Title is required.";
+    if (Object.keys(rowErrors).length > 0) signatoryErrors[row.id] = rowErrors;
+  }
+
+  return { errors, signatoryErrors };
+}
+
+function SignatoryGroup({
+  side,
+  heading,
+  hint,
+  rows,
+  errors,
+  onFieldChange,
+  onAdd,
+  onRemove,
+}: {
+  side: SignatorySide;
+  heading: string;
+  hint: string;
+  rows: SignatoryRow[];
+  errors: SignatoryErrors;
+  onFieldChange: (side: SignatorySide, id: string, field: SignatoryField, value: string) => void;
+  onAdd: (side: SignatorySide) => void;
+  onRemove: (side: SignatorySide, id: string) => void;
+}) {
+  const atMax = rows.length >= MAX_SIGNATORIES;
+  const atMin = rows.length <= MIN_SIGNATORIES;
+
+  return (
+    <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 md:p-5">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3.5">
+        <div>
+          <h3 className="text-sm font-bold uppercase tracking-[0.12em] text-[#8be9a5]">
+            {heading}
+          </h3>
+          <p className="mt-1 text-xs text-white/50">{hint}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => onAdd(side)}
+          disabled={atMax}
+          title={atMax ? `Up to ${MAX_SIGNATORIES} representatives per side.` : undefined}
+          className="rounded-lg border border-[#5cd47e]/45 bg-[#28a143]/12 px-3.5 py-2 text-xs font-semibold text-[#8be9a5] transition hover:border-[#5cd47e] hover:bg-[#28a143]/22 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.03] disabled:text-white/30"
+        >
+          + Add representative
+        </button>
+      </div>
+
+      <div className="space-y-3">
+        {rows.map((row, index) => {
+          const rowErrors = errors[row.id] ?? {};
+          return (
+            <div
+              key={row.id}
+              className="signatory-row-in rounded-lg border border-white/10 bg-white/[0.04] p-3.5"
+            >
+              <div className="mb-2.5 flex items-center justify-between gap-3">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/45">
+                  Representative {index + 1}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => onRemove(side, row.id)}
+                  disabled={atMin}
+                  title={
+                    atMin
+                      ? "At least one representative is required on each side."
+                      : `Remove representative ${index + 1}`
+                  }
+                  className="rounded-md px-2 py-1 text-xs font-semibold text-[#ff9b9b] transition hover:bg-[#ff9b9b]/12 disabled:cursor-not-allowed disabled:text-white/25 disabled:hover:bg-transparent"
+                >
+                  Remove
+                </button>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Field
+                  id={`${row.id}-name`}
+                  label="Full name *"
+                  error={rowErrors.name}
+                >
+                  <input
+                    id={`${row.id}-name`}
+                    value={row.name}
+                    onChange={(event) =>
+                      onFieldChange(side, row.id, "name", event.target.value)
+                    }
+                    className={inputClass}
+                    placeholder="Full name"
+                    aria-invalid={Boolean(rowErrors.name)}
+                  />
+                </Field>
+                <Field
+                  id={`${row.id}-title`}
+                  label="Title / designation *"
+                  error={rowErrors.title}
+                >
+                  <input
+                    id={`${row.id}-title`}
+                    value={row.title}
+                    onChange={(event) =>
+                      onFieldChange(side, row.id, "title", event.target.value)
+                    }
+                    className={inputClass}
+                    placeholder="e.g. Managing Director"
+                    aria-invalid={Boolean(rowErrors.title)}
+                  />
+                </Field>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <p className="mt-3 text-xs text-white/40">
+        {rows.length} of {MAX_SIGNATORIES} signature lines used
+        {atMax ? " — remove one to add a different signatory." : ""}
+      </p>
+    </div>
+  );
 }
 
 export default function SlaBuilderForm() {
   const [form, setForm] = useState<FormState>(initialForm);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [signatoryErrors, setSignatoryErrors] = useState<SignatoryErrors>({});
   const [isDownloading, setIsDownloading] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
+  /** Row id whose name input should take focus — set right after "Add", then
+   * consumed by the effect below once the new row is in the DOM. A ref rather
+   * than state: focusing is a DOM side effect, not something we render from. */
+  const pendingFocusRowId = useRef<string | null>(null);
+
+  useEffect(() => {
+    const rowId = pendingFocusRowId.current;
+    if (!rowId) return;
+    pendingFocusRowId.current = null;
+    document.getElementById(`${rowId}-name`)?.focus();
+  });
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: undefined }));
+    setPdfError(null);
+  }
+
+  function updateSignatory(
+    side: SignatorySide,
+    id: string,
+    field: SignatoryField,
+    value: string,
+  ) {
+    const key = SIDE_FIELD[side];
+    setForm((current) => ({
+      ...current,
+      [key]: current[key].map((row) =>
+        row.id === id ? { ...row, [field]: value } : row,
+      ),
+    }));
+    setSignatoryErrors((current) => {
+      const rowErrors = current[id];
+      if (!rowErrors?.[field]) return current;
+
+      const remaining = { ...rowErrors };
+      delete remaining[field];
+
+      const next = { ...current };
+      if (Object.keys(remaining).length === 0) delete next[id];
+      else next[id] = remaining;
+      return next;
+    });
+    setPdfError(null);
+  }
+
+  function addSignatory(side: SignatorySide) {
+    const key = SIDE_FIELD[side];
+    if (form[key].length >= MAX_SIGNATORIES) return;
+
+    const row = emptyRow(side);
+    setForm((current) => ({ ...current, [key]: [...current[key], row] }));
+    pendingFocusRowId.current = row.id;
+    setPdfError(null);
+  }
+
+  function removeSignatory(side: SignatorySide, id: string) {
+    const key = SIDE_FIELD[side];
+    if (form[key].length <= MIN_SIGNATORIES) return;
+
+    setForm((current) => ({
+      ...current,
+      [key]: current[key].filter((row) => row.id !== id),
+    }));
+    setSignatoryErrors((current) => {
+      if (!current[id]) return current;
+      const next = { ...current };
+      delete next[id];
+      return next;
+    });
     setPdfError(null);
   }
 
@@ -172,10 +397,26 @@ export default function SlaBuilderForm() {
   }
 
   function prepareDetails(): SlaDetails | null {
-    const nextErrors = validate(form);
+    const { errors: nextErrors, signatoryErrors: nextSignatoryErrors } =
+      validate(form);
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) {
-      document.querySelector<HTMLElement>("[aria-invalid='true']")?.focus();
+    setSignatoryErrors(nextSignatoryErrors);
+
+    if (
+      Object.keys(nextErrors).length > 0 ||
+      Object.keys(nextSignatoryErrors).length > 0
+    ) {
+      // The invalid fields only get aria-invalid on the next render, so let
+      // that commit land before hunting for the first one — otherwise the very
+      // first submit finds nothing and the rep is left staring at an unchanged
+      // page. A timeout rather than requestAnimationFrame: frames are paused
+      // in a background tab, timers still fire.
+      setTimeout(() => {
+        const firstInvalid =
+          document.querySelector<HTMLElement>("[aria-invalid='true']");
+        firstInvalid?.scrollIntoView({ behavior: "smooth", block: "center" });
+        firstInvalid?.focus({ preventScroll: true });
+      }, 0);
       return null;
     }
 
@@ -192,12 +433,14 @@ export default function SlaBuilderForm() {
       trackingFeePerEmployee: form.includeEmployeeTracking
         ? Number(form.trackingFeePerEmployee)
         : undefined,
-      clientCeoName: form.clientCeoName.trim(),
-      clientCeoTitle: form.clientCeoTitle.trim(),
-      clientHrHeadName: form.clientHrHeadName.trim(),
-      clientHrHeadTitle: form.clientHrHeadTitle.trim(),
-      shomvobPocName: form.shomvobPocName.trim(),
-      shomvobPocTitle: form.shomvobPocTitle.trim(),
+      clientSignatories: form.clientSignatories.map(({ name, title }) => ({
+        name: name.trim(),
+        title: title.trim(),
+      })),
+      shomvobSignatories: form.shomvobSignatories.map(({ name, title }) => ({
+        name: name.trim(),
+        title: title.trim(),
+      })),
     };
 
     saveSlaDetails(details);
@@ -412,25 +655,31 @@ export default function SlaBuilderForm() {
       </SectionCard>
 
       <SectionCard number="4" title="Authorized signatories">
-        <div className="grid gap-6 md:grid-cols-2">
-          <Field id="clientCeoName" label="Client CEO name *" error={errors.clientCeoName}>
-            <input id="clientCeoName" value={form.clientCeoName} onChange={(event) => update("clientCeoName", event.target.value)} className={inputClass} aria-invalid={invalid("clientCeoName")} />
-          </Field>
-          <Field id="clientCeoTitle" label="Client CEO title *" error={errors.clientCeoTitle}>
-            <input id="clientCeoTitle" value={form.clientCeoTitle} onChange={(event) => update("clientCeoTitle", event.target.value)} className={inputClass} aria-invalid={invalid("clientCeoTitle")} />
-          </Field>
-          <Field id="clientHrHeadName" label="Client HR head name *" error={errors.clientHrHeadName}>
-            <input id="clientHrHeadName" value={form.clientHrHeadName} onChange={(event) => update("clientHrHeadName", event.target.value)} className={inputClass} aria-invalid={invalid("clientHrHeadName")} />
-          </Field>
-          <Field id="clientHrHeadTitle" label="Client HR head title *" error={errors.clientHrHeadTitle}>
-            <input id="clientHrHeadTitle" value={form.clientHrHeadTitle} onChange={(event) => update("clientHrHeadTitle", event.target.value)} className={inputClass} aria-invalid={invalid("clientHrHeadTitle")} />
-          </Field>
-          <Field id="shomvobPocName" label="Shomvob POC name *" error={errors.shomvobPocName}>
-            <input id="shomvobPocName" value={form.shomvobPocName} onChange={(event) => update("shomvobPocName", event.target.value)} className={inputClass} aria-invalid={invalid("shomvobPocName")} />
-          </Field>
-          <Field id="shomvobPocTitle" label="Shomvob POC title *" error={errors.shomvobPocTitle}>
-            <input id="shomvobPocTitle" value={form.shomvobPocTitle} onChange={(event) => update("shomvobPocTitle", event.target.value)} className={inputClass} aria-invalid={invalid("shomvobPocTitle")} />
-          </Field>
+        <p className="mb-5 text-sm text-white/60">
+          Each representative below becomes one signature line in Article 13 —
+          add or remove rows so both sides match who is actually signing.
+        </p>
+        <div className="space-y-5">
+          <SignatoryGroup
+            side="client"
+            heading="For the Client"
+            hint="Whoever signs on the client's behalf."
+            rows={form.clientSignatories}
+            errors={signatoryErrors}
+            onFieldChange={updateSignatory}
+            onAdd={addSignatory}
+            onRemove={removeSignatory}
+          />
+          <SignatoryGroup
+            side="shomvob"
+            heading="For Shomvob Technologies Ltd"
+            hint="Pre-filled with Hasib Rahman — edit or remove as needed."
+            rows={form.shomvobSignatories}
+            errors={signatoryErrors}
+            onFieldChange={updateSignatory}
+            onAdd={addSignatory}
+            onRemove={removeSignatory}
+          />
         </div>
       </SectionCard>
 

@@ -73,6 +73,24 @@ img[alt="Shomvob HR"] {
   animation: pulse-subtle 2.8s ease-in-out infinite;
 }
 
+/* Entrance for a signatory row added in SlaBuilderForm.tsx — short enough
+   that it reads as the row appearing, not as an animation to sit through.
+   Removal is deliberately instant: the row is gone the moment it's clicked. */
+@keyframes signatory-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.signatory-row-in {
+  animation: signatory-row-in 0.22s ease-out both;
+}
+
 /* Homepage foreground entrance, automated title sheen, and button-only hover
    sheen. The LightRays background is deliberately excluded from these rules. */
 @keyframes home-fade-in {
@@ -171,7 +189,8 @@ img[alt="Shomvob HR"] {
 
 @media (prefers-reduced-motion: reduce) {
   .home-fade-in,
-  .home-text-sheen {
+  .home-text-sheen,
+  .signatory-row-in {
     animation: none;
   }
 

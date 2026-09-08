@@ -68,7 +68,7 @@ export default function SlaPreviewPage() {
       </div>
       <SlaCoverPage clientName={details.clientName} />
       <SlaDocument details={details} />
-      <SlaPrintPdfButton />
+      <SlaPrintPdfButton details={details} />
     </main>
   );
 }

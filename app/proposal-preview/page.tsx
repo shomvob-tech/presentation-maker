@@ -11,7 +11,10 @@ export default function ProposalPreviewPage() {
       <PreviewLetterPage />
       <PreviewModuleOverviewPage />
       <PreviewCommercialTermsPage />
-      
+      {/* Renders the "Save as PDF" button and, on ?print=1, opens the print
+          dialog once the A4 pages have mounted. Without it the builder's
+          "Print as PDF" only opens the preview. */}
+      <PrintPdfButton />
     </>
   );
 }

@@ -3,6 +3,15 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { MODULE_HIGHLIGHTS } from "@/lib/module-highlights";
 import {
+  arrayDelta,
+  beginDraft,
+  bumpPreviewCount,
+  currentDraft,
+  diffAgainstSnapshot,
+  logEvent,
+  markInput,
+} from "@/lib/audit/client";
+import {
   buildSuggestedSlaPdfFileName,
   DEFAULT_SHOMVOB_SIGNATORY,
   saveSlaDetails,
@@ -320,6 +329,8 @@ export default function SlaBuilderForm() {
    * consumed by the effect below once the new row is in the DOM. A ref rather
    * than state: focusing is a DOM side effect, not something we render from. */
   const pendingFocusRowId = useRef<string | null>(null);
+  /** Strict Mode mounts effects twice in dev — see the proposal builder. */
+  const hasLoggedOpen = useRef(false);
 
   useEffect(() => {
     const rowId = pendingFocusRowId.current;
@@ -328,7 +339,18 @@ export default function SlaBuilderForm() {
     document.getElementById(`${rowId}-name`)?.focus();
   });
 
+  // One visit to the builder is one draft — the form always mounts blank.
+  useEffect(() => {
+    if (hasLoggedOpen.current) return;
+    hasLoggedOpen.current = true;
+
+    beginDraft("sla");
+    logEvent("builder_opened", "sla");
+  }, []);
+
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
+    if (markInput("sla")) logEvent("form_touched", "sla");
+
     setForm((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: undefined }));
     setPdfError(null);
@@ -340,6 +362,8 @@ export default function SlaBuilderForm() {
     field: SignatoryField,
     value: string,
   ) {
+    if (markInput("sla")) logEvent("form_touched", "sla");
+
     const key = SIDE_FIELD[side];
     setForm((current) => ({
       ...current,
@@ -417,6 +441,18 @@ export default function SlaBuilderForm() {
         firstInvalid?.scrollIntoView({ behavior: "smooth", block: "center" });
         firstInvalid?.focus({ preventScroll: true });
       }, 0);
+
+      logEvent("validation_failed", "sla", {
+        client_name: form.clientName.trim(),
+        validation_failed_fields: [
+          ...Object.keys(nextErrors),
+          // Signatory errors are keyed by row id, which says nothing useful —
+          // report them as one field so the counts stay comparable.
+          ...(Object.keys(nextSignatoryErrors).length > 0
+            ? ["signatories"]
+            : []),
+        ].join(", "),
+      });
       return null;
     }
 
@@ -447,14 +483,67 @@ export default function SlaBuilderForm() {
     return details;
   }
 
+  /** Shared shape for the SLA rows — the fee/feature columns of the schema. */
+  function slaRowFields(details: SlaDetails) {
+    return {
+      client_name: details.clientName,
+      employee_count: details.employeeCount,
+      mrc_fee: details.monthlyFee,
+      module_count: details.selectedFeatures.length,
+      modules: details.selectedFeatures.join(", "),
+    };
+  }
+
+  function logSlaPreviewed(details: SlaDetails) {
+    const { added, removed } = arrayDelta(
+      details.selectedFeatures,
+      DEFAULT_FEATURES,
+    );
+
+    const optionalSections = [
+      details.includeEmployeeTracking ? "employee_tracking" : null,
+      details.oneTimeFee > 0 ? "one_time_fee" : null,
+      details.clientSignatories.length > 1 ||
+      details.shomvobSignatories.length > 1
+        ? "extra_signatories"
+        : null,
+    ].filter((section): section is string => section !== null);
+
+    const snapshot = details as unknown as Record<string, unknown>;
+
+    logEvent("previewed", "sla", {
+      ...slaRowFields(details),
+      preview_count: bumpPreviewCount("sla"),
+      modules_added_vs_default: added.join(", "),
+      modules_removed_vs_default: removed.join(", "),
+      optional_sections: optionalSections.join(", "),
+      fields_changed_since_last_preview: diffAgainstSnapshot(
+        "sla",
+        snapshot,
+      ).join(", "),
+      payload_json: JSON.stringify(details),
+    });
+  }
+
   function handlePreview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!prepareDetails()) return;
+    const details = prepareDetails();
+    if (!details) return;
+
+    logSlaPreviewed(details);
     window.open("/sla-preview", "_blank", "noopener,noreferrer");
   }
 
   function handlePrint() {
-    if (!prepareDetails()) return;
+    const details = prepareDetails();
+    if (!details) return;
+
+    // As on the proposal side, the OS print dialog never reports back whether
+    // the rep saved or cancelled.
+    logEvent("export_clicked", "sla", {
+      ...slaRowFields(details),
+      export_method: "print",
+    });
     window.open("/sla-preview?print=1", "_blank", "noopener,noreferrer");
   }
 
@@ -464,6 +553,10 @@ export default function SlaBuilderForm() {
 
     setIsDownloading(true);
     setPdfError(null);
+    logEvent("export_clicked", "sla", {
+      ...slaRowFields(details),
+      export_method: "api",
+    });
 
     try {
       const response = await fetch("/api/export-pdf-sla", {
@@ -472,6 +565,8 @@ export default function SlaBuilderForm() {
         body: JSON.stringify({
           url: `${window.location.origin}/sla-preview`,
           slaDetails: details,
+          // Joins the server's export_result row to this draft.
+          auditDraftId: currentDraft("sla").draftId,
         }),
       });
 

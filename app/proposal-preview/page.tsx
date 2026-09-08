@@ -11,7 +11,7 @@ export default function ProposalPreviewPage() {
       <PreviewLetterPage />
       <PreviewModuleOverviewPage />
       <PreviewCommercialTermsPage />
-      <PrintPdfButton />
+      
     </>
   );
 }

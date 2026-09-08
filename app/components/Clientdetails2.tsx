@@ -2,8 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getModuleRecommendation } from "@/app/components/ModuleRecommendation";
+import {
+  arrayDelta,
+  beginDraft,
+  bumpPreviewCount,
+  currentDraft,
+  diffAgainstSnapshot,
+  logEvent,
+  markInput,
+} from "@/lib/audit/client";
 import type { ClientDetailsInput } from "@/lib/module-recommendation";
 import {
   buildClientMailtoUrl,
@@ -25,6 +34,7 @@ import {
   savePreviewClientName,
   savePreviewLogo,
   saveProposalDetails,
+  type ProposalDetails,
 } from "@/lib/presentation-session";
 
 type FormState = {
@@ -445,13 +455,30 @@ export default function Clientdetails2() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
+  /** Strict Mode mounts effects twice in dev — without this the local sheet
+   * gets two `builder_opened` rows and two draft ids per visit. */
+  const hasLoggedOpen = useRef(false);
+
+  // The form always mounts blank, so one visit to the builder is one draft:
+  // every preview and export that follows belongs to this id.
+  useEffect(() => {
+    if (hasLoggedOpen.current) return;
+    hasLoggedOpen.current = true;
+
+    beginDraft("proposal");
+    logEvent("builder_opened", "proposal");
+  }, []);
 
   function updateField<K extends keyof FormState>(key: K, value: FormState[K]) {
+    if (markInput("proposal")) logEvent("form_touched", "proposal");
+
     setForm((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: undefined }));
   }
 
   function toggleModule(id: string) {
+    if (markInput("proposal")) logEvent("form_touched", "proposal");
+
     setForm((current) => {
       const isSelected = current.selectedModules.includes(id);
       const selectedModules = isSelected
@@ -479,6 +506,62 @@ export default function Clientdetails2() {
     }
   }
 
+  /** Which of the optional sections this proposal actually used. */
+  function usedOptionalSections(): string[] {
+    return [
+      form.includeRolloutCharge ? "rollout_charge" : null,
+      form.includeFieldTracking ? "field_tracking" : null,
+      hasProblemStatement(form) ? "problem_statement" : null,
+      form.includeTrialAccountDetails ? "trial_account" : null,
+      form.preparedByName.trim() || form.preparedByEmail.trim()
+        ? "prepared_by"
+        : null,
+      logo ? "client_logo" : null,
+    ].filter((section): section is string => section !== null);
+  }
+
+  /**
+   * One `previewed` row per click of Preview Proposal. `preview_count` is the
+   * running total for this draft, so "edits before download" reads straight
+   * off the export row without any cross-row work in the sheet.
+   */
+  function logPreviewed(
+    details: ProposalDetails,
+    recommendedModules: string[],
+  ) {
+    const { added, removed } = arrayDelta(
+      form.selectedModules,
+      DEFAULT_SELECTED_MODULE_IDS,
+    );
+
+    // The problem statement is Tiptap HTML. Its length is the useful part —
+    // the markup itself would be a multi-kilobyte cell with no analytical
+    // value, and Sheets caps a cell at 50k characters.
+    const snapshot: Record<string, unknown> = {
+      ...details,
+      problemStatementText: undefined,
+      problemStatementChars: details.problemStatementText?.length ?? 0,
+    };
+
+    logEvent("previewed", "proposal", {
+      preview_count: bumpPreviewCount("proposal"),
+      client_name: form.clientName.trim(),
+      employee_count: details.employeeCount,
+      mrc_fee: details.mrcFee,
+      module_count: form.selectedModules.length,
+      modules: form.selectedModules.join(", "),
+      modules_added_vs_default: added.join(", "),
+      modules_removed_vs_default: removed.join(", "),
+      recommended_modules: recommendedModules.join(", "),
+      optional_sections: usedOptionalSections().join(", "),
+      fields_changed_since_last_preview: diffAgainstSnapshot(
+        "proposal",
+        snapshot,
+      ).join(", "),
+      payload_json: JSON.stringify(snapshot),
+    });
+  }
+
   async function persistProposalSession(): Promise<ClientDetailsInput> {
     const clientDetails: ClientDetailsInput = {
       clientName: form.clientName.trim(),
@@ -501,7 +584,7 @@ export default function Clientdetails2() {
 
     const problemStatementPresent = hasProblemStatement(form);
 
-    saveProposalDetails({
+    const proposalDetails: ProposalDetails = {
       documentTitle: form.documentTitle.trim() || DEFAULT_DOCUMENT_TITLE,
       preparedDate: form.preparedDate,
       recipientTitle: form.recipientTitle.trim() || DEFAULT_RECIPIENT_TITLE,
@@ -532,7 +615,10 @@ export default function Clientdetails2() {
       preparedByTitle: form.preparedByTitle.trim() || undefined,
       preparedByPhone: form.preparedByPhone.trim() || undefined,
       preparedByEmail: form.preparedByEmail.trim() || undefined,
-    });
+    };
+
+    saveProposalDetails(proposalDetails);
+    logPreviewed(proposalDetails, recommendation.modules);
 
     return clientDetails;
   }
@@ -544,6 +630,10 @@ export default function Clientdetails2() {
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
       scrollToFirstErrorSection(nextErrors);
+      logEvent("validation_failed", "proposal", {
+        client_name: form.clientName.trim(),
+        validation_failed_fields: Object.keys(nextErrors).join(", "),
+      });
       return;
     }
 
@@ -624,6 +714,15 @@ export default function Clientdetails2() {
     }
 
     setPdfError(null);
+    // This is as far as we can see on the print path: window.print() opens an
+    // OS dialog and never tells us whether the rep saved or cancelled.
+    logEvent("export_clicked", "proposal", {
+      client_name: form.clientName.trim(),
+      export_method: "print",
+      employee_count: details.employeeCount,
+      mrc_fee: details.mrcFee,
+      module_count: details.selectedModules?.length ?? 0,
+    });
     window.open("/proposal-preview?print=1", "_blank", "noopener,noreferrer");
   }
 
@@ -648,6 +747,15 @@ export default function Clientdetails2() {
 
     setIsDownloadingPdf(true);
     setPdfError(null);
+    // The matching outcome is logged server-side by /api/export-pdf, which is
+    // the only place a timeout or render failure is visible.
+    logEvent("export_clicked", "proposal", {
+      client_name: clientName,
+      export_method: "api",
+      employee_count: details.employeeCount,
+      mrc_fee: details.mrcFee,
+      module_count: details.selectedModules?.length ?? 0,
+    });
 
     try {
       const response = await fetch("/api/export-pdf", {
@@ -658,6 +766,9 @@ export default function Clientdetails2() {
           logoDataUrl,
           clientName,
           proposalDetails: details,
+          // Lets the server's export_result row join to this draft's
+          // export_clicked row in the sheet.
+          auditDraftId: currentDraft("proposal").draftId,
         }),
       });
 

@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
 import { launchBrowser } from "@/lib/launch-browser";
+import { toDhakaTimestamp } from "@/lib/audit/events";
+import { safeAppendAuditRow } from "@/lib/audit/sheets";
 import {
   PRESENTATION_SESSION_KEY,
   PREVIEW_CLIENT_NAME_KEY,
@@ -37,6 +39,41 @@ function isProposalDetails(value: unknown): value is ProposalDetails {
 }
 
 /**
+ * Records how an export actually turned out. This is the only place a render
+ * failure or a slow export is visible — the browser just sees a generic error.
+ *
+ * Note the one blind spot: a hard Vercel timeout kills the function before
+ * `after()` runs, so a timed-out export writes no row at all. In the sheet it
+ * shows up as an `export_clicked` with no matching `export_result`.
+ */
+function logExportResult(fields: {
+  result: string;
+  startedAt: number;
+  draftId: unknown;
+  clientName: unknown;
+  pageCount?: number;
+}) {
+  const now = new Date();
+
+  after(() =>
+    safeAppendAuditRow({
+      event_id: "srv-" + now.getTime() + "-" + Math.random().toString(36).slice(2, 8),
+      ts_utc: now.toISOString(),
+      ts_local: toDhakaTimestamp(now),
+      event: "export_result",
+      doc_type: "proposal",
+      draft_id: typeof fields.draftId === "string" ? fields.draftId : "",
+      client_name: typeof fields.clientName === "string" ? fields.clientName : "",
+      export_method: "api",
+      export_result: fields.result,
+      export_ms: Date.now() - fields.startedAt,
+      page_count: fields.pageCount ?? "",
+      app_version: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? "local",
+    }),
+  );
+}
+
+/**
  * Generates a PDF from a presentation/proposal URL using the same
  * page-by-page capture approach as scripts/export-pdf.mjs, exposed here as
  * an API route so the UI can trigger a download directly.
@@ -50,6 +87,9 @@ export async function POST(request: NextRequest) {
   let clientName: unknown;
   let presentationContent: unknown;
   let proposalDetails: unknown;
+  let auditDraftId: unknown;
+
+  const startedAt = Date.now();
 
   try {
     const body = await request.json();
@@ -58,6 +98,7 @@ export async function POST(request: NextRequest) {
     clientName = body?.clientName;
     presentationContent = body?.presentationContent;
     proposalDetails = body?.proposalDetails;
+    auditDraftId = body?.auditDraftId;
   } catch {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
@@ -230,6 +271,13 @@ export async function POST(request: NextRequest) {
     const pageCount = a4Count > 0 ? a4Count : sectionCount;
 
     if (pageCount === 0) {
+      logExportResult({
+        result: "no_pages_found",
+        startedAt,
+        draftId: auditDraftId,
+        clientName,
+        pageCount: 0,
+      });
       return NextResponse.json(
         { error: "No slides or proposal pages were found at the preview URL." },
         { status: 422 },
@@ -242,6 +290,14 @@ export async function POST(request: NextRequest) {
       margin: { top: 0, right: 0, bottom: 0, left: 0 },
     });
 
+    logExportResult({
+      result: "success",
+      startedAt,
+      draftId: auditDraftId,
+      clientName,
+      pageCount,
+    });
+
     return new NextResponse(new Uint8Array(pdfBuffer), {
       status: 200,
       headers: {
@@ -252,6 +308,12 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Failed to generate PDF.";
+    logExportResult({
+      result: "error: " + message.slice(0, 200),
+      startedAt,
+      draftId: auditDraftId,
+      clientName,
+    });
     return NextResponse.json({ error: message }, { status: 500 });
   } finally {
     await browser?.close();

@@ -41,7 +41,12 @@ export type PreparedByContact = {
 };
 
 export interface CoverPageProps {
-  /** Client's full legal/display name, e.g. "Terraprime Hotels & Resorts Ltd." */
+  /**
+   * Client's full legal/display name, e.g. "Terraprime Hotels & Resorts Ltd."
+   * No longer printed on the cover — the client logo identifies the recipient
+   * there — but still used for the logo's alt text, and by every interior page
+   * via LetterheadFrame's footer.
+   */
   clientName: string;
   /** Client logo — data URL or public path. Transparent background recommended.
    * Optional: when omitted the cover simply opens on the gold rule instead. */
@@ -127,9 +132,6 @@ export default function CoverPage({
           <div className="mb-[7mm] h-px w-[36mm] bg-gradient-to-r from-transparent via-brand_green to-transparent" />
 
           <div className="text-[9.6pt] leading-[2] text-brand_muted">
-            <div>
-              Prepared for: <b className="text-brand_ink">{clientName}</b>
-            </div>
             {preparedBy ? (
               <div className="mt-[1mm] flex flex-col gap-0">
                 <div>

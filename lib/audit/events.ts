@@ -76,7 +76,7 @@ export type AuditEventName =
   | "export_clicked"
   | "export_result";
 
-export type AuditDocType = "proposal" | "sla";
+export type AuditDocType = "proposal" | "sla" | "device";
 
 /** A single sheet row. Missing columns are written as empty cells. */
 export type AuditRow = Partial<Record<AuditColumn, string | number>>;
@@ -129,7 +129,9 @@ export function isAuditClientPayload(
   return (
     typeof row.event === "string" &&
     EVENT_NAMES.has(row.event) &&
-    (row.doc_type === "proposal" || row.doc_type === "sla")
+    (row.doc_type === "proposal" ||
+      row.doc_type === "sla" ||
+      row.doc_type === "device")
   );
 }
 

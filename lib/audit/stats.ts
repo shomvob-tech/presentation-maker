@@ -22,8 +22,14 @@ import type { AuditColumn, AuditDocType, AuditRow } from "./events";
 
 export type Tally = { label: string; count: number };
 
-/** A count split by product, since both share one tab. */
-export type DocSplit = { proposal: number; sla: number; total: number };
+/** A count split by product, since all three share one tab. */
+export type DocSplit = {
+  proposal: number;
+  sla: number;
+  /** Biometric device proposals — see lib/device-session.ts. */
+  device: number;
+  total: number;
+};
 
 export type NumberSummary = {
   samples: number;
@@ -104,7 +110,9 @@ function list(row: AuditRow, column: AuditColumn): string[] {
 
 function docTypeOf(row: AuditRow): AuditDocType | null {
   const value = text(row, "doc_type");
-  return value === "proposal" || value === "sla" ? value : null;
+  return value === "proposal" || value === "sla" || value === "device"
+    ? value
+    : null;
 }
 
 // ---------------------------------------------------------------------------
@@ -145,7 +153,8 @@ function split(drafts: Draft[], predicate: (draft: Draft) => boolean): DocSplit 
   const matching = drafts.filter(predicate);
   const proposal = matching.filter((d) => d.docType === "proposal").length;
   const sla = matching.filter((d) => d.docType === "sla").length;
-  return { proposal, sla, total: matching.length };
+  const device = matching.filter((d) => d.docType === "device").length;
+  return { proposal, sla, device, total: matching.length };
 }
 
 // ---------------------------------------------------------------------------

@@ -1,0 +1,937 @@
+================================================================================
+  SHOMVOB JOBS -- SERVICE MODULES & PRICING WORKSHEET
+  Working document for finalising the Jobs branch service catalogue
+--------------------------------------------------------------------------------
+  Status   : DRAFT -- nothing below is agreed
+  Created  : 19 September 2026
+  Owner    : ____________________
+  Purpose  : Pin down, for every Jobs module, (a) what it actually delivers and
+             (b) its pricing structure -- so one rate card exists and every rep
+             quotes the same numbers.
+================================================================================
+
+
+HOW TO USE THIS FILE
+--------------------------------------------------------------------------------
+  This is the Jobs branch, NOT the HRIS/HR-software product. Separate services,
+  separate pricing logic, separate buyer.
+
+  Every module below has these parts:
+
+     WHAT IT DELIVERS   Plain description. Edit freely.
+     ON RECORD          What our existing documents say, with the source tag.
+                        DO NOT EDIT -- this is evidence.
+     CONFLICTS          Where the documents disagree with each other.
+     DECIDE             Open questions. Tick when settled.
+     >> FINAL           Empty. Write the agreed answer here.
+
+  Only the >> FINAL blocks and the DECIDE ticks should change during review.
+  When every >> FINAL block is filled, this file becomes the rate card and we
+  can build the proposal generator off it.
+
+
+SOURCE KEY
+--------------------------------------------------------------------------------
+  [A]  Gamma deck "Recruitment Process Outsourcing (RPO)"
+       gamma.app/docs/Recruitment-Process-Outsourcing-RPO-8r0eamgkjjwe7rl
+       Oldest. Tiered % rate card sits under the name "RPO".
+
+  [B]  Gamma deck "Shomvob Jobs Service Proposal"
+       gamma.app/docs/Shomvob-Jobs-Service-Proposal-yz6tgr12k6xdp1t
+       Flat-rate simplified offer. Contact: mesbah@shomvob.com.
+
+  [C]  notes-plans/jobs/Shomvob Jobs Offerings.pdf
+       Raw offerings deck. Contains visible editing artefacts (see M1).
+
+  [D]  notes-plans/jobs/Shomvob_Jobs_Corporate_Proposal.pdf
+       Cleanest and apparently newest deck. Contact: Sumon Jobs, Client
+       Partnerships. TREAT AS CURRENT unless the team says otherwise.
+
+  [E]  notes-plans/jobs/Social_Geek_RPO_Agreement.docx
+       Real client agreement (Social Geek). The ONLY document with contract
+       terms -- payment window, replacement clause, repeat-hire clause.
+       Prices differ from every deck.
+
+  NOTE: [A] and [B] are still live public links. If they are superseded,
+  unpublish them -- clients are reading them today.
+
+
+PRICING SHAPES IN USE
+--------------------------------------------------------------------------------
+  Five different shapes across eight modules. This is why one template will
+  not cover the branch.
+
+    Shape                                  Modules
+    -------------------------------------  --------------------------------
+    Package / bundle, fixed validity       M1 Job Post Service
+    Flat fee, fixed duration               M2 Banner Ad
+    Per unit, tiered by candidate level    M3 CV Support
+    Per unit, single band                  M4 Interview Scheduling
+    % of candidate gross salary, tiered    M5 Head-Hunting
+    Flat fee per placement                 M6 Bulk Hiring
+    UNDEFINED                              M7 RPO, M8 Staffing & Payroll
+
+
+MODULE INDEX
+--------------------------------------------------------------------------------
+    M1  Job Post Service ................. package
+    M2  Banner Ad ........................ add-on
+    M3  CV Support ....................... per CV
+    M4  Interview Scheduling ............. per attendance
+    M5  Head-Hunting ..................... % of gross
+    M6  Bulk Hiring ...................... per placement
+    M7  RPO .............................. NAME IS AMBIGUOUS -- resolve first
+    M8  Staffing & Payroll ............... sold but never priced
+
+    X1  VAT, AIT & billing
+    X2  Payment terms
+    X3  Replacement guarantee
+    X4  Repeat-hire clause
+    X5  Contract wrapper
+    X6  Definitions
+    X7  Claims & proof points
+
+
+
+################################################################################
+  M1 -- JOB POST SERVICE
+################################################################################
+  Pricing shape : Package (three tiers, fixed price, fixed validity)
+  Status        : [ ] Draft  [ ] Reviewed  [ ] Final
+  Owner         : ____________________
+
+WHAT IT DELIVERS
+    Client posts a vacancy on the Shomvob Jobs platform and receives applicant
+    CVs through it. Sold as a bundle, not per-hire. No placement guarantee --
+    the client does their own screening from the applications received.
+
+ON RECORD
+    [D] three tiers:
+
+        BASIC ................................... BDT  1,500
+            1 job post within 30 days
+            1,000 CV views
+            AI-integrated algorithm
+            Free logo placement
+            Additional support
+
+        BUSINESS (marked MOST POPULAR) .......... BDT  5,500
+            6 job posts within validity
+            Unlimited CV views
+            AI + algorithm + logo
+            Boosting on 3 job ads
+            60 days validity
+            Additional support
+
+        PREMIUM (marked BEST VALUE) ............. BDT 10,000
+            Unlimited job posts
+            Unlimited CV views
+            AI-integrated algorithm
+            90 days validity
+            5 jobs boosting
+            Additional support
+
+    [B] single offer: BDT 1,500 per job post, valid one month, unlimited
+        application viewing, 500 SMS limit for contacting applicants,
+        1 Facebook boost per post.
+
+CONFLICTS
+    1. [C] is visibly mid-edit. Its Basic column lists BOTH "1000 CV view" AND
+       "Unlimited CV View" in the same block. Its Business price renders as two
+       overlapping figures (5,500 and 5,000). Its Premium column shows BOTH
+       "10,000 BDT" and "7000BDT". Someone changed prices and left both layers
+       in the file. [D] resolves these to 1,500 / 5,500 / 10,000 -- CONFIRM.
+
+    2. [B] gives the 1,500 tier UNLIMITED application viewing. [D] caps the
+       same tier at 1,000 CV views. One of these is wrong.
+
+    3. [B] includes a 500 SMS allowance and 1 Facebook boost at 1,500. Neither
+       appears anywhere in [C] or [D]. Was SMS withdrawn, or dropped by
+       accident? Clients on the old deck will expect it.
+
+    4. "Boosting" (M1 Business/Premium) and "Banner Ad" (M2) are never
+       distinguished. Are 3 boosts worth 3 x BDT 3,500 of banner ad, or is a
+       boost a lesser thing? Affects whether Business at 5,500 is underpriced.
+
+DECIDE
+    [ ] Confirm the three prices: 1,500 / 5,500 / 10,000
+    [ ] Basic CV views: 1,000 or unlimited?
+    [ ] Is SMS included at any tier? How many?
+    [ ] Is Facebook boost the same thing as "job ad boosting"?
+    [ ] What is "Additional support"? It is listed on all three tiers, which
+        makes it worthless as a differentiator. Define it or remove it.
+    [ ] Unused posts at expiry -- forfeited, or carried over?
+    [ ] Is there a discount for buying multiple Premium packages?
+
+>> FINAL
+    Basic     : BDT ________   validity ______ days   posts ____   CV views ____
+                includes: ______________________________________________
+    Business  : BDT ________   validity ______ days   posts ____   CV views ____
+                includes: ______________________________________________
+    Premium   : BDT ________   validity ______ days   posts ____   CV views ____
+                includes: ______________________________________________
+    Notes     : ____________________________________________________________
+
+
+
+################################################################################
+  M2 -- BANNER AD
+################################################################################
+  Pricing shape : Flat fee for a fixed run
+  Status        : [ ] Draft  [ ] Reviewed  [ ] Final
+  Owner         : ____________________
+
+WHAT IT DELIVERS
+    Paid placement of a client's job ad on the Shomvob Jobs landing page, in
+    motion, for a fixed window. A visibility add-on -- not a standalone
+    service and not a hiring outcome.
+
+ON RECORD
+    [C][D]  BDT 3,500 for 7 days
+            "4X more visibility to potential candidates"
+            "Vacancy gets filled 2X faster statistically"
+            "Prime placement on the landing page"
+            "Attracts greater attention as your job appears in motion"
+
+CONFLICTS
+    None between documents. But see M1 conflict 4 -- the relationship between
+    a paid banner ad and the "boosting" bundled into M1 packages is undefined.
+
+DECIDE
+    [ ] Can banner ad be bought without a job post package? (Today it is
+        presented as an add-on but priced standalone.)
+    [ ] Is 7 days the only duration? Add a 14/30-day rate?
+    [ ] How many banner slots exist at once? If it is one slot, it must be
+        booked, not just sold.
+    [ ] The 4X / 2X claims -- see X7. They need a source before they go in
+        front of an enterprise client again.
+
+>> FINAL
+    Price     : BDT ________ for ______ days
+    Sold      : [ ] standalone  [ ] add-on only  [ ] both
+    Inventory : ______ concurrent slots
+    Notes     : ____________________________________________________________
+
+
+
+################################################################################
+  M3 -- CV SUPPORT
+################################################################################
+  Pricing shape : Per CV, tiered by candidate level, with minimum order
+  Status        : [ ] Draft  [ ] Reviewed  [ ] Final
+  Owner         : ____________________
+
+WHAT IT DELIVERS
+    We supply pre-screened CVs matched to the client's requirement. The client
+    runs their own interviews and makes their own decision. We are paid for
+    the CV, not for a hire.
+
+ON RECORD
+    [C][D]  Entry Level ....... 250 BDT per CV   (minimum 10 CVs)
+            Mid Level ......... 350 BDT per CV   (minimum 10 CVs)
+            Top Level ......... 500 BDT per CV   (minimum  5 CVs)
+
+    [A] calls this "CV Shortlisting Service":
+            Salary range 10K - 20K
+            "Service Fee: Based on successful CV shortlisting"  (no number)
+            "Does not include interview attendance confirmation"
+            "No replacements provided"
+
+CONFLICTS
+    1. Name changed: "CV Shortlisting Service" [A] -> "CV Support" [C][D].
+       Pick one.
+
+    2. [A] quoted no price at all and scoped it to a 10-20K salary band.
+       [C][D] price it per level with no salary band. The levels here
+       (Entry/Mid/Top) are NOT defined by salary the way M5's are -- so a
+       "Top Level" CV at 500 BDT has no stated definition.
+
+    3. [A] explicitly disclaimed attendance confirmation and replacements.
+       [C][D] are silent, which reads as if there are none -- but nobody has
+       said so to a client in writing since [A].
+
+DECIDE
+    [ ] Final name: CV Support / CV Shortlisting / other: ______________
+    [ ] Define Entry / Mid / Top for this module. Reuse M5's salary bands, or
+        define by designation?
+    [ ] What counts as a billable CV? Delivered, or shortlisted by the client?
+        If the client rejects all 10 as irrelevant, do they still pay 2,500?
+    [ ] Is there a replacement / free-top-up rule for rejected CVs?
+    [ ] Is there a cap? Can a client order 200 CVs at 250 each?
+    [ ] Minimums: keep 10 / 10 / 5?
+    [ ] Turnaround commitment -- how many days to deliver the first batch?
+
+>> FINAL
+    Entry  : BDT ______ per CV   min ____ CVs   definition: __________________
+    Mid    : BDT ______ per CV   min ____ CVs   definition: __________________
+    Top    : BDT ______ per CV   min ____ CVs   definition: __________________
+    Billable when : ______________________________________________________
+    Turnaround    : ______________________________________________________
+    Notes         : ______________________________________________________
+
+
+
+################################################################################
+  M4 -- INTERVIEW SCHEDULING
+################################################################################
+  Pricing shape : Per candidate attendance
+  Status        : [ ] Draft  [ ] Reviewed  [ ] Final
+  Owner         : ____________________
+
+WHAT IT DELIVERS
+    We source and shortlist candidates, then coordinate and confirm interview
+    attendance. Billed per candidate who actually shows up. The client still
+    decides who to hire and pays nothing for the hire itself under this module.
+
+ON RECORD
+    [C][D]  300 - 500 BDT per attendance
+            Headline claim: "Ensuring maximum candidate attendance"
+
+    [B]     350 - 400 BDT per candidate attendance
+            "lowest possible rate"
+            "The number of candidates you select from the pool is entirely
+             up to you"
+
+    [A]     350 - 900 BDT per candidate interview attendance
+            Salary range 10K - 20K
+            "Does not include interview attendance confirmation"
+            "No replacements provided"
+
+CONFLICTS
+    1. THREE different price ranges for the same service:
+           [A] 350 - 900     [B] 350 - 400     [C][D] 300 - 500
+       The bottom moved down and the top moved down by 400 BDT.
+
+    2. DIRECT CONTRADICTION ON THE CORE PROMISE. [A] says the fee "does not
+       include interview attendance confirmation". [C][D] sell the module on
+       "ensuring maximum candidate attendance". These cannot both be true.
+       This is the most dangerous inconsistency in the catalogue -- it is a
+       promise, not a price.
+
+    3. What moves a candidate from 300 to 500? Nothing stated. Same problem as
+       M5. If it is negotiated, print ONE number and keep the range internal.
+
+DECIDE
+    [ ] Final price. One number, or a band with a stated rule?
+    [ ] If a band: what determines position within it? (Candidate level?
+        Location? Volume?)
+    [ ] Do we confirm attendance or not? Write the exact sentence.
+    [ ] No-show: billed or not billed?
+    [ ] Candidate attends but is unsuitable -- billed?
+    [ ] Same candidate attends two rounds -- one fee or two?
+    [ ] Is there a minimum order, like M3 has?
+    [ ] Does this stack with M5? If a scheduled candidate is then hired, do we
+        charge the attendance fee AND the head-hunting fee?
+
+>> FINAL
+    Price         : BDT ______ per attendance   [ ] flat   [ ] band ____-____
+    Band rule     : ______________________________________________________
+    Attendance    : [ ] confirmed/guaranteed   [ ] best effort, not guaranteed
+    No-show       : [ ] billed  [ ] not billed
+    Stacks with M5: [ ] yes  [ ] no  [ ] credited against placement fee
+    Notes         : ______________________________________________________
+
+
+
+################################################################################
+  M5 -- HEAD-HUNTING
+################################################################################
+  Pricing shape : Percentage of candidate's gross monthly salary, tiered
+  Status        : [ ] Draft  [ ] Reviewed  [ ] Final
+  Owner         : ____________________
+
+  *** HIGHEST-VALUE MODULE AND THE MOST CONTRADICTED. Settle this first. ***
+
+WHAT IT DELIVERS
+    Full-responsibility recruitment for a named role. We source, screen,
+    interview and present a shortlist; the client hires; we are paid a
+    percentage of that hire's gross salary. Success-based.
+
+ON RECORD -- BY SALARY BAND
+    [C][D]  Senior .... salary 50k or above ...... 80% - 100% of gross
+            Mid ....... salary 30k - 45k ......... 60% -  70% of gross
+            Entry ..... salary 20k - 25k ......... 50%        of gross
+
+    [A]     Senior .... salary 50k or above ...... 60% - 100% of gross
+            Mid ....... salary 30k - 45k ......... 40% -  50% of gross
+            Entry ..... salary 15k - 25k ......... 30% -  40% of gross
+
+    [B]     All levels ........................... 50% flat of gross
+            Charged only on final selection AND joining.
+
+    [E]     All marketing levels, Trainee Marketer through Marketing Team
+            Lead / Manager ....................... 100% flat
+            "of confirmed one-month gross salary", "payable for each
+            candidate placed and joined", "applies uniformly across all
+            designations listed above".
+
+ON RECORD -- BY DESIGNATION
+    [D] table, "applicable across designations and hiring types":
+
+        Level               Designations                        Fee
+        ------------------  ----------------------------------  ------------
+        Top / Sr. Mgmt      AGM / DGM / GM / VP / CEO / CFO /    80% - 100%
+                            CMO / COO / HOS / CTO
+        Middle Management   Assistant Manager / Manager          60% -  70%
+        Entry / Junior      Officer / Sr. Officer / Executive /  50%
+                            Sr. Executive / Jr. Executive
+        Bulk Hiring         Skilled / Specialized Jobs           BDT 2,500
+                                                                 per hiring
+
+CONFLICTS
+    1. FOUR different rate cards for the same service. A 60,000 BDT senior
+       hire is billed at:
+              [A]     36,000   (60%)
+              [B]     30,000   (50%)
+              [C][D]  48,000 - 60,000   (80-100%)
+              [E]     60,000   (100%)
+       A 2x spread. Whichever rep the client speaks to determines the price.
+
+    2. The signed agreement [E] charges 100% for a TRAINEE. The current deck
+       [C][D] charges 50% at entry level. Either Social Geek is paying double
+       the rate card, or the rate card is below what we actually close at.
+       Whichever it is, we are leaving money on the table or misquoting.
+
+    3. SALARY BANDS HAVE HOLES. [C][D]:
+              below 20k .... no band (bulk hiring? unstated)
+              25k - 30k .... NO BAND
+              45k - 50k .... NO BAND
+       These are common salaries. Today the answer is improvised on the call.
+
+    4. TWO CLASSIFICATION SYSTEMS THAT DO NOT AGREE. The band table classifies
+       by salary; the designation table classifies by job title. A "Manager"
+       on 28,000 is Middle Management (60-70%) by title but falls in the
+       25-30k hole by salary. Which wins?
+
+    5. RANGES ARE PRINTED IN THE CLIENT-FACING DECK. "80% - 100%" guarantees
+       every client anchors at 80. Nothing states what earns the top of a
+       range. [B] already fixed this by printing a single number.
+
+    6. [C][D] give no payment trigger. [B] and [E] both say on joining.
+
+DECIDE
+    [ ] ONE rate card. Which is live?
+    [ ] Publish single numbers or ranges? (Recommend single; keep the range
+        as an internal floor/ceiling for the rep.)
+    [ ] If ranges stay: write the rule that decides position in the range.
+    [ ] Close the 25-30k and 45-50k gaps. Close below-20k.
+    [ ] Salary band or designation -- which is authoritative when they clash?
+    [ ] Does [E]'s 100% reflect our real closing rate, or was Social Geek a
+        special case? Check what other signed clients pay.
+    [ ] Is the fee on OFFERED gross or CONFIRMED gross after probation?
+        [E] says "confirmed one-month gross salary" -- define this (X6).
+    [ ] Payment trigger: on offer accepted, on joining, or after probation?
+
+>> FINAL
+    Tier 1  : salary ________ to ________   titles: ______________   fee ____%
+    Tier 2  : salary ________ to ________   titles: ______________   fee ____%
+    Tier 3  : salary ________ to ________   titles: ______________   fee ____%
+    Tier 4  : salary ________ to ________   titles: ______________   fee ____%
+    When salary band and title disagree, ______________ wins.
+    Print in client documents : [ ] single number  [ ] range
+    Fee calculated on         : [ ] offered gross  [ ] confirmed gross
+    Payment trigger           : ______________________________________
+    Notes                     : ______________________________________
+
+
+
+################################################################################
+  M6 -- BULK HIRING
+################################################################################
+  Pricing shape : Flat fee per placement
+  Status        : [ ] Draft  [ ] Reviewed  [ ] Final
+  Owner         : ____________________
+
+WHAT IT DELIVERS
+    High-volume sourcing for repeated, standardised roles. Priced per head
+    rather than as a percentage, because the salaries are too low for a
+    percentage to be worth the effort on either side.
+
+ON RECORD
+    [C][D]  BDT 2,500 per hiring
+            Scope stated as "Skilled / Specialized Jobs"
+            Appears as the fourth row of the head-hunting charges table [D]
+
+    [A]     BDT 3,500 per head
+            Salary range 10K - 15K
+            "Guaranteed candidate interview attendance"
+            "Complimentary replacement if a placed candidate does not join
+             after the interview"
+
+CONFLICTS
+    1. Price dropped 3,500 -> 2,500 with no stated reason. Confirm intentional.
+
+    2. Scope changed and got vaguer. [A] scoped it by salary (10-15K).
+       [C][D] scope it by the phrase "Skilled / Specialized Jobs", which
+       contradicts the usual meaning of bulk hiring (entry-level volume) and
+       collides with M5's Entry tier.
+
+    3. [A] carried two guarantees -- attendance and free replacement on
+       no-join. [C][D] dropped both silently. Were they withdrawn?
+
+    4. If bulk hiring covers 10-15K salaries and M5 Entry starts at 20K, the
+       15-20K range belongs to nobody.
+
+DECIDE
+    [ ] Price: 2,500 or 3,500?
+    [ ] Scope by salary band, by role type, or by volume? Write the trigger
+        that makes a requirement "bulk" instead of M5.
+    [ ] Minimum headcount to qualify for bulk pricing?
+    [ ] Do the attendance and replacement guarantees still apply?
+    [ ] Billed per candidate joined, or per candidate placed?
+    [ ] Volume discount above N heads?
+
+>> FINAL
+    Price       : BDT ________ per ____________________
+    Qualifies as bulk when : ______________________________________________
+    Salary range           : ________ to ________
+    Minimum headcount      : ________
+    Guarantees             : ______________________________________________
+    Notes                  : ______________________________________________
+
+
+
+################################################################################
+  M7 -- RPO (RECRUITMENT PROCESS OUTSOURCING)
+################################################################################
+  Pricing shape : UNDEFINED -- and the name is ambiguous
+  Status        : [ ] Draft  [ ] Reviewed  [ ] Final
+  Owner         : ____________________
+
+  *** RESOLVE THIS BEFORE ANYTHING ELSE. It is the most requested document
+      in the branch and we do not have a single definition of what it is. ***
+
+THE PROBLEM
+    "RPO" is used three different ways across our own documents:
+
+      As a PRICED SERVICE      [A] puts the tiered %-of-gross table directly
+                               under the heading "RPO Pricing Structure".
+
+      As AN UNPRICED FEATURE   [C][D] describe RPO with three feature blocks
+                               (vast options / cherry-picking / full-service)
+                               and give NO price. The identical %-of-gross
+                               table now appears under "Head-Hunting" instead.
+
+      As A CONTRACT WRAPPER    [E] is titled "RPO / Recruitment Process
+                               Outsourcing Service Agreement" and prices it at
+                               a flat 100% of gross, describing what reads as
+                               ordinary placement work.
+
+    So: is RPO a distinct service, a rename of head-hunting, or the name of
+    the retained/annual engagement that head-hunting is delivered under?
+
+ON RECORD
+    [C][D]  Features only, no price:
+              VAST OPTIONS TO CHOOSE FROM -- expansive database and network,
+                covering blue-collar, specialised workforce and white-collar
+              CHERRY-PICKING IDEAL CANDIDATES -- proprietary match-making
+                algorithm, filtered shortlist, screening on experience,
+                skills and background
+              FULL-SERVICE PROCESS -- "we take on the full responsibility of
+                hiring"
+
+    [A]     RPO priced as the tiered %-of-gross table (see M5).
+
+    [B]     RPO described as end-to-end, performance-based, 50% of gross,
+            charged only on selection and joining.
+
+    [E]     Signed as a one-year retained agreement at 100% flat, with the
+            operational division of labour spelled out (see X5).
+
+CONFLICTS
+    1. The same %-of-gross table lives under "RPO" in [A] and under
+       "Head-Hunting" in [C][D]. Either they are the same product with two
+       names, or one of the decks mislabels it.
+
+    2. [E] is the only document that describes RPO as a TERM engagement --
+       one year, ongoing, with a notice period. Decks present it as
+       transactional. That is a different commercial relationship.
+
+DECIDE
+    [ ] Is RPO (a) a separate service, (b) another name for head-hunting, or
+        (c) the annual retained wrapper that M3-M6 are delivered under?
+    [ ] If (c): does a retained client get different rates than a one-off?
+    [ ] Is there a retainer or minimum annual commitment, or is it still
+        purely success-based?
+    [ ] Does RPO include exclusivity -- can the client also use another
+        agency for the same role?
+    [ ] If RPO is retired as a product name, update [A] and [B] or unpublish
+        them.
+
+>> FINAL
+    RPO is        : ______________________________________________________
+    Relationship to M5 Head-Hunting : ____________________________________
+    Pricing       : ______________________________________________________
+    Term          : ______________________________________________________
+    Exclusivity   : ______________________________________________________
+    Notes         : ______________________________________________________
+
+
+
+################################################################################
+  M8 -- STAFFING & PAYROLL
+################################################################################
+  Pricing shape : NONE EXISTS
+  Status        : [ ] Draft  [ ] Reviewed  [ ] Final
+  Owner         : ____________________
+
+  *** We advertise this on every deck and have never priced it. ***
+
+WHAT IT DELIVERS
+    Unclear. Appears to mean Shomvob employs the worker on paper and the
+    client uses them -- contract staffing / EOR -- but no document says so.
+
+ON RECORD
+    [C]  "Staffing & Payroll -- Managing a wider talent pool"
+    [D]  "Staffing & Payroll -- End-to-end management of a wider contracted
+          talent pool"
+    [D]  Listed again on the closing slide as one of the services offered.
+
+    That is the entire record. No price, no deliverable, no terms, in any of
+    the five documents.
+
+CONFLICTS
+    None -- there is nothing to conflict with. That is the problem.
+
+DECIDE
+    [ ] Is this a real, sellable service today, or aspirational? If
+        aspirational, REMOVE IT FROM THE DECKS until it is real -- we are
+        advertising something we cannot quote.
+    [ ] Who is the legal employer of the worker?
+    [ ] Pricing shape: % of payroll, flat per head per month, or margin on
+        cost? (This is the "variable per month" module.)
+    [ ] Who carries statutory liability, severance, and compliance risk?
+    [ ] Minimum headcount and minimum term?
+    [ ] Does this overlap with the HRIS product's payroll module? If a client
+        buys both, what is the boundary?
+
+>> FINAL
+    Sellable today : [ ] yes  [ ] no -- remove from decks
+    Deliverable    : ______________________________________________________
+    Legal employer : ______________________________________________________
+    Pricing        : BDT ________ per ____________ per month
+    Minimum        : ______ heads, ______ months
+    Notes          : ______________________________________________________
+
+
+
+################################################################################
+  CROSS-CUTTING TERMS
+  These apply across modules. Today they live only in the Social Geek
+  agreement [E] -- no deck states any of them.
+################################################################################
+
+
+X1 -- VAT, AIT & BILLING
+--------------------------------------------------------------------------------
+ON RECORD
+    [C][D]  "15% VAT to be included."   (footnote to the head-hunting table)
+    [B]     "a 5% VAT will be excluded from the total billing"  (stated twice)
+    [E]     "VAT and AIT will be applicable as per prevailing Government
+             regulations."  -- no rate given
+    HRIS side, for comparison (notes-plans/proposal_format.md):
+            "5% VAT will be added on the total invoice amount."
+
+CONFLICTS
+    1. 5% vs 15%. A 3x difference on every invoice. HR software and
+       recruitment services may genuinely attract different VAT rates -- but
+       nobody has written down which applies to which, and [B] applies 5% to
+       recruitment services.
+    2. The word "excluded" in [B] is almost certainly wrong. "VAT will be
+       excluded from the total billing" reads to a client as "you do not pay
+       VAT". [C][D] say "included", which reads as the opposite -- that the
+       quoted price already contains VAT. Both are sloppy. The correct
+       phrasing is either "exclusive of VAT" or "VAT will be added".
+    3. AIT appears ONLY in the signed agreement. No deck mentions it, so no
+       client sees it coming.
+
+DECIDE
+    [ ] Confirm the correct VAT rate for Jobs services: ______%
+    [ ] Is it the same rate for M1/M2 (platform/ad) as for M3-M6 (services)?
+    [ ] Agree ONE sentence, used verbatim everywhere:
+        "________________________________________________________________"
+    [ ] State AIT treatment in client-facing documents. Who bears it?
+    [ ] Are quoted prices VAT-inclusive or VAT-exclusive? Say so on the page.
+
+>> FINAL
+    VAT rate        : ______%   applies to: ______________________________
+    AIT             : ______________________________________________________
+    Prices quoted   : [ ] exclusive of VAT   [ ] inclusive of VAT
+    Standard wording: ______________________________________________________
+
+
+X2 -- PAYMENT TERMS
+--------------------------------------------------------------------------------
+ON RECORD
+    [E] clause 3:
+        "The consultancy fee will be payable to the Service Provider within
+         fifteen (15) working days from the receipt of the invoice,
+         subsequent to the candidate's joining. All bills are to be submitted
+         within fifteen (15) days of the candidate's joining."
+    [B] "Charges apply only for candidates who are finally selected and after
+         they join your team. No upfront costs for unsuccessful hires."
+    [C][D] silent.
+    [E] clause 5: company issues the offer letter and conveys the accepted
+        package to Shomvob "for billing purposes".
+
+CONFLICTS
+    No document conflict, but no DECK states payment terms at all. A client
+    reading [D] has no idea when they pay.
+
+DECIDE
+    [ ] Standard payment window -- keep 15 working days?
+    [ ] Same terms for package modules (M1/M2), which are presumably prepaid?
+    [ ] Late payment interest or service suspension?
+    [ ] Do package modules require payment before the post goes live?
+    [ ] Add payment terms to the client-facing deck.
+
+>> FINAL
+    Success-based modules (M3-M7) : ______________________________________
+    Prepaid modules (M1, M2)      : ______________________________________
+    Late payment                  : ______________________________________
+
+
+X3 -- REPLACEMENT GUARANTEE
+--------------------------------------------------------------------------------
+ON RECORD
+    [E] clause 8, verbatim:
+        "In case any Managerial Level (excluding blue-collar level) employee
+         resigns, or his/her employment is terminated by the employer for any
+         unethical or illegal activity, within three (3) months of employment
+         with the employer, then the Service Provider will provide an
+         alternative list of candidates free of any cost or charge. This
+         clause will not be applicable if the employer terminates the
+         employee within 3 months for reasons other than unethical/illegal
+         activity or non-performance."
+
+    [A] bulk hiring only: "Complimentary replacement if a placed candidate
+        does not join after the interview."
+    [A] interview scheduling and CV shortlisting: "No replacements provided."
+    [B], [C], [D]: silent.
+
+CONFLICTS
+    1. No deck mentions a replacement guarantee at all for the main service.
+       It is the most negotiated term in recruitment and it appears only in a
+       contract the client sees after they have already agreed.
+    2. What [E] promises is an "alternative LIST of candidates", not a
+       replacement hire and not a refund. That is a much weaker remedy than
+       most clients will assume "replacement guarantee" means.
+    3. The final sentence of clause 8 is a broken double negative. Read
+       literally, the carve-out excludes termination for non-performance --
+       meaning the guarantee DOES apply when someone is fired for poor
+       performance, which is presumably the opposite of what was intended.
+       THIS SENTENCE NEEDS REDRAFTING BEFORE THE NEXT SIGNATURE.
+    4. Managerial only. Nothing covers entry level or bulk placements.
+
+DECIDE
+    [ ] Standard guarantee window: ______ days/months
+    [ ] Which levels are covered?
+    [ ] Remedy: free replacement hire / alternative CV list / pro-rata
+        refund / credit note?
+    [ ] How many replacement attempts before it converts to a refund?
+    [ ] Redraft clause 8's carve-out sentence in plain language.
+    [ ] Put the guarantee in the client-facing deck -- it is a selling point.
+
+>> FINAL
+    Window   : ______________   Levels covered : ______________________
+    Remedy   : ______________________________________________________
+    Excluded : ______________________________________________________
+    Wording  : ______________________________________________________
+
+
+X4 -- REPEAT-HIRE CLAUSE
+--------------------------------------------------------------------------------
+ON RECORD
+    [E] clause 9:
+        "If, in the near future, the Company hires any candidate of any level
+         (Managerial, Non-Managerial, or otherwise) from the previous pool
+         provided by the Service Provider within six (6) months, the Company
+         must pay 100% of the applicable recruitment fee."
+
+CONFLICTS
+    Not in any deck. Protects real revenue and clients should know about it
+    up front rather than discover it in an invoice.
+
+DECIDE
+    [ ] Keep 6 months?
+    [ ] "the previous pool" is loose -- does it mean any CV we ever sent?
+        Define it (e.g. any candidate introduced in writing by Shomvob).
+    [ ] How do we evidence a claim under this clause?
+    [ ] Does it survive termination of the agreement?
+
+>> FINAL
+    Window     : ______ months from ____________________
+    Pool means : ______________________________________________________
+    Fee        : ______% of applicable fee
+    Survives termination : [ ] yes  [ ] no
+
+
+X5 -- CONTRACT WRAPPER
+--------------------------------------------------------------------------------
+ON RECORD -- from [E], the only document with any of this
+    Term             One (1) year, start and end dates blank in the template.
+    Termination      Expiry, OR one (1) month prior written notice by either
+                     party, OR mutual consent, no reason required.
+    Exit             Both parties sign a No Objection Certificate (NOC)
+                     before termination.
+    Confidentiality  Mutual; no disclosure to third parties.
+    Anonymity        Shomvob must not name the client in any newspaper,
+                     magazine or publication advertisement without prior
+                     written consent.
+    Who does what    Shomvob: sourcing, 1st-level and advanced screening,
+                        interviewing, ALL candidate correspondence including
+                        interview scheduling, and informing rejected
+                        candidates.
+                     Client: sends rejection decisions to Shomvob, issues the
+                        offer letter, conveys the accepted package to Shomvob
+                        for billing.
+    Signatories      Shomvob: Hasib Rahman, COO. Witness: Md. Al-Amin,
+                     Head of Business.
+
+CONFLICTS
+    Note the tension with X7: the anonymity clause restricts naming a client
+    in advertising, yet our decks name fifteen enterprise clients by logo.
+
+DECIDE
+    [ ] Is [E] our standard template, or was it drafted for Social Geek only?
+    [ ] Should there be a shorter agreement for single transactional
+        placements, versus this annual one?
+    [ ] Do M1/M2 (platform purchases) need an agreement at all, or are terms
+        of service enough?
+    [ ] Reconcile the advertising-consent clause with our use of client logos
+        -- do we have written consent from all fifteen?
+    [ ] Add a governing law / dispute resolution clause. [E] has none.
+    [ ] Add a data protection clause covering candidate personal data. [E]
+        has none, and enterprise clients will ask.
+
+>> FINAL
+    Standard template : ______________________________________________
+    Short-form option : [ ] yes  [ ] no
+    Missing clauses to add : _____________________________________________
+
+
+X6 -- DEFINITIONS
+--------------------------------------------------------------------------------
+    Terms used in pricing that have never been defined. Each one is worth
+    real money on a percentage-based fee.
+
+    "Gross salary"
+        [E] says "confirmed one-month gross salary" and separately refers to
+        the "offered consolidated package". Not the same thing.
+        [ ] Does it include: basic? house rent? medical? transport?
+            mobile allowance? festival bonus? performance bonus?
+        [ ] Offered gross, or gross confirmed after probation?
+        >> DEFINITION: ____________________________________________________
+
+    "Placed" / "Joined"
+        [ ] Fee triggers on offer acceptance or on first day worked?
+        >> DEFINITION: ____________________________________________________
+
+    "Entry / Mid / Top" and "Senior / Middle / Junior"
+        Two vocabularies in use across M3 and M5, mapped differently.
+        [ ] Agree ONE set of level names used identically in every module.
+        >> LEVELS: ________________________________________________________
+
+    "Bulk"
+        [ ] Minimum headcount, salary ceiling, or role type? (See M6.)
+        >> DEFINITION: ____________________________________________________
+
+
+X7 -- CLAIMS & PROOF POINTS
+--------------------------------------------------------------------------------
+ON RECORD
+    [D] cover and stats strip:
+        "1,000,000+ candidate database"
+        "4X more visibility with Banner Ads"
+        "2X faster vacancy fill rate"
+        "15+ trusted enterprise partners"
+    [D] names as partners: Transcom, Berger Paints, Uber, Milvik, Singer
+        Bangladesh, KFC / Pizza Hut, Burger King, Pathao, Daraz, Dana Group,
+        SSLCommerz, inDrive, Hemas Consumer, foodpanda, Sundora Beauty.
+    [D] cover strip: "Trusted by Uber, Daraz, foodpanda, Berger, Transcom,
+        Singer".
+    [C][D] banner ad: "vacancy gets filled 2X faster statistically".
+
+DECIDE
+    [ ] "2X faster statistically" -- against what baseline, measured when?
+        The word "statistically" invites the question. Either cite it or drop
+        the word.
+    [ ] "4X more visibility" -- impressions, clicks, or applications?
+    [ ] 1,000,000+ candidates -- registered, or active in the last N months?
+        An enterprise client will ask for the active number.
+    [ ] Do we have written consent to use all fifteen logos? See X5.
+    [ ] Agree a single approved stats block, the way the HRIS cover already
+        has one, so the numbers stop drifting between decks.
+
+>> FINAL
+    Approved stats block:
+        ________________  ____________________________________________
+        ________________  ____________________________________________
+        ________________  ____________________________________________
+        ________________  ____________________________________________
+    Logos cleared for use : ______________________________________________
+
+
+
+################################################################################
+  MEETING AGENDA -- OPEN QUESTIONS IN PRIORITY ORDER
+################################################################################
+
+  BLOCKING. Nothing can be built or quoted until these are answered.
+
+    1.  M7  What IS RPO -- a service, a rename of head-hunting, or the
+            annual wrapper? Everything else depends on the answer.
+    2.  M5  Which of the four head-hunting rate cards is live? Why does the
+            signed Social Geek agreement charge 100% when the deck says
+            50-100%?
+    3.  M5  Close the 25-30k and 45-50k salary gaps, and decide whether
+            salary band or job title is authoritative.
+    4.  X1  5% VAT or 15%? And fix the "included"/"excluded" wording.
+    5.  M4  Do we guarantee interview attendance or not? [A] says no,
+            [C][D] sell on yes.
+
+  IMPORTANT. Needed before the next client proposal goes out.
+
+    6.  X3  Standard replacement guarantee, and redraft the broken carve-out
+            sentence in clause 8.
+    7.  M8  Is Staffing & Payroll real? If not, take it off the decks.
+    8.  M1  Confirm 1,500 / 5,500 / 10,000 and resolve the CV-view and SMS
+            discrepancies.
+    9.  M6  2,500 or 3,500 per head, and what makes a requirement "bulk".
+    10. X6  Define "gross salary". On a 100% fee this is the whole deal.
+
+  HOUSEKEEPING. Cheap, and currently leaking.
+
+    11. [A] and [B] are live public Gamma links quoting retired prices.
+        Unpublish or update them.
+    12. Two contacts are in circulation -- mesbah@shomvob.com [B] and Sumon
+        Jobs, Client Partnerships [D]. Agree who owns Jobs enquiries.
+    13. X7  Substantiate or soften the 4X / 2X / 1,000,000+ claims.
+    14. X5  Confirm logo consent for the fifteen named partners.
+
+
+################################################################################
+  ONCE THIS IS FINAL
+################################################################################
+
+  The filled-in >> FINAL blocks become the Jobs rate card, and the proposal
+  generator can be built off them directly. Note for whoever builds it: this
+  branch does NOT fit the existing HRIS proposal shape. It needs a line-item
+  quotation with mixed pricing shapes -- closer to the device quotation flow
+  (lib/device-catalog.ts holds editable presets, lib/device-quote.ts holds the
+  arithmetic) than to the module-grid HRIS proposal.
+
+  Do not start building until items 1-5 above are answered. Building now means
+  hard-coding one of four contradictory rate cards.
+
+
+================================================================================
+  CHANGE LOG
+--------------------------------------------------------------------------------
+  19 Sep 2026   Created. Compiled from [A] [B] [C] [D] [E]. All prices are as
+                found in those sources -- nothing here is invented, and every
+                figure carries its source tag. No decisions taken yet.
+  ____________  ________________________________________________________
+  ____________  ________________________________________________________
+  ____________  ________________________________________________________
+================================================================================

@@ -130,6 +130,24 @@ img[alt="Shomvob HR"] {
   animation-delay: 500ms;
 }
 
+/* Panel swap for the home page's document-type switch. Deliberately lighter
+   than home-fade-in — that one travels 14px and unblurs, which reads as the
+   page arriving. This fires on every tab click, so it stays a short lift. */
+@keyframes home-panel-swap {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.home-panel-swap {
+  animation: home-panel-swap 0.26s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @keyframes home-text-sheen {
   0%,
   18% {
@@ -190,6 +208,7 @@ img[alt="Shomvob HR"] {
 @media (prefers-reduced-motion: reduce) {
   .home-fade-in,
   .home-text-sheen,
+  .home-panel-swap,
   .signatory-row-in {
     animation: none;
   }

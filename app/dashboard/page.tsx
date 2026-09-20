@@ -186,7 +186,16 @@ function SummaryLine({
 }
 
 function splitText(value: DocSplit): string {
-  return value.total + " (" + value.proposal + "P / " + value.sla + "S)";
+  return (
+    value.total +
+    " (" +
+    value.proposal +
+    "P / " +
+    value.sla +
+    "S / " +
+    value.device +
+    "D)"
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -321,7 +330,7 @@ async function Report({ days }: { days: number | null }) {
       <p className="text-xs text-neutral-500">
         {stats.rowCount} rows · {stats.draftCount} drafts ·{" "}
         {timestamp(stats.firstEventAt)} → {timestamp(stats.lastEventAt)}{" "}
-        (Asia/Dhaka). P = proposal, S = SLA.
+        (Asia/Dhaka). P = proposal, S = SLA, D = device proposal.
       </p>
 
       <Section

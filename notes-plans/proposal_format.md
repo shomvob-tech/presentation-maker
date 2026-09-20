@@ -78,10 +78,13 @@ Used for highlighting important or nuanced information within the solution secti
 3. **Eyebrow** — uppercase label: `PROPOSAL`
 4. **Document title** — large, bold. Default: **"Workforce Management Ecosystem"**. Should be updated to match the scope when the proposal covers a more specific subset. Examples: *"Attendance, Leave & Device Integration"*, *"Attendance, Payroll & Workforce Management"*.
 5. **Thin green divider line** — gradient fade from transparent → `#28a143` → transparent. Separates title from metadata.
-6. **Proposal metadata** — three lines, centered, regular weight:
-   - `Prepared for: [Client Full Name]`
-   - `Prepared by: Shomvob Technologies Limited`
+6. **Proposal metadata** — two lines, centered, regular weight:
+   - `Prepared by: Shomvob Technologies Limited` (or the named contact — see App inputs)
    - `Date: [DD Month, YYYY]`
+
+   There is deliberately no `Prepared for:` line. The client logo above the
+   title is what names the recipient on the cover; the client name still
+   appears on the Section 3 meta line and in every interior page footer.
 7. **Stats strip** — a single horizontal row of 4 Shomvob credibility stats, separated by thin `#e2e2e2` hairline dividers. Each stat has a bold dark numeral and a small uppercase gray label beneath it. Stats are static:
 
    | Stat | Label |

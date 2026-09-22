@@ -37,10 +37,16 @@ export type DeviceProposalDetails = {
   /** "YYYY-MM-DD" from <input type="date">. */
   preparedDate: string;
 
-  /** Letter (page 2). The device letter addresses a named person, unlike the
-   * HRIS letter, which opens on the recipient's title. */
-  recipientName: string;
-  recipientTitle: string;
+  /**
+   * Letter (page 2). The device letter can address a named person, unlike the
+   * HRIS letter, which opens on the recipient's title.
+   *
+   * Both are optional: a quotation often goes to a company rather than to a
+   * person the rep can name, and an invented contact is worse than none. When
+   * both are blank the letter's "To," block is just the addressee company.
+   */
+  recipientName?: string;
+  recipientTitle?: string;
   /** Letter "To," company — defaults to the client name when left blank. */
   letterAddresseeName?: string;
   keyBenefits: string[];
@@ -133,8 +139,8 @@ export function isDeviceProposalDetails(
     details.clientName.trim().length > 0 &&
     typeof details.documentTitle === "string" &&
     typeof details.preparedDate === "string" &&
-    typeof details.recipientName === "string" &&
-    typeof details.recipientTitle === "string" &&
+    isOptionalText(details.recipientName) &&
+    isOptionalText(details.recipientTitle) &&
     isOptionalText(details.letterAddresseeName) &&
     isStringList(details.keyBenefits) &&
     isOptionalText(details.preparedByName) &&

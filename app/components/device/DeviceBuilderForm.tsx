@@ -219,8 +219,6 @@ function validate(form: FormState): {
     "clientName",
     "documentTitle",
     "preparedDate",
-    "recipientName",
-    "recipientTitle",
     "warrantyPeriod",
     "paymentTerms",
     "deliveryCity",
@@ -581,8 +579,8 @@ export default function DeviceBuilderForm() {
       documentTitle: form.documentTitle.trim(),
       preparedDate: form.preparedDate,
 
-      recipientName: form.recipientName.trim(),
-      recipientTitle: form.recipientTitle.trim(),
+      recipientName: form.recipientName.trim() || undefined,
+      recipientTitle: form.recipientTitle.trim() || undefined,
       letterAddresseeName: form.letterAddresseeName.trim() || undefined,
       keyBenefits: form.keyBenefits,
 
@@ -812,26 +810,31 @@ export default function DeviceBuilderForm() {
 
       <SectionCard number="2" title="Letter from the COO">
         <div className="grid gap-5 md:grid-cols-2">
-          <Field id="recipientName" label="Recipient name *" error={errors.recipientName}>
+          <Field id="recipientName" label="Recipient name" error={errors.recipientName}>
             <input
               id="recipientName"
               value={form.recipientName}
               onChange={(event) => update("recipientName", event.target.value)}
               className={inputClass}
               placeholder="Md. Shariful Islam"
-              aria-invalid={invalid("recipientName")}
             />
           </Field>
-          <Field id="recipientTitle" label="Recipient title *" error={errors.recipientTitle}>
+          <Field id="recipientTitle" label="Recipient title" error={errors.recipientTitle}>
             <input
               id="recipientTitle"
               value={form.recipientTitle}
               onChange={(event) => update("recipientTitle", event.target.value)}
               className={inputClass}
               placeholder="Chief Executive Officer"
-              aria-invalid={invalid("recipientTitle")}
             />
           </Field>
+          <div className="md:col-span-2 -mt-1">
+            <p className="text-xs text-white/50">
+              Both are optional. Leave them blank when the quotation goes to the
+              company rather than to a named person — the letter then opens
+              straight onto the addressee below.
+            </p>
+          </div>
           <div className="md:col-span-2">
             <Field
               id="letterAddresseeName"

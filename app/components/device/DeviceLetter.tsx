@@ -4,8 +4,9 @@
  * The HRIS proposal's Letterfromcoo.tsx is not reusable here: its subject line
  * hardcodes "SaaS Based Human Resource Information System", its body is four
  * fixed HRIS sections (Solution Overview / No Upfront Cost / Ongoing Support),
- * and it addresses a title rather than a person. The device letter addresses a
- * named recipient and carries a Key Benefits list instead. What the two do
+ * and it addresses a title rather than a person. The device letter can address
+ * a named recipient (both name and title are optional) and carries a Key
+ * Benefits list instead. What the two do
  * share — the letterhead chrome, the date/To/Subject block, the signature
  * block — comes from LetterheadFrame, so only the copy differs.
  *
@@ -23,8 +24,10 @@ export interface DeviceLetterProps {
    * passing it in — this component renders what it is given, same as the
    * HRIS letter. */
   addresseeName: string;
-  recipientName: string;
-  recipientTitle: string;
+  /** Both optional — the "To," block drops whichever is absent and keeps the
+   * addressee company, which is always present. */
+  recipientName?: string;
+  recipientTitle?: string;
   preparedDate: Date | string;
   keyBenefits: string[];
   /** Fixed 4-page format, but kept a prop so the page order stays visible at

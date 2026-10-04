@@ -1,8 +1,6 @@
-"use client";
-
-import Image from "next/image";
-import ClientLogo from "./ClientLogo";
-import { useModuleSlideContent } from "./usePresentationContent";
+import { formatDeckNumber, type DeckSlideProps } from "@/lib/deck-catalog";
+import ClientLogo, { WithClientLogo } from "./ClientLogo";
+import ShomvobMark from "./ShomvobMark";
 
 const stats = [
   { value: "600+", label: "Employees", icon: "people" },
@@ -118,14 +116,10 @@ function FeatureIcon({ type }: { type: string }) {
   );
 }
 
-export default function ManagementDashboardSlide() {
-  const moduleContent = useModuleSlideContent("dashboard");
-  const renderedFeatures = features.map((feature, index) => ({
-    ...feature,
-    title: moduleContent?.points[index]?.title ?? feature.title,
-    copy: moduleContent?.points[index]?.description ?? feature.copy,
-  }));
-
+export default function ManagementDashboardSlide({
+  slideNumber = 14,
+  moduleNumber = 9,
+}: DeckSlideProps) {
   return (
     <section
       data-module="dashboard"
@@ -136,13 +130,13 @@ export default function ManagementDashboardSlide() {
         aria-hidden="true"
         className="pointer-events-none absolute left-[3%] top-[4%] select-none text-[clamp(5rem,10vw,11rem)] font-black leading-none text-[#0c3d20]/[0.035]"
       >
-        14
+        {formatDeckNumber(slideNumber)}
       </span>
 
       <header className="relative z-20 flex items-start justify-between px-[5.5%] pt-[5%]">
         <div className="max-w-[68%]">
           <span className="text-[clamp(0.55rem,0.7vw,0.78rem)] font-bold uppercase tracking-[0.25em] text-[#28a143]">
-            Module 09 &middot; Visibility
+            Module {formatDeckNumber(moduleNumber)}{" "}&middot; Visibility
           </span>
           <h1 className="mt-2 text-[clamp(2.1rem,3.7vw,4.2rem)] font-bold leading-none tracking-tight">
             Management Dashboard
@@ -154,17 +148,12 @@ export default function ManagementDashboardSlide() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="rounded-xl bg-white px-4 py-2 shadow-sm">
-            <Image
-              src="/resources/shomvob_hr_text.png"
-              alt="Shomvob HR"
-              width={120}
-              height={28}
-            />
-          </div>
-          <div className="rounded-xl bg-[#0c3d20] px-4 py-2 shadow-sm">
-            <ClientLogo size="sm" />
-          </div>
+          <ShomvobMark tone="light" />
+          <WithClientLogo>
+            <div className="rounded-xl bg-[#0c3d20] px-4 py-2 shadow-sm">
+              <ClientLogo size="sm" />
+            </div>
+          </WithClientLogo>
         </div>
       </header>
 
@@ -191,7 +180,7 @@ export default function ManagementDashboardSlide() {
       </div>
 
       <div className="relative z-10 mt-[clamp(1.5rem,2.6vw,2.5rem)] grid grid-cols-2 grid-rows-2 gap-[clamp(0.75rem,1.2vw,1.35rem)] px-[5.5%] pb-[6%]">
-        {renderedFeatures.map((feature) => (
+        {features.map((feature) => (
           <article
             key={feature.number}
             className={`relative flex items-center gap-[clamp(0.9rem,1.4vw,1.5rem)] overflow-hidden rounded-2xl border p-[clamp(1rem,1.5vw,1.6rem)] shadow-sm ${

@@ -1,8 +1,6 @@
-"use client";
-
 import Image from "next/image";
-import ClientLogo from "./ClientLogo";
-import { useModuleSlideContent } from "./usePresentationContent";
+import ClientLogo, { WithClientLogo } from "./ClientLogo";
+import ShomvobMark from "./ShomvobMark";
 
 const capabilities = [
   {
@@ -93,13 +91,6 @@ function CapabilityIcon({ type }: { type: string }) {
 }
 
 export default function UnifiedLeaveManagementSlide() {
-  const moduleContent = useModuleSlideContent("leave");
-  const renderedCapabilities = capabilities.map((capability, index) => ({
-    ...capability,
-    title: moduleContent?.points[index]?.title ?? capability.title,
-    copy: moduleContent?.points[index]?.description ?? capability.copy,
-  }));
-
   return (
     <section
       data-module="leave"
@@ -125,20 +116,17 @@ export default function UnifiedLeaveManagementSlide() {
         </div>
 
         <div className="flex items-center gap-5 text-white">
-          <Image
-            src="/resources/shomvob_hr_text.png"
-            alt="Shomvob HR"
-            width={130}
-            height={31}
-          />
-          <div className="h-7 w-px bg-white/25" />
-          <ClientLogo size="md" />
+          <ShomvobMark tone="dark" />
+          <WithClientLogo>
+            <div className="h-7 w-px bg-white/25" />
+            <ClientLogo size="md" />
+          </WithClientLogo>
         </div>
       </header>
 
       <div className="absolute bottom-[6%] left-[5.5%] right-[44%] top-[27%] z-10">
         <div className="grid h-full grid-cols-2 gap-[clamp(0.65rem,1vw,1.15rem)]">
-          {renderedCapabilities.map((capability, index) => (
+          {capabilities.map((capability, index) => (
             <article
               key={capability.title}
               className={`relative flex min-w-0 items-start gap-[clamp(0.65rem,0.9vw,1rem)] overflow-hidden rounded-2xl border p-[clamp(0.85rem,1.15vw,1.25rem)] ${

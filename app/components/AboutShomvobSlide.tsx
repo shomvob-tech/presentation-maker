@@ -1,5 +1,6 @@
 import Image from "next/image";
 import ClientLogo from "./ClientLogo";
+import ShomvobMark from "./ShomvobMark";
 
 const strengths = [
   {
@@ -97,13 +98,7 @@ export default function AboutShomvobSlide() {
       <div className="pointer-events-none absolute left-0 top-0 h-full w-1.5 bg-[#edb713]" />
 
       <header className="absolute inset-x-[5.5%] top-[4.5%] z-20 flex items-center justify-between">
-        <Image
-          src="/resources/shomvob_hr_text.png"
-          alt="Shomvob HR"
-          width={178}
-          height={43}
-          className="h-[clamp(2rem,3.2vw,2.8rem)] w-auto"
-        />
+        <ShomvobMark tone="dark" size="lg" />
         <ClientLogo size="md" />
       </header>
 

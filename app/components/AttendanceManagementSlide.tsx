@@ -1,8 +1,7 @@
-"use client";
-
 import Image from "next/image";
+import { formatDeckNumber, type DeckSlideProps } from "@/lib/deck-catalog";
 import ClientLogo from "./ClientLogo";
-import { useModuleSlideContent } from "./usePresentationContent";
+import ShomvobMark from "./ShomvobMark";
 
 const features = [
   {
@@ -70,14 +69,9 @@ function FeatureIcon({ type }: { type: string }) {
   );
 }
 
-export default function AttendanceManagementSlide() {
-  const moduleContent = useModuleSlideContent("attendance");
-  const renderedFeatures = features.map((feature, index) => ({
-    ...feature,
-    title: moduleContent?.points[index]?.title ?? feature.title,
-    copy: moduleContent?.points[index]?.description ?? feature.copy,
-  }));
-
+export default function AttendanceManagementSlide({
+  slideNumber = 7,
+}: DeckSlideProps) {
   return (
     <section
       data-module="attendance"
@@ -100,7 +94,7 @@ export default function AttendanceManagementSlide() {
         aria-hidden="true"
         className="pointer-events-none absolute left-[3%] top-[4%] select-none text-[clamp(5rem,10vw,11rem)] font-black leading-none text-white/[0.045]"
       >
-        07
+        {formatDeckNumber(slideNumber)}
       </span>
 
       <header className="relative z-20 flex items-start justify-between px-[5.5%] pt-[5%]">
@@ -118,14 +112,7 @@ export default function AttendanceManagementSlide() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="rounded-xl bg-white px-4 py-2 shadow-sm">
-            <Image
-              src="/resources/shomvob_hr_text.png"
-              alt="Shomvob HR"
-              width={120}
-              height={28}
-            />
-          </div>
+          <ShomvobMark tone="dark" />
           <ClientLogo size="sm" />
         </div>
       </header>
@@ -180,7 +167,7 @@ export default function AttendanceManagementSlide() {
           </div>
 
           <div className="grid min-h-0 flex-1 grid-cols-2 grid-rows-2 gap-[clamp(0.75rem,1.2vw,1.35rem)]">
-            {renderedFeatures.map((feature, index) => (
+            {features.map((feature, index) => (
               <article
                 key={feature.number}
                 className="relative flex items-center gap-[clamp(0.9rem,1.4vw,1.5rem)] overflow-hidden rounded-2xl bg-white/95 p-[clamp(1rem,1.5vw,1.6rem)] text-[#092d19] shadow-xl shadow-black/15"

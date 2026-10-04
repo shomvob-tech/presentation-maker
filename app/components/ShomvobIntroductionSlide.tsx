@@ -1,5 +1,6 @@
 import Image from "next/image";
 import ClientLogo from "./ClientLogo";
+import ShomvobMark from "./ShomvobMark";
 
 const credibility = [
   {
@@ -64,14 +65,7 @@ export default function ShomvobIntroductionSlide() {
       <div className="pointer-events-none absolute -bottom-36 -left-28 h-[430px] w-[430px] rounded-full border-[80px] border-[#edb713]/12" />
 
       <header className="absolute inset-x-[5.5%] top-[5%] z-20 flex items-center justify-between">
-        <div className="rounded-xl bg-white px-4 py-2 shadow-sm">
-          <Image
-            src="/resources/shomvob_hr_text.png"
-            alt="Shomvob HR"
-            width={130}
-            height={31}
-          />
-        </div>
+        <ShomvobMark tone="light" />
         <ClientLogo size="md" />
       </header>
 

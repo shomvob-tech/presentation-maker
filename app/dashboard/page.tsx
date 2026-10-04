@@ -194,7 +194,11 @@ function splitText(value: DocSplit): string {
     value.sla +
     "S / " +
     value.device +
-    "D)"
+    "D / " +
+    value.combined +
+    "C / " +
+    value.presentation +
+    "Pr)"
   );
 }
 
@@ -330,7 +334,8 @@ async function Report({ days }: { days: number | null }) {
       <p className="text-xs text-neutral-500">
         {stats.rowCount} rows · {stats.draftCount} drafts ·{" "}
         {timestamp(stats.firstEventAt)} → {timestamp(stats.lastEventAt)}{" "}
-        (Asia/Dhaka). P = proposal, S = SLA, D = device proposal.
+        (Asia/Dhaka). P = proposal, S = SLA, D = device, C = combined HRIS + device,
+        Pr = presentation.
       </p>
 
       <Section

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import ValidateOptionsForm from "../../components/ValidateOptionsForm";
+import ValidateOptionsForm from "@/app/components/ValidateOptionsForm";
 
 const steps = [
   { label: "Start", status: "done" as const },

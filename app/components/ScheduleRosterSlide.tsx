@@ -1,8 +1,6 @@
-"use client";
-
-import Image from "next/image";
+import { formatDeckNumber, type DeckSlideProps } from "@/lib/deck-catalog";
 import ClientLogo from "./ClientLogo";
-import { useModuleSlideContent } from "./usePresentationContent";
+import ShomvobMark from "./ShomvobMark";
 
 const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
@@ -79,14 +77,10 @@ function FeatureIcon({ type }: { type: string }) {
   );
 }
 
-export default function ScheduleRosterSlide() {
-  const moduleContent = useModuleSlideContent("schedule");
-  const renderedFeatures = features.map((feature, index) => ({
-    ...feature,
-    title: moduleContent?.points[index]?.title ?? feature.title,
-    copy: moduleContent?.points[index]?.description ?? feature.copy,
-  }));
-
+export default function ScheduleRosterSlide({
+  slideNumber = 11,
+  moduleNumber = 6,
+}: DeckSlideProps) {
   return (
     <section
       data-module="schedule"
@@ -105,13 +99,13 @@ export default function ScheduleRosterSlide() {
         aria-hidden="true"
         className="pointer-events-none absolute left-[3%] top-[4%] select-none text-[clamp(5rem,10vw,11rem)] font-black leading-none text-white/[0.045]"
       >
-        11
+        {formatDeckNumber(slideNumber)}
       </span>
 
       <header className="relative z-20 flex items-start justify-between px-[5.5%] pt-[5.5%]">
         <div className="max-w-[68%]">
           <span className="text-[clamp(0.55rem,0.7vw,0.78rem)] font-bold uppercase tracking-[0.25em] text-[#edb713]">
-            Module 06 &middot; Scheduling
+            Module {formatDeckNumber(moduleNumber)}{" "}&middot; Scheduling
           </span>
           <h1 className="mt-2 text-[clamp(2.15rem,3.8vw,4.3rem)] font-bold leading-none tracking-tight">
             Schedule &amp; Roster
@@ -123,14 +117,7 @@ export default function ScheduleRosterSlide() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="rounded-xl bg-white px-4 py-2 shadow-sm">
-            <Image
-              src="/resources/shomvob_hr_text.png"
-              alt="Shomvob HR"
-              width={120}
-              height={28}
-            />
-          </div>
+          <ShomvobMark tone="dark" />
           <ClientLogo size="sm" />
         </div>
       </header>
@@ -152,7 +139,7 @@ export default function ScheduleRosterSlide() {
       </div>
 
       <div className="relative z-10 mt-[clamp(1.5rem,2.6vw,2.5rem)] grid grid-cols-4 gap-[clamp(0.75rem,1.2vw,1.35rem)] px-[5.5%] pb-[6%]">
-        {renderedFeatures.map((feature) => (
+        {features.map((feature) => (
           <article
             key={feature.number}
             className="relative flex flex-col overflow-hidden rounded-2xl bg-white/95 p-[clamp(1rem,1.5vw,1.5rem)] text-[#092d19] shadow-xl shadow-black/15"

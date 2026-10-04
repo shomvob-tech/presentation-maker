@@ -43,8 +43,9 @@ export default function Home() {
         </h1>
 
         <p className="home-fade-in home-fade-delay-3 mt-6 max-w-xl text-lg text-white/70 md:text-xl">
-          Assemble a branded, client-ready proposal — HRIS, SLA, or biometric
-          device quotation — in minutes.
+          Assemble a branded, client-ready document — HRIS proposal, SLA,
+          hardware quotation, the two combined, or a pitch presentation — in
+          minutes.
         </p>
 
         <div className="home-fade-in home-fade-delay-4 mt-10 w-full">

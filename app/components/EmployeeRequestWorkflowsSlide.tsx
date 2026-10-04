@@ -1,7 +1,5 @@
-"use client";
-
-import Image from "next/image";
-import { useModuleSlideContent } from "./usePresentationContent";
+import { formatDeckNumber, type DeckSlideProps } from "@/lib/deck-catalog";
+import ShomvobMark from "./ShomvobMark";
 
 const pipeline = ["Request", "Review", "Approval", "Record"];
 
@@ -80,14 +78,10 @@ function FeatureIcon({ type }: { type: string }) {
   );
 }
 
-export default function EmployeeRequestWorkflowsSlide() {
-  const moduleContent = useModuleSlideContent("recruitment");
-  const renderedFeatures = features.map((feature, index) => ({
-    ...feature,
-    title: moduleContent?.points[index]?.title ?? feature.title,
-    copy: moduleContent?.points[index]?.description ?? feature.copy,
-  }));
-
+export default function EmployeeRequestWorkflowsSlide({
+  slideNumber = 13,
+  moduleNumber = 8,
+}: DeckSlideProps) {
   return (
     <section
       data-module="recruitment"
@@ -106,13 +100,13 @@ export default function EmployeeRequestWorkflowsSlide() {
         aria-hidden="true"
         className="pointer-events-none absolute right-[3%] top-[4%] select-none text-[clamp(5rem,10vw,11rem)] font-black leading-none text-white/[0.045]"
       >
-        13
+        {formatDeckNumber(slideNumber)}
       </span>
 
       <header className="relative z-20 flex items-start justify-between px-[5.5%] pt-[5.5%]">
         <div className="max-w-[68%]">
           <span className="text-[clamp(0.55rem,0.7vw,0.78rem)] font-bold uppercase tracking-[0.25em] text-[#edb713]">
-            Module 08 &middot; Requests
+            Module {formatDeckNumber(moduleNumber)}{" "}&middot; Requests
           </span>
           <h1 className="mt-2 text-[clamp(2.05rem,3.6vw,4.1rem)] font-bold leading-none tracking-tight">
             Employee Request Workflows
@@ -123,14 +117,7 @@ export default function EmployeeRequestWorkflowsSlide() {
           </p>
         </div>
 
-        <div className="rounded-xl bg-white px-4 py-2 shadow-sm">
-          <Image
-            src="/resources/shomvob_hr_text.png"
-            alt="Shomvob HR"
-            width={120}
-            height={28}
-          />
-        </div>
+        <ShomvobMark tone="dark" />
       </header>
 
       {/* decorative approval pipeline */}
@@ -156,7 +143,7 @@ export default function EmployeeRequestWorkflowsSlide() {
       </div>
 
       <div className="relative z-10 mt-[clamp(1.5rem,2.6vw,2.5rem)] grid grid-cols-2 grid-rows-2 gap-[clamp(0.75rem,1.2vw,1.35rem)] px-[5.5%] pb-[6%]">
-        {renderedFeatures.map((feature) => (
+        {features.map((feature) => (
           <article
             key={feature.number}
             className="relative flex items-center gap-[clamp(0.9rem,1.4vw,1.5rem)] overflow-hidden rounded-2xl border border-white/10 bg-[#071d10]/90 p-[clamp(0.95rem,1.4vw,1.5rem)]"

@@ -22,12 +22,16 @@ import type { AuditColumn, AuditDocType, AuditRow } from "./events";
 
 export type Tally = { label: string; count: number };
 
-/** A count split by product, since all three share one tab. */
+/** A count split by product, since all five share one tab. */
 export type DocSplit = {
   proposal: number;
   sla: number;
   /** Biometric device proposals — see lib/device-session.ts. */
   device: number;
+  /** Combined HRIS + device proposals — see lib/combined-session.ts. */
+  combined: number;
+  /** 16:9 presentation decks — see lib/deck-session.ts. */
+  presentation: number;
   total: number;
 };
 
@@ -110,7 +114,11 @@ function list(row: AuditRow, column: AuditColumn): string[] {
 
 function docTypeOf(row: AuditRow): AuditDocType | null {
   const value = text(row, "doc_type");
-  return value === "proposal" || value === "sla" || value === "device"
+  return value === "proposal" ||
+    value === "sla" ||
+    value === "device" ||
+    value === "combined" ||
+    value === "presentation"
     ? value
     : null;
 }
@@ -154,7 +162,9 @@ function split(drafts: Draft[], predicate: (draft: Draft) => boolean): DocSplit 
   const proposal = matching.filter((d) => d.docType === "proposal").length;
   const sla = matching.filter((d) => d.docType === "sla").length;
   const device = matching.filter((d) => d.docType === "device").length;
-  return { proposal, sla, device, total: matching.length };
+  const combined = matching.filter((d) => d.docType === "combined").length;
+  const presentation = matching.filter((d) => d.docType === "presentation").length;
+  return { proposal, sla, device, combined, presentation, total: matching.length };
 }
 
 // ---------------------------------------------------------------------------

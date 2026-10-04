@@ -1,5 +1,5 @@
 import { generateSlidePlan, parseModuleIdsParam } from "@/lib/points-generator";
-import { SLIDE_COMPONENTS } from "../components/slide-registry";
+import { SLIDE_COMPONENTS } from "@/app/components/slide-registry";
 
 type PreviewPageProps = {
   searchParams: Promise<{ modules?: string | string[] }>;

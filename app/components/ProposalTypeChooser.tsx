@@ -50,12 +50,35 @@ const PROPOSAL_TYPES: ProposalType[] = [
   },
   {
     id: "device",
-    label: "Device quotation",
+    // Shortened from "Device quotation" when the fourth type landed —
+    // four full-length labels do not fit the switch at phone width.
+    label: "Device",
     description: "Itemised hardware quotation with delivery and warranty terms.",
     builderHref: "/device-builder",
     ctaLabel: "Start a device proposal",
     samplePath: "/resources/sample_device_prop.pdf",
     sampleLabel: "View sample quotation",
+  },
+  {
+    id: "combined",
+    label: "HRIS + Device",
+    description:
+      "Everything in the HRIS proposal plus itemised attendance hardware.",
+    builderHref: "/combined-builder",
+    ctaLabel: "Start a combined proposal",
+    samplePath: "/resources/sample_device_prop.pdf",
+    sampleLabel: "View sample quotation",
+  },
+  {
+    id: "presentation",
+    label: "Presentation",
+    description:
+      "A 16:9 pitch deck — Shomvob's introduction, then the slides for each module.",
+    builderHref: "/presentation-builder",
+    ctaLabel: "Start a presentation",
+    // A live route rather than a PDF: the sample is the deck component itself.
+    samplePath: "/300ltd",
+    sampleLabel: "View sample presentation",
   },
 ];
 
@@ -98,7 +121,7 @@ export default function ProposalTypeChooser() {
         role="tablist"
         aria-label="Document type"
         onKeyDown={handleKeyDown}
-        className="flex w-full max-w-md items-center gap-1 rounded-2xl border border-white/10 bg-white/[0.045] p-1.5 shadow-lg shadow-black/20 backdrop-blur-sm sm:w-auto"
+        className="flex w-full max-w-md flex-wrap items-center justify-center gap-1 rounded-2xl border border-white/10 bg-white/[0.045] p-1.5 shadow-lg shadow-black/20 backdrop-blur-sm sm:w-auto sm:max-w-none sm:flex-nowrap"
       >
         {PROPOSAL_TYPES.map((type, index) => {
           const isActive = type.id === activeId;
@@ -117,7 +140,7 @@ export default function ProposalTypeChooser() {
               // Roving tabindex: the switch is one Tab stop, arrows move within it.
               tabIndex={isActive ? 0 : -1}
               onClick={() => setActiveId(type.id)}
-              className={`flex-1 whitespace-nowrap rounded-xl px-5 py-3 text-sm transition duration-200 outline-none focus-visible:ring-2 focus-visible:ring-[#5cd47e] focus-visible:ring-offset-2 focus-visible:ring-offset-[#03110a] sm:px-7 ${
+              className={`flex-1 basis-[calc(50%-2px)] whitespace-nowrap rounded-xl px-4 py-3 text-sm sm:basis-auto transition duration-200 outline-none focus-visible:ring-2 focus-visible:ring-[#5cd47e] focus-visible:ring-offset-2 focus-visible:ring-offset-[#03110a] sm:flex-none sm:px-6 ${
                 isActive
                   ? "bg-[#edb713] font-bold text-[#0c3d20] shadow-md shadow-black/25"
                   : "font-medium text-white/65 hover:bg-white/[0.06] hover:text-white/90"

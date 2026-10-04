@@ -1,5 +1,5 @@
-import Image from "next/image";
-import ClientLogo from "./ClientLogo";
+import ClientLogo, { WithClientLogo } from "./ClientLogo";
+import ShomvobMark from "./ShomvobMark";
 
 export default function ThankYouSlide() {
   return (
@@ -40,7 +40,8 @@ export default function ThankYouSlide() {
           Let&apos;s Build This, Together
         </span>
 
-        <h1 className="text-6xl font-bold leading-[1.05] tracking-tight lg:text-7xl">
+        {/* print: repeats lg: — see TitleSlideDesignThree. */}
+        <h1 className="text-6xl font-bold leading-[1.05] tracking-tight lg:text-7xl print:text-7xl">
           Thank You.
         </h1>
 
@@ -59,16 +60,11 @@ export default function ThankYouSlide() {
       {/* closing signature bar */}
       <div className="absolute inset-x-0 bottom-[7%] z-10 flex flex-col items-center gap-3">
         <div className="flex items-center gap-5">
-          <div className="rounded-lg bg-white/95 px-3 py-1.5 shadow-md">
-            <Image
-              src="/resources/shomvob_hr_text.png"
-              alt="Shomvob HR"
-              width={110}
-              height={26}
-            />
-          </div>
-          <div className="h-6 w-px bg-white/20" />
-          <ClientLogo size="sm" />
+          <ShomvobMark tone="dark" size="sm" />
+          <WithClientLogo>
+            <div className="h-6 w-px bg-white/20" />
+            <ClientLogo size="sm" />
+          </WithClientLogo>
         </div>
       </div>
     </section>

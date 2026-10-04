@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore, type ReactNode } from "react";
 import {
   loadPreviewLogo,
   PRESENTATION_SESSION_KEY,
@@ -55,16 +55,33 @@ function getServerSnapshot() {
   return FALLBACK_LOGO;
 }
 
+/** The logo this deck shows, or null when it shows none. */
+export function useClientLogoSrc(): string | null {
+  const { showClientBranding, logoSrc } = usePresentationBranding();
+  const storedSrc = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+
+  if (!showClientBranding) return null;
+  return logoSrc === undefined ? storedSrc : logoSrc;
+}
+
+/**
+ * Renders its children only when the deck has a client logo. For the frame or
+ * divider a slide draws around the logo, which would otherwise be left
+ * standing empty on a deck built without one.
+ */
+export function WithClientLogo({ children }: { children: ReactNode }) {
+  return useClientLogoSrc() ? children : null;
+}
+
 export default function ClientLogo({
   alt = "Client logo",
   size = "md",
   className = "",
 }: ClientLogoProps) {
-  const { showClientBranding } = usePresentationBranding();
-  const src = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const src = useClientLogoSrc();
   const boxClassName = [SIZE_BOX[size], className].filter(Boolean).join(" ");
 
-  if (!showClientBranding) return null;
+  if (!src) return null;
 
   return (
     <span className={`inline-flex shrink-0 items-center justify-center ${boxClassName}`}>

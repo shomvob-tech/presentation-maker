@@ -20,8 +20,14 @@
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 
-const USERNAME = "admin";
-const PASSWORD = "Whatis?";
+/** Falls back to the literals below so local dev keeps working without env setup. */
+function dashboardUsername(): string {
+  return process.env.DASHBOARD_USERNAME?.trim() || "admin";
+}
+
+function dashboardPassword(): string {
+  return process.env.DASHBOARD_PASSWORD?.trim() || "Whatis?";
+}
 
 export const SESSION_COOKIE = "audit_dashboard";
 
@@ -48,8 +54,8 @@ function constantTimeEquals(a: string, b: string): boolean {
 export function verifyCredentials(username: string, password: string): boolean {
   // Both comparisons always run: `&&` would short-circuit and make a wrong
   // username measurably faster than a wrong password.
-  const usernameMatches = constantTimeEquals(username, USERNAME);
-  const passwordMatches = constantTimeEquals(password, PASSWORD);
+  const usernameMatches = constantTimeEquals(username, dashboardUsername());
+  const passwordMatches = constantTimeEquals(password, dashboardPassword());
   return usernameMatches && passwordMatches;
 }
 

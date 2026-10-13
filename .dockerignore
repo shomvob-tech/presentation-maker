@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.github
+notes-plans
+*.md
+!README.md
+.env
+.env*.local
+.vercel
+coverage
+npm-debug.log*
+*.pdf
+.DS_Store

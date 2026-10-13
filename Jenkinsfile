@@ -11,8 +11,8 @@ pipeline {
     // Required Jenkins credentials:
     //   ec2-deploy-ssh-key               SSH Username with private key — EC2 login
     //   OVERSEAS_PRIVATE_EC2_HOST        Secret text — EC2 host/IP
-    //   STG_PM_GHCR                      Username/Password — GHCR username +
-    //                                    a GitHub PAT with `write:packages` scope
+    //   GHCR_TOKEN                       Secret text — GitHub PAT with `write:packages`
+    //                                    scope (same credential used by hris-backend)
     //   STG_PM_PUBLIC_API_URL            Secret text — NEXT_PUBLIC_PRESENTATION_API_URL
     //                                    (build-time: inlined into the browser bundle)
     //   STG_PM_GOOGLE_SERVICE_ACCOUNT_EMAIL  Secret text
@@ -24,7 +24,8 @@ pipeline {
     //   STG_PM_DASHBOARD_SESSION_SECRET  Secret text — signs the dashboard session cookie
     environment {
         REGISTRY     = 'ghcr.io/shomvob-tech/presentation-maker'
-        GHCR         = credentials('STG_PM_GHCR')               // -> GHCR_USR / GHCR_PSW
+        GHCR_USER    = 'abrahimcse'                              // CONFIRM: same GHCR username as hris-backend?
+        GHCR_TOKEN   = credentials('GHCR_TOKEN')
         EC2_HOST     = credentials('OVERSEAS_PRIVATE_EC2_HOST')
         CONTAINER    = 'presentation-maker'
         PORT         = '3000'
@@ -47,8 +48,8 @@ pipeline {
         stage('Build & Push') {
             steps {
                 sh '''
-                    echo $GHCR_PSW | docker login ghcr.io \
-                      -u $GHCR_USR --password-stdin
+                    echo $GHCR_TOKEN | docker login ghcr.io \
+                      -u $GHCR_USER --password-stdin
 
                     docker build \
                       --build-arg NEXT_PUBLIC_PRESENTATION_API_URL="$NEXT_PUBLIC_PRESENTATION_API_URL" \
@@ -80,8 +81,8 @@ pipeline {
                         sh '''
                             ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST \
                             "
-                                echo '$GHCR_PSW' | docker login ghcr.io \
-                                  -u $GHCR_USR --password-stdin
+                                echo '$GHCR_TOKEN' | docker login ghcr.io \
+                                  -u $GHCR_USER --password-stdin
 
                                 docker pull $IMAGE_LATEST
 

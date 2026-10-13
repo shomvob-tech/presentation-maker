@@ -13,8 +13,6 @@ pipeline {
     //   OVERSEAS_PRIVATE_EC2_HOST        Secret text — EC2 host/IP
     //   GHCR_TOKEN                       Secret text — GitHub PAT with `write:packages`
     //                                    scope (same credential used by hris-backend)
-    //   STG_PM_PUBLIC_API_URL            Secret text — NEXT_PUBLIC_PRESENTATION_API_URL
-    //                                    (build-time: inlined into the browser bundle)
     //   STG_PM_GOOGLE_SERVICE_ACCOUNT_EMAIL  Secret text
     //   STG_PM_GOOGLE_PRIVATE_KEY_B64    Secret text
     //   STG_PM_AUDIT_SHEET_ID            Secret text
@@ -31,10 +29,6 @@ pipeline {
         PORT         = '3000'
         IMAGE_TAG    = "${REGISTRY}:${BUILD_NUMBER}"
         IMAGE_LATEST = "${REGISTRY}:latest"
-
-        // Build-time only (NEXT_PUBLIC_* gets inlined into the client bundle by
-        // `next build`), but bound here so it's available to the Build stage.
-        NEXT_PUBLIC_PRESENTATION_API_URL = credentials('STG_PM_PUBLIC_API_URL')
     }
 
     stages {
@@ -52,7 +46,6 @@ pipeline {
                       -u $GHCR_USER --password-stdin
 
                     docker build \
-                      --build-arg NEXT_PUBLIC_PRESENTATION_API_URL="$NEXT_PUBLIC_PRESENTATION_API_URL" \
                       -t $IMAGE_TAG \
                       -t $IMAGE_LATEST \
                       .
@@ -96,7 +89,6 @@ pipeline {
                                   -e NODE_ENV=production \
                                   -e PORT=$PORT \
                                   -e HOSTNAME=0.0.0.0 \
-                                  -e NEXT_PUBLIC_PRESENTATION_API_URL='$NEXT_PUBLIC_PRESENTATION_API_URL' \
                                   -e GOOGLE_SERVICE_ACCOUNT_EMAIL='$GOOGLE_SERVICE_ACCOUNT_EMAIL' \
                                   -e GOOGLE_PRIVATE_KEY_B64='$GOOGLE_PRIVATE_KEY_B64' \
                                   -e AUDIT_SHEET_ID='$AUDIT_SHEET_ID' \

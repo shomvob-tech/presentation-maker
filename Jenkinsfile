@@ -17,9 +17,12 @@ pipeline {
     //   STG_PM_GOOGLE_PRIVATE_KEY_B64    Secret text
     //   STG_PM_AUDIT_SHEET_ID            Secret text
     //   STG_PM_AUDIT_SHEET_TAB           Secret text (blank is fine — app defaults to "events")
-    //   STG_PM_DASHBOARD_USERNAME        Secret text — overrides the hardcoded "admin"
-    //   STG_PM_DASHBOARD_PASSWORD        Secret text — overrides the hardcoded "Whatis?"
     //   STG_PM_DASHBOARD_SESSION_SECRET  Secret text — signs the dashboard session cookie
+    //
+    // Not wired in below (dashboard login stays on its hardcoded admin/"Whatis?"
+    // default): STG_PM_DASHBOARD_USERNAME, STG_PM_DASHBOARD_PASSWORD. The app
+    // code supports overriding both via DASHBOARD_USERNAME/DASHBOARD_PASSWORD
+    // env vars if this ever needs to change.
     environment {
         REGISTRY     = 'ghcr.io/shomvob-tech/presentation-maker'
         GHCR_USER    = 'abrahimcse'                              // CONFIRM: same GHCR username as hris-backend?
@@ -67,8 +70,6 @@ pipeline {
                         string(credentialsId: 'STG_PM_AUDIT_SHEET_ID',               variable: 'AUDIT_SHEET_ID'),
                         string(credentialsId: 'STG_PM_AUDIT_SHEET_TAB',              variable: 'AUDIT_SHEET_TAB'),
                         // ── /dashboard login ──────────────────────────
-                        string(credentialsId: 'STG_PM_DASHBOARD_USERNAME',          variable: 'DASHBOARD_USERNAME'),
-                        string(credentialsId: 'STG_PM_DASHBOARD_PASSWORD',          variable: 'DASHBOARD_PASSWORD'),
                         string(credentialsId: 'STG_PM_DASHBOARD_SESSION_SECRET',    variable: 'DASHBOARD_SESSION_SECRET')
                     ]) {
                         sh '''
@@ -93,8 +94,6 @@ pipeline {
                                   -e GOOGLE_PRIVATE_KEY_B64='$GOOGLE_PRIVATE_KEY_B64' \
                                   -e AUDIT_SHEET_ID='$AUDIT_SHEET_ID' \
                                   -e AUDIT_SHEET_TAB='$AUDIT_SHEET_TAB' \
-                                  -e DASHBOARD_USERNAME='$DASHBOARD_USERNAME' \
-                                  -e DASHBOARD_PASSWORD='$DASHBOARD_PASSWORD' \
                                   -e DASHBOARD_SESSION_SECRET='$DASHBOARD_SESSION_SECRET' \
                                   -e VERCEL_GIT_COMMIT_SHA=$BUILD_NUMBER \
                                   $IMAGE_LATEST

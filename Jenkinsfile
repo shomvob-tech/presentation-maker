@@ -8,24 +8,9 @@ pipeline {
         timeout(time: 30, unit: 'MINUTES')
     }
 
-    // Required Jenkins credentials:
-    //   ec2-deploy-ssh-key               SSH Username with private key — EC2 login
-    //   OVERSEAS_PRIVATE_EC2_HOST        Secret text — EC2 host/IP
-    //   GHCR_TOKEN                       Secret text — GitHub PAT with `write:packages`
-    //                                    scope (same credential used by hris-backend)
-    //   STG_PM_GOOGLE_SERVICE_ACCOUNT_EMAIL  Secret text
-    //   STG_PM_GOOGLE_PRIVATE_KEY_B64    Secret text
-    //   STG_PM_AUDIT_SHEET_ID            Secret text
-    //   STG_PM_AUDIT_SHEET_TAB           Secret text (blank is fine — app defaults to "events")
-    //   STG_PM_DASHBOARD_SESSION_SECRET  Secret text — signs the dashboard session cookie
-    //
-    // Not wired in below (dashboard login stays on its hardcoded admin/"Whatis?"
-    // default): STG_PM_DASHBOARD_USERNAME, STG_PM_DASHBOARD_PASSWORD. The app
-    // code supports overriding both via DASHBOARD_USERNAME/DASHBOARD_PASSWORD
-    // env vars if this ever needs to change.
     environment {
         REGISTRY     = 'ghcr.io/shomvob-tech/presentation-maker'
-        GHCR_USER    = 'abrahimcse'                              // CONFIRM: same GHCR username as hris-backend?
+        GHCR_USER    = 'abrahimcse'                              
         GHCR_TOKEN   = credentials('GHCR_TOKEN')
         EC2_HOST     = credentials('OVERSEAS_PRIVATE_EC2_HOST')
         CONTAINER    = 'presentation-maker'

@@ -47,6 +47,9 @@ import {
   type DeviceLineItem,
 } from "@/lib/device-session";
 import { fileToDataUrl } from "@/lib/presentation-session";
+// Shared with the HRIS-only builder so `modules_added_vs_default` stays
+// comparable between the two flows.
+import { DEFAULT_SELECTED_MODULE_IDS } from "@/lib/proposal-defaults";
 
 /** A quotation row while it is being edited — numbers stay strings so a
  * half-typed "1." does not become NaN mid-keystroke. */
@@ -118,11 +121,6 @@ const MIN_LINE_ITEMS = 1;
 const MAX_LINE_ITEMS = 6;
 
 const MAX_LOGO_BYTES = 2 * 1024 * 1024;
-
-/** Mirrors DEFAULT_SELECTED_MODULE_IDS in Clientdetails2.tsx. Kept in step by
- * hand so `modules_added_vs_default` stays comparable between the HRIS flow
- * and this one — the constant is not exported from that component. */
-const DEFAULT_SELECTED_MODULE_IDS = ["attendance", "leave", "payroll", "roster"];
 
 const DEFAULT_PROBLEM_STATEMENT_HEADING = "Solving Your Specific Challenge";
 

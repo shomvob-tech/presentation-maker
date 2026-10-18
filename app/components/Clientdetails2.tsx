@@ -27,6 +27,12 @@ import {
 } from "@/lib/module-page-layout";
 import Richtexteditor from "@/app/components/Richtexteditor";
 import {
+  DEFAULT_DOCUMENT_TITLE,
+  DEFAULT_RECIPIENT_TITLE,
+  DEFAULT_SELECTED_MODULE_IDS,
+  DEFAULT_VALIDITY_DAYS,
+} from "@/lib/proposal-defaults";
+import {
   fileToDataUrl,
   loadPreviewLogo,
   loadProposalDetails,
@@ -92,10 +98,6 @@ type FormState = {
 
 type FormErrors = Partial<Record<keyof FormState | "logo" | "selectedModules", string>>;
 
-/** Mirrors the default set in CoverPage.tsx — keep these in sync. */
-const DEFAULT_DOCUMENT_TITLE = "Workforce Management Ecosystem";
-const DEFAULT_RECIPIENT_TITLE = "Managing Director";
-
 /** Trial accounts are always on the same portal today — override per row if
  * that ever changes (e.g. staging environment for a specific client). */
 const DEFAULT_TRIAL_PORTAL_URL = "https://hr.shomvob.com/";
@@ -113,10 +115,6 @@ const DEFAULT_TRIAL_PORTAL_URL = "https://hr.shomvob.com/";
  * tends to look sparse for a client-facing proposal. */
 const RECOMMENDED_MIN_MODULE_COUNT = 4;
 
-/** Preselected by default for every new proposal — the four modules most
- * proposals end up including anyway. Reps can untick any of them. */
-const DEFAULT_SELECTED_MODULE_IDS = ["attendance", "leave", "payroll", "roster"];
-
 function todayAsDateInputValue(): string {
   return new Date().toISOString().slice(0, 10);
 }
@@ -132,7 +130,7 @@ const initialForm: FormState = {
   recipientTitle: "",
   letterAddresseeName: "",
   meetingDateReference: todayAsDateInputValue(),
-  validityDays: "30",
+  validityDays: String(DEFAULT_VALIDITY_DAYS),
 
   problemStatementHeading: "",
   problemStatementText: "",
@@ -601,7 +599,7 @@ export default function Clientdetails2() {
       meetingDateReference: form.meetingDateReference,
       validityDays: form.validityDays.trim()
         ? Number(form.validityDays)
-        : 30,
+        : DEFAULT_VALIDITY_DAYS,
 
       problemStatementHeading: problemStatementPresent
         ? form.problemStatementHeading.trim() || undefined

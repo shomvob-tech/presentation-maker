@@ -41,20 +41,27 @@ const baseUrl = (args.find((arg) => /^https?:/.test(arg) && args[args.indexOf(ar
 const mockUrl = (option("--mock") ?? "http://localhost:4000").replace(/\/+$/, "");
 const only = option("--only")?.split(",").map((id) => id.trim());
 
+// Locally all four come from `npm run hris:clients -- --local-env`. Against
+// staging only HRIS_TEST_API_KEY (the pb-smoke key) is needed: scenarios that
+// need the others are skipped, and --client-id / --quotation-prefix /
+// --no-webhook adapt the rest (see docs/hris-operations.md).
 const KEY_A = process.env.HRIS_TEST_API_KEY ?? "";
 const KEY_B = process.env.HRIS_TEST_API_KEY_B ?? "";
 const KEY_HOLD = process.env.HRIS_TEST_API_KEY_HOLD ?? "";
 const KEY_NONE = process.env.HRIS_TEST_API_KEY_NONE ?? "";
-if (!KEY_A || !KEY_B || !KEY_HOLD || !KEY_NONE) {
-  console.error("Missing HRIS_TEST_API_KEY* — run `npm run hris:clients -- --local-env` and add its output to .env.local.");
+if (!KEY_A) {
+  console.error("Missing HRIS_TEST_API_KEY — run `npm run hris:clients -- --local-env` and add its output to .env.local.");
   process.exit(1);
 }
+const CLIENT_ID = option("--client-id") ?? "local-test";
+const QUOTATION_PREFIX = option("--quotation-prefix") ?? "it";
+const CHECK_WEBHOOKS = !args.includes("--no-webhook");
 
 const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!, {
   auth: { persistSession: false, autoRefreshToken: false },
 });
 
-const RUN = `it-${Date.now()}`;
+const RUN = `${QUOTATION_PREFIX}-${Date.now()}`;
 let seq = 0;
 const quotation = () => `${RUN}-${++seq}`;
 const newKey = () => crypto.randomUUID();
@@ -205,9 +212,10 @@ await scenario("T-INT-1", "happy path: 202, ready, stored bytes match, signed we
   const ready = await waitFor(created.json.jobId, terminal);
   assert.equal(ready.status, "ready", JSON.stringify(ready.error));
   assert.equal(ready.document!.pageCount, expectedPages(["core", "payroll"]));
-  assert.match(ready.document!.objectKey, new RegExp(`^documents/local-test/it-tenant-a/${payload.quotationId}/proposal_v1\\.pdf$`));
+  assert.match(ready.document!.objectKey, new RegExp(`^documents/${CLIENT_ID}/it-tenant-a/${payload.quotationId}/proposal_v1\\.pdf$`));
   await downloadAndCheck(ready);
   happyJob = ready;
+  if (!CHECK_WEBHOOKS) return `v${ready.version}, ${ready.document!.pageCount} pages (webhook not checked)`;
 
   // The mock receives one verified document.ready whose data equals the GET body.
   const deadline = Date.now() + 30_000;
@@ -327,8 +335,7 @@ await scenario("T-INT-9", "GET errors: unknown, malformed, no key, another clien
   assert.equal((await get("not-a-uuid")).status, 400);
   assert.equal((await get(crypto.randomUUID(), null)).status, 401);
   const mine = await post(body(), newKey());
-  const other = await get(mine.json.jobId, KEY_B);
-  assert.equal(other.status, 404);
+  if (KEY_B) assert.equal((await get(mine.json.jobId, KEY_B)).status, 404);
   const queued = await get(mine.json.jobId);
   if (queued.json.status === "queued" || queued.json.status === "processing") {
     assert.equal(queued.headers.get("retry-after"), "10");
@@ -349,6 +356,7 @@ await scenario("T-INT-11", "~1 MB logo renders and is cleared from the row after
 });
 
 await scenario("T-INT-12", "namespace isolation: tenants and clients version separately", async () => {
+  if (!KEY_B) return "skipped: HRIS_TEST_API_KEY_B not set";
   const quotationId = quotation();
   const a = await post(body({ quotationId, tenantId: "it-tenant-a" }), newKey());
   const b = await post(body({ quotationId, tenantId: "it-tenant-b" }), newKey());
@@ -367,7 +375,7 @@ await scenario("T-INT-12", "namespace isolation: tenants and clients version sep
 
 await scenario("T-CR-5", "a foreign object at the job's key fails it and is never overwritten", async () => {
   const quotationId = quotation();
-  const key = `documents/local-test/it-tenant-a/${quotationId}/proposal_v1.pdf`;
+  const key = `documents/${CLIENT_ID}/it-tenant-a/${quotationId}/proposal_v1.pdf`;
   const stray = Buffer.from("%PDF-1.4\n% stray object placed by the test\n%%EOF\n");
   const placed = await supabase.storage.from("proposal-pdfs").upload(key, stray, { contentType: "application/pdf", upsert: false });
   assert.ok(!placed.error, placed.error?.message);
@@ -380,6 +388,7 @@ await scenario("T-CR-5", "a foreign object at the job's key fails it and is neve
 
   const { data } = await supabase.storage.from("proposal-pdfs").download(key);
   assert.deepEqual(Buffer.from(await data!.arrayBuffer()), stray, "stray object untouched");
+  if (!CHECK_WEBHOOKS) return "webhook not checked";
 
   const deadline = Date.now() + 30_000;
   let event;
@@ -391,6 +400,7 @@ await scenario("T-CR-5", "a foreign object at the job's key fails it and is neve
 });
 
 await scenario("T-WH-6", "a 'hold' client's delivery waits unclaimed", async () => {
+  if (!KEY_HOLD) return "skipped: HRIS_TEST_API_KEY_HOLD not set";
   const created = await post(body(), newKey(), KEY_HOLD);
   const ready = await waitFor(created.json.jobId, terminal, KEY_HOLD);
   assert.equal(ready.status, "ready");
@@ -401,6 +411,7 @@ await scenario("T-WH-6", "a 'hold' client's delivery waits unclaimed", async () 
 });
 
 await scenario("T-WH-7", "a 'none' client's delivery is skipped", async () => {
+  if (!KEY_NONE) return "skipped: HRIS_TEST_API_KEY_NONE not set";
   const created = await post(body(), newKey(), KEY_NONE);
   await waitFor(created.json.jobId, terminal, KEY_NONE);
   const skipped = await waitFor(created.json.jobId, (r) => r.notification?.status === "skipped", KEY_NONE, 30_000);

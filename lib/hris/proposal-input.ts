@@ -40,14 +40,14 @@ export type ParseResult =
 
 /** Becomes a storage path segment, so it must never contain `/` or `..`. */
 const COMPANY_ID_PATTERN = /^[A-Za-z0-9_-]{1,64}$/;
-const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+export const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const LOGO_PATTERN =
   /^data:image\/(png|jpeg|webp|gif|svg\+xml);base64,[A-Za-z0-9+/]+={0,2}$/;
 
 /** ~1 MB of image once base64's 4/3 overhead is taken off. */
 const MAX_LOGO_CHARS = 1_400_000;
-const MAX_TEXT_CHARS = 200;
-const MAX_PROBLEM_STATEMENT_CHARS = 20_000;
+export const MAX_TEXT_CHARS = 200;
+export const MAX_PROBLEM_STATEMENT_CHARS = 20_000;
 
 const SELECTABLE_MODULE_IDS = new Set(SELECTABLE_MODULES.map((module) => module.id));
 
@@ -75,9 +75,9 @@ const KNOWN_FIELDS = new Set([
   "preparedByEmail",
 ]);
 
-type Body = Record<string, unknown>;
+export type Body = Record<string, unknown>;
 
-function isBlank(value: unknown): boolean {
+export function isBlank(value: unknown): boolean {
   return (
     value === undefined ||
     value === null ||
@@ -85,7 +85,7 @@ function isBlank(value: unknown): boolean {
   );
 }
 
-function readString(
+export function readString(
   body: Body,
   field: string,
   errors: FieldError[],
@@ -111,7 +111,7 @@ function readString(
 }
 
 /** Accepts a JSON number or a numeric string — HRIS form values are often strings. */
-function readNumber(
+export function readNumber(
   body: Body,
   field: string,
   errors: FieldError[],
@@ -136,7 +136,7 @@ function readNumber(
   return n;
 }
 
-function readDate(body: Body, field: string, errors: FieldError[]): string | undefined {
+export function readDate(body: Body, field: string, errors: FieldError[]): string | undefined {
   const value = readString(body, field, errors);
   if (value === undefined) return undefined;
 
@@ -172,7 +172,7 @@ function readCompanyId(body: Body, errors: FieldError[]): string | undefined {
   return id.trim();
 }
 
-function readLogo(body: Body, errors: FieldError[]): string | undefined {
+export function readLogo(body: Body, errors: FieldError[]): string | undefined {
   const value = body.logo;
   if (isBlank(value)) return undefined;
 

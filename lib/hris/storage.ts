@@ -47,7 +47,7 @@ export function isStorageConfigured(): boolean {
   return Boolean(supabaseUrl() && process.env.SUPABASE_SERVICE_KEY?.trim());
 }
 
-function getClient(): SupabaseClient {
+export function getClient(): SupabaseClient {
   const url = supabaseUrl();
   const key = process.env.SUPABASE_SERVICE_KEY?.trim();
   if (!url || !key) {
@@ -73,12 +73,21 @@ function authenticatedUrl(path: string): string {
   return `${supabaseUrl()}/storage/v1/object/authenticated/${HRIS_BUCKET}/${path}`;
 }
 
-function isUploadConflict(error: { message: string; status?: number; statusCode?: string }) {
+export function isUploadConflict(error: { message: string; status?: number; statusCode?: string }) {
   // Older Storage versions answer 400 with statusCode "409"; newer ones 409.
   return (
     error.status === 409 ||
     error.statusCode === "409" ||
     /already exists|duplicate/i.test(error.message)
+  );
+}
+
+/** A download/info miss. Storage reports it as 404, or as 400 with statusCode "404". */
+export function isObjectNotFound(error: { message?: string; status?: number; statusCode?: string }) {
+  return (
+    error.status === 404 ||
+    error.statusCode === "404" ||
+    /not.?found/i.test(error.message ?? "")
   );
 }
 

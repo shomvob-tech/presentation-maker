@@ -21,6 +21,18 @@ export const maxDuration = 120;
 const MAX_BODY_CHARS = 2_000_000;
 
 /**
+ * DEPRECATED — superseded by the async POST /api/v1/documents (see
+ * docs/hris-documents-api-v3.md). Logic is frozen; it only advertises its
+ * successor. Sunset is deploy date + 30 days: move it if the deploy slips.
+ * After 7 days with no `[hris-legacy]` log lines it answers 410, then goes.
+ */
+const DEPRECATION_HEADERS = {
+  Deprecation: "true",
+  Sunset: "Wed, 18 Nov 2026 00:00:00 GMT",
+  Link: '</api/v1/documents>; rel="successor-version"',
+};
+
+/**
  * Creates an HRIS proposal PDF, stores it as the next version for the company,
  * and returns where it was stored. Independent of the public builder: it
  * shares only the /proposal-preview template, so both produce identical PDFs.
@@ -34,7 +46,7 @@ const MAX_BODY_CHARS = 2_000_000;
  */
 export async function POST(request: NextRequest) {
   const origin = request.headers.get("origin");
-  const cors = corsHeaders(origin);
+  const cors = { ...corsHeaders(origin), ...DEPRECATION_HEADERS };
 
   const fail = (
     status: number,
@@ -94,6 +106,7 @@ export async function POST(request: NextRequest) {
     });
   }
   const input = parsed.value;
+  console.warn("[hris-legacy] call", { ip: clientIp(request), companyId: input.companyId });
 
   let rendered;
   try {

@@ -10,7 +10,16 @@
     "pdf": "node scripts/export-pdf.mjs",
     "test:points": "npx --yes tsx scripts/test-point-selection.mts",
     "audit:init": "npx --yes tsx scripts/init-audit-sheet.mts",
-    "test:hris-api": "npx --yes tsx scripts/test-hris-api.mts"
+    "test:hris-api": "npx --yes tsx scripts/test-hris-api.mts",
+    "test:hrm-modules": "npx --yes tsx scripts/test-hrm-modules.mts",
+    "test:hris-unit": "npx --yes tsx scripts/test-hris-unit.mts",
+    "test:hris-documents": "npx --yes tsx scripts/test-hris-documents.mts",
+    "test:hris-signed-url": "npx --yes tsx scripts/test-hris-signed-url.mts",
+    "hris:mock-webhook": "npx --yes tsx scripts/mock-hris-webhook.mts",
+    "hris:reconcile": "npx --yes tsx scripts/hris-reconcile.mts",
+    "hris:cleanup-objects": "npx --yes tsx scripts/cleanup-hris-objects.mts",
+    "hris:clients": "npx --yes tsx scripts/hris-clients.mts",
+    "start:standalone": "node scripts/run-standalone.mjs"
   },
   "dependencies": {
     "@sparticuz/chromium-min": "^149.0.0",

@@ -61,6 +61,8 @@ import { getHrisWorkerHandle, setHrisWorkerHandle, type HrisWorkerStatus } from 
 import {
   createWorkerState,
   errMsg,
+  heartbeatMs,
+  JOB_RETRY_DELAYS_SECONDS,
   sleep,
   sleepOrWake,
   wake,
@@ -71,13 +73,10 @@ import {
 
 const CONCURRENCY = Math.min(Math.max(workerConcurrency(), 1), MAX_CONCURRENT_RENDERS);
 const LEASE_SECONDS = workerLeaseSeconds();
-/** Lease/4, at most 30 s. */
-export const HEARTBEAT_MS = Math.min(30_000, LEASE_SECONDS * 250);
+const HEARTBEAT_MS = heartbeatMs(LEASE_SECONDS);
 /** Heartbeat errors for this long count as a lost lease. */
 const HEARTBEAT_LOSS_MS = LEASE_SECONDS * 500;
 const RENDER_TIMEOUT_MS = renderTimeoutOverrideMs() ?? 150_000;
-/** Backoff after attempts 1-4 (max_attempts is 5). */
-export const JOB_RETRY_DELAYS_SECONDS = [30, 120, 600, 1800];
 /** In-process retries when the complete call itself throws (network). */
 const COMPLETE_RETRY_MS = [500, 2000, 5000];
 const MAX_PDF_BYTES = 50 * 1024 * 1024;

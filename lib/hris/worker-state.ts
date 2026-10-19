@@ -3,6 +3,14 @@
  * new job can cut short, counters for /api/v1/health, and the log format.
  */
 
+/** Heartbeat every lease/4, at most every 30 s. */
+export function heartbeatMs(leaseSeconds: number): number {
+  return Math.min(30_000, leaseSeconds * 250);
+}
+
+/** Backoff after job attempts 1-4 (max_attempts is 5). */
+export const JOB_RETRY_DELAYS_SECONDS = [30, 120, 600, 1800] as const;
+
 export type InFlightJob = {
   jobId: string;
   abort: AbortController;

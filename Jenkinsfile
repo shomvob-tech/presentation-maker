@@ -8,6 +8,13 @@ pipeline {
         timeout(time: 30, unit: 'MINUTES')
     }
 
+    parameters {
+        // Rollback for the HRIS document worker: re-run with false. POSTs still
+        // return 202 and jobs wait in the database until it is back on.
+        booleanParam(name: 'HRIS_WORKER_ENABLED', defaultValue: true, description: 'Run the HRIS document worker')
+        string(name: 'HRIS_WORKER_CONCURRENCY', defaultValue: '2', description: 'Simultaneous HRIS renders (1 or 2)')
+    }
+
     environment {
         REGISTRY     = 'ghcr.io/shomvob-tech/presentation-maker'
         GHCR_USER    = 'abrahimcse'                              
@@ -60,7 +67,9 @@ pipeline {
                         string(credentialsId: 'STG_PM_SUPABASE_URL',                 variable: 'SUPABASE_URL'),
                         string(credentialsId: 'STG_PM_SUPABASE_SERVICE_KEY',         variable: 'SUPABASE_SERVICE_KEY'),
                         string(credentialsId: 'STG_PM_HRIS_API_KEY',                 variable: 'HRIS_API_KEY'),
-                        string(credentialsId: 'STG_PM_HRIS_ALLOWED_ORIGINS',         variable: 'HRIS_ALLOWED_ORIGINS')
+                        string(credentialsId: 'STG_PM_HRIS_ALLOWED_ORIGINS',         variable: 'HRIS_ALLOWED_ORIGINS'),
+                        // ── HRIS async document API (client registry) ─
+                        string(credentialsId: 'STG_PM_HRIS_CLIENTS_B64',             variable: 'HRIS_CLIENTS_B64')
                     ]) {
                         sh '''
                             ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST \
@@ -70,10 +79,10 @@ pipeline {
 
                                 docker pull $IMAGE_LATEST
 
-                                docker stop $CONTAINER 2>/dev/null || true
+                                docker stop -t 30 $CONTAINER 2>/dev/null || true
                                 docker rm   $CONTAINER 2>/dev/null || true
 
-                                docker run -d \
+                                docker run -d --init \
                                   --name $CONTAINER \
                                   --restart unless-stopped \
                                   -p 127.0.0.1:$PORT:$PORT \
@@ -89,6 +98,11 @@ pipeline {
                                   -e SUPABASE_SERVICE_KEY='$SUPABASE_SERVICE_KEY' \
                                   -e HRIS_API_KEY='$HRIS_API_KEY' \
                                   -e HRIS_ALLOWED_ORIGINS='$HRIS_ALLOWED_ORIGINS' \
+                                  -e HRIS_CLIENTS_B64='$HRIS_CLIENTS_B64' \
+                                  -e HRIS_QUEUE_NAME=staging \
+                                  -e HRIS_WORKER_ENABLED=${HRIS_WORKER_ENABLED:-true} \
+                                  -e HRIS_WORKER_CONCURRENCY=${HRIS_WORKER_CONCURRENCY:-2} \
+                                  -e APP_VERSION=$BUILD_NUMBER \
                                   -e VERCEL_GIT_COMMIT_SHA=$BUILD_NUMBER \
                                   $IMAGE_LATEST
 

@@ -1,24 +1,30 @@
 /**
  * Server-side render of /proposal-preview to PDF, for callers that have the
- * proposal as data rather than a browser tab (the HRIS API today).
+ * proposal as data rather than a browser tab: the legacy synchronous HRIS
+ * route and the async HRIS worker.
  *
  * SERVER ONLY — launches Chromium.
  *
  * Same technique as the export-pdf-* routes: seed the preview page's
- * localStorage before it loads, wait for the A4 pages, print. Three things
- * differ, all because the input arrives from outside rather than from our own
- * form:
+ * localStorage before it loads, wait for the A4 pages, print. Differences,
+ * all because the input arrives from outside rather than from our own form:
  *
  * - The page is loaded from this server directly (INTERNAL_BASE_URL), never
  *   from a URL in the request.
- * - Every request the page makes outside that origin is aborted, and so is any
- *   request to our own /api/*. `problemStatementText` is HTML rendered with
- *   dangerouslySetInnerHTML; without this an <img> or <iframe> in it could
- *   make the server fetch internal addresses and print the result.
- * - Renders are capped at MAX_CONCURRENT_RENDERS. Each one is a full Chromium,
- *   and a burst of API calls must not starve the public site on the same box.
+ * - The page may only make GET requests to this origin (minus /api/*), and may
+ *   only navigate to the preview itself. `problemStatementText` is HTML
+ *   rendered with dangerouslySetInnerHTML; without this an <img>, <iframe> or
+ *   form in it could make the server fetch internal addresses or call its own
+ *   API and print the result.
+ * - Renders share MAX_CONCURRENT_RENDERS slots across the whole process (on
+ *   globalThis, because the worker runs in the instrumentation bundle and the
+ *   legacy route in a route bundle). Each render is a full Chromium, and a
+ *   burst of API calls must not starve the public site on the same box.
+ * - The worker can cancel a render (signal) or bound it (timeoutMs). Either
+ *   closes Chromium immediately; the slot is released only after the close.
  */
 
+import type { Browser } from "playwright-core";
 import { launchBrowser } from "@/lib/launch-browser";
 import {
   PREVIEW_CLIENT_NAME_KEY,
@@ -27,7 +33,7 @@ import {
   type ProposalDetails,
 } from "@/lib/presentation-session";
 
-const MAX_CONCURRENT_RENDERS = 2;
+export const MAX_CONCURRENT_RENDERS = 2;
 /** Beyond this many waiting, callers get RenderQueueFullError straight away. */
 const MAX_QUEUED_RENDERS = 8;
 
@@ -38,26 +44,68 @@ export class RenderQueueFullError extends Error {
   }
 }
 
-let activeRenders = 0;
-const waitingRenders: (() => void)[] = [];
+/** `timeoutMs` elapsed; Chromium was closed. */
+export class RenderTimeoutError extends Error {
+  constructor(timeoutMs: number) {
+    super(`Rendering took longer than ${timeoutMs} ms.`);
+    this.name = "RenderTimeoutError";
+  }
+}
 
-async function acquireRenderSlot(): Promise<void> {
-  if (activeRenders < MAX_CONCURRENT_RENDERS) {
-    activeRenders++;
+/** `signal` aborted (lease lost or shutdown); Chromium was closed. */
+export class RenderAbortedError extends Error {
+  constructor() {
+    super("Rendering was cancelled.");
+    this.name = "RenderAbortedError";
+  }
+}
+
+type Waiter = { resolve: () => void };
+type Slots = { active: number; waiting: Waiter[] };
+
+const SLOTS_KEY = Symbol.for("pb.renderSlots");
+
+function slots(): Slots {
+  const store = globalThis as unknown as Record<symbol, Slots | undefined>;
+  return (store[SLOTS_KEY] ??= { active: 0, waiting: [] });
+}
+
+/** Waits for a slot; leaves the queue and rejects if `signal` aborts first. */
+async function acquireRenderSlot(signal?: AbortSignal): Promise<void> {
+  if (signal?.aborted) throw new RenderAbortedError();
+  const state = slots();
+  if (state.active < MAX_CONCURRENT_RENDERS) {
+    state.active++;
     return;
   }
-  if (waitingRenders.length >= MAX_QUEUED_RENDERS) {
+  if (state.waiting.length >= MAX_QUEUED_RENDERS) {
     throw new RenderQueueFullError();
   }
-  // The releasing render hands its slot straight over, so `activeRenders`
-  // is not incremented here.
-  await new Promise<void>((resolve) => waitingRenders.push(resolve));
+
+  // The releasing render hands its slot straight over, so `active` is not
+  // incremented here.
+  await new Promise<void>((resolve, reject) => {
+    const onAbort = () => {
+      const index = state.waiting.indexOf(waiter);
+      if (index >= 0) state.waiting.splice(index, 1);
+      reject(new RenderAbortedError());
+    };
+    const waiter: Waiter = {
+      resolve: () => {
+        signal?.removeEventListener("abort", onAbort);
+        resolve();
+      },
+    };
+    signal?.addEventListener("abort", onAbort, { once: true });
+    state.waiting.push(waiter);
+  });
 }
 
 function releaseRenderSlot(): void {
-  const next = waitingRenders.shift();
-  if (next) next();
-  else activeRenders--;
+  const state = slots();
+  const next = state.waiting.shift();
+  if (next) next.resolve();
+  else state.active--;
 }
 
 /**
@@ -69,7 +117,7 @@ function releaseRenderSlot(): void {
  * server listens on IPv4 only and `localhost` may resolve to ::1 first.
  * Override for a dev server on a non-default port.
  */
-function internalBaseUrl(): URL {
+export function internalBaseUrl(): URL {
   const configured = process.env.INTERNAL_BASE_URL?.trim();
   const host = process.env.NODE_ENV === "production" ? "127.0.0.1" : "localhost";
   return new URL(configured || `http://${host}:${process.env.PORT || 3000}`);
@@ -77,26 +125,75 @@ function internalBaseUrl(): URL {
 
 export type RenderedPdf = { pdf: Buffer; pageCount: number };
 
-export async function renderProposalPdf(input: {
+export type RenderProposalInput = {
   clientName: string;
   logoDataUrl?: string;
   details: ProposalDetails;
-}): Promise<RenderedPdf> {
-  await acquireRenderSlot();
+  /** Wait (up to 30 s) for at least this many pages. Never throws on a shortfall. */
+  expectedPageCount?: number;
+  /** Abort → close Chromium now → RenderAbortedError. */
+  signal?: AbortSignal;
+  /** Armed AFTER the slot is acquired → close Chromium → RenderTimeoutError. */
+  timeoutMs?: number;
+  onSlotAcquired?: () => void;
+  /** Environment for Chromium (see launchBrowser). */
+  launchEnv?: Record<string, string>;
+  /** Test hook: never finish (exercises timeoutMs). */
+  testHang?: boolean;
+  /** Test hook: wait this long after acquiring the slot (a slow render). */
+  testDelayMs?: number;
+};
 
-  let browser;
+export async function renderProposalPdf(input: RenderProposalInput): Promise<RenderedPdf> {
+  await acquireRenderSlot(input.signal);
+  input.onSlotAcquired?.();
+
+  let browser: Browser | undefined;
+  let stopReason: "abort" | "timeout" | null = null;
+  // A function, so reads after an await see writes made by the timer/listener.
+  const stopped = () => stopReason;
+  const stop = (reason: "abort" | "timeout") => {
+    if (stopReason) return;
+    stopReason = reason;
+    void browser?.close().catch(() => undefined);
+  };
+  const stoppedError = () =>
+    stopped() === "timeout" ? new RenderTimeoutError(input.timeoutMs ?? 0) : new RenderAbortedError();
+
+  const onAbort = () => stop("abort");
+  input.signal?.addEventListener("abort", onAbort, { once: true });
+  if (input.signal?.aborted) stop("abort");
+  const timer = input.timeoutMs ? setTimeout(() => stop("timeout"), input.timeoutMs) : null;
+
   try {
+    if (input.testDelayMs) {
+      const until = Date.now() + input.testDelayMs;
+      while (!stopped() && Date.now() < until) {
+        await new Promise((resolve) => setTimeout(resolve, 250));
+      }
+    }
+    if (stopped()) throw stoppedError();
+
     const baseUrl = internalBaseUrl();
-    browser = await launchBrowser();
+    const previewUrl = new URL("/proposal-preview", baseUrl).toString();
+    browser = await launchBrowser(input.launchEnv ? { env: input.launchEnv } : {});
+    if (stopped()) throw stoppedError();
+
     const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+    page.setDefaultTimeout(30_000);
 
     await page.route("**/*", (route) => {
-      const url = new URL(route.request().url());
-      const allowed =
+      const request = route.request();
+      const url = new URL(request.url());
+      const permitted =
         url.protocol === "data:" ||
         url.protocol === "blob:" ||
         (url.origin === baseUrl.origin && !url.pathname.startsWith("/api/"));
-      return allowed ? route.continue() : route.abort("blockedbyclient");
+      const ok =
+        permitted &&
+        request.method() === "GET" &&
+        (!request.isNavigationRequest() || request.url() === previewUrl);
+      return ok ? route.continue() : route.abort("blockedbyclient");
     });
 
     // Every key the preview components read — see loadClientName,
@@ -117,10 +214,7 @@ export async function renderProposalPdf(input: {
       },
     );
 
-    await page.goto(new URL("/proposal-preview", baseUrl).toString(), {
-      waitUntil: "load",
-      timeout: 60_000,
-    });
+    await page.goto(previewUrl, { waitUntil: "load", timeout: 60_000 });
 
     await page.waitForFunction(
       () => document.querySelectorAll(".a4-page").length > 0,
@@ -149,6 +243,19 @@ export async function renderProposalPdf(input: {
         new Promise((resolve) => setTimeout(resolve, 10_000)),
       ]);
     });
+
+    if (input.expectedPageCount) {
+      await page
+        .waitForFunction(
+          (expected) => document.querySelectorAll(".a4-page").length >= expected,
+          input.expectedPageCount,
+          { timeout: 30_000 },
+        )
+        .catch(() => undefined);
+    }
+
+    if (input.testHang) await page.evaluate(() => new Promise(() => {}));
+
     await page.emulateMedia({ media: "print" });
 
     const pageCount = await page.locator(".a4-page").count();
@@ -158,9 +265,17 @@ export async function renderProposalPdf(input: {
       margin: { top: 0, right: 0, bottom: 0, left: 0 },
     });
 
+    if (stopped()) throw stoppedError();
     return { pdf, pageCount };
+  } catch (error) {
+    // Closing Chromium makes pending calls reject with Playwright errors;
+    // report why it was closed instead.
+    if (stopped()) throw stoppedError();
+    throw error;
   } finally {
-    await browser?.close();
+    if (timer) clearTimeout(timer);
+    input.signal?.removeEventListener("abort", onAbort);
+    await browser?.close().catch(() => undefined);
     releaseRenderSlot();
   }
 }

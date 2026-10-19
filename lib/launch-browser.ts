@@ -34,8 +34,17 @@
 
 import { chromium as playwrightChromium, type Browser } from "playwright-core";
 
+export type LaunchOptions = {
+  /**
+   * Environment for the Chromium process. Omitted, Chromium inherits the
+   * server's full env (the existing behaviour). The HRIS worker passes a
+   * scrubbed one so service keys and webhook secrets never reach it.
+   */
+  env?: Record<string, string>;
+};
+
 /** Mirrors scripts/export-pdf.mjs's candidate list exactly — local dev only. */
-async function launchLocalBrowser(): Promise<Browser> {
+async function launchLocalBrowser(options: LaunchOptions): Promise<Browser> {
   const candidates =
     process.platform === "win32"
       ? [{ channel: "msedge" }, { channel: "chrome" }, {}]
@@ -45,7 +54,11 @@ async function launchLocalBrowser(): Promise<Browser> {
 
   for (const candidate of candidates) {
     try {
-      return await playwrightChromium.launch({ headless: true, ...candidate });
+      return await playwrightChromium.launch({
+        headless: true,
+        ...candidate,
+        ...(options.env ? { env: options.env } : {}),
+      });
     } catch (error) {
       errors.push(error instanceof Error ? error.message : String(error));
     }
@@ -86,7 +99,7 @@ function resolvePackUrl(): string {
   return url;
 }
 
-async function launchServerlessBrowser(): Promise<Browser> {
+async function launchServerlessBrowser(options: LaunchOptions): Promise<Browser> {
   // Dynamic import: keeps this package out of the local-dev path entirely,
   // and out of anything Next traces for routes that don't reach this branch.
   const { default: chromium } = await import("@sparticuz/chromium-min");
@@ -99,6 +112,7 @@ async function launchServerlessBrowser(): Promise<Browser> {
     args: chromium.args,
     executablePath: cachedExecutablePath,
     headless: true,
+    ...(options.env ? { env: options.env } : {}),
   });
 }
 
@@ -107,10 +121,10 @@ async function launchServerlessBrowser(): Promise<Browser> {
  * production) — no manual env var configuration needed. Everywhere else
  * (localhost, other hosts) falls through to the local-browser path.
  */
-export async function launchBrowser(): Promise<Browser> {
+export async function launchBrowser(options: LaunchOptions = {}): Promise<Browser> {
   if (process.env.VERCEL) {
-    return launchServerlessBrowser();
+    return launchServerlessBrowser(options);
   }
 
-  return launchLocalBrowser();
+  return launchLocalBrowser(options);
 }

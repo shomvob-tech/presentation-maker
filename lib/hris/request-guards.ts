@@ -7,7 +7,8 @@
  *
  * - CORS (HRIS_ALLOWED_ORIGINS) decides which websites' scripts may call the
  *   API from a browser. It does nothing against curl, Postman or a script —
- *   they never send an Origin header and never enforce CORS.
+ *   they never send an Origin header and never enforce CORS. `*` allows every
+ *   origin; that's for testing, and tightening it later is an env change.
  * - The API key (HRIS_API_KEY, sent as `x-api-key`) is what actually keeps
  *   everyone else out.
  */
@@ -18,40 +19,54 @@ import type { NextRequest } from "next/server";
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 60;
 
-let cachedOrigins: { raw: string; origins: Set<string> } | null = null;
+type OriginPolicy = { anyOrigin: boolean; origins: Set<string> };
+
+let cachedPolicy: { raw: string; policy: OriginPolicy } | null = null;
 
 /**
  * Parsed once per distinct env value. Entries are normalised with `new
  * URL().origin`, so a pasted trailing slash ("https://hr.shomvob.com/") still
- * matches what browsers send. Unparseable entries are dropped.
+ * matches what browsers send. Unparseable entries are dropped. A `*` entry
+ * anywhere in the list allows every origin.
  */
-function allowedOrigins(): Set<string> {
+function originPolicy(): OriginPolicy {
   const raw = process.env.HRIS_ALLOWED_ORIGINS ?? "";
-  if (cachedOrigins?.raw === raw) return cachedOrigins.origins;
+  if (cachedPolicy?.raw === raw) return cachedPolicy.policy;
 
-  const origins = new Set<string>();
+  const policy: OriginPolicy = { anyOrigin: false, origins: new Set() };
   for (const entry of raw.split(",")) {
     const trimmed = entry.trim();
     if (!trimmed) continue;
+    if (trimmed === "*") {
+      policy.anyOrigin = true;
+      continue;
+    }
     try {
-      origins.add(new URL(trimmed).origin);
+      policy.origins.add(new URL(trimmed).origin);
     } catch {
       console.warn(`[hris-api] Ignoring invalid HRIS_ALLOWED_ORIGINS entry: ${trimmed}`);
     }
   }
 
-  cachedOrigins = { raw, origins };
-  return origins;
+  cachedPolicy = { raw, policy };
+  return policy;
+}
+
+function isListedOrigin(origin: string): boolean {
+  const policy = originPolicy();
+  return policy.anyOrigin || policy.origins.has(origin);
 }
 
 /** No Origin header means a non-browser caller — allowed here, the key still applies. */
 export function isOriginAllowed(origin: string | null): boolean {
-  return origin === null || allowedOrigins().has(origin);
+  return origin === null || isListedOrigin(origin);
 }
 
 export function corsHeaders(origin: string | null): Record<string, string> {
   const headers: Record<string, string> = { Vary: "Origin" };
-  if (origin && allowedOrigins().has(origin)) {
+  if (origin && isListedOrigin(origin)) {
+    // Echo the origin rather than sending `*`: same effect for this
+    // credential-less API, and it works unchanged once the list is narrowed.
     headers["Access-Control-Allow-Origin"] = origin;
     headers["Access-Control-Allow-Methods"] = "POST, OPTIONS";
     headers["Access-Control-Allow-Headers"] = "Content-Type, X-API-Key";

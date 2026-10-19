@@ -45,3 +45,9 @@ service-account.json
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local credentials and client-registry drafts — never commit
+notes-plans/db_details.txt
+notes-plans/env.txt
+notes-plans/serv.json
+*.local.json

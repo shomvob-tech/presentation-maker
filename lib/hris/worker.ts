@@ -156,9 +156,13 @@ async function runJob(s: WorkerState, job: DocumentJobRow): Promise<void> {
   s.inFlight.set(lease, { jobId: job.id, abort, renderStartedAt: null });
 
   let lastHeartbeatOk = Date.now();
+  // Set once this attempt has finished, so a heartbeat already in flight when
+  // the job completed (and the lease was cleared) isn't reported as a loss.
+  let settled = false;
   const heartbeat = setInterval(() => {
     heartbeatDocumentJob(job.id, lease, LEASE_SECONDS)
       .then((ok) => {
+        if (settled) return;
         if (ok) lastHeartbeatOk = Date.now();
         else {
           workerLog("lease.lost", { jobId: job.id, at: "heartbeat" }, "warn");
@@ -166,6 +170,7 @@ async function runJob(s: WorkerState, job: DocumentJobRow): Promise<void> {
         }
       })
       .catch((error) => {
+        if (settled) return;
         workerLog("heartbeat.error", { jobId: job.id, error: errMsg(error) }, "warn");
         if (Date.now() - lastHeartbeatOk > HEARTBEAT_LOSS_MS) abort.abort("lease_lost");
       });
@@ -177,7 +182,9 @@ async function runJob(s: WorkerState, job: DocumentJobRow): Promise<void> {
       const own = await findOwnObject(job);
       if (own) {
         workerLog("job.adopted", jobFields(job));
-        if (await completeWithRetry(job, lease, own)) workerLog("job.completed", jobFields(job));
+        const completed = await completeWithRetry(job, lease, own);
+        settled = true;
+        if (completed) workerLog("job.completed", jobFields(job));
         return;
       }
     }
@@ -239,7 +246,9 @@ async function runJob(s: WorkerState, job: DocumentJobRow): Promise<void> {
     if (testFault() === "exit_after_upload") process.exit(137);
 
     // E. Complete, writing the webhook delivery in the same transaction.
-    if (await completeWithRetry(job, lease, stored)) workerLog("job.completed", jobFields(job));
+    const completed = await completeWithRetry(job, lease, stored);
+    settled = true;
+    if (completed) workerLog("job.completed", jobFields(job));
   } catch (error) {
     // Shutdown or a lost lease: never fail or delay the job; another attempt
     // (here after restart, or on whoever holds the lease) carries on.
@@ -263,6 +272,7 @@ async function runJob(s: WorkerState, job: DocumentJobRow): Promise<void> {
       workerLog("fail.error", { jobId: job.id, error: errMsg(failError) }, "error");
     }
   } finally {
+    settled = true;
     clearInterval(heartbeat);
     s.inFlight.delete(lease);
     wake(s, "jobs");

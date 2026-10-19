@@ -6,6 +6,18 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "port": 3000
+    },
+    {
+      "name": "standalone",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["scripts/run-standalone.mjs"],
+      "port": 3000
+    },
+    {
+      "name": "mock-hris-webhook",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--yes", "tsx", "scripts/mock-hris-webhook.mts", "--port", "4000"],
+      "port": 4000
     }
   ]
 }

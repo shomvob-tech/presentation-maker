@@ -56,11 +56,11 @@ pipeline {
                         string(credentialsId: 'STG_PM_AUDIT_SHEET_TAB',              variable: 'AUDIT_SHEET_TAB'),
                         // ── /dashboard login ──────────────────────────
                         string(credentialsId: 'STG_PM_DASHBOARD_SESSION_SECRET',    variable: 'DASHBOARD_SESSION_SECRET'),
-                        // ── Not yet read by any code in this app ──────
-                        string(credentialsId: 'STG_PM_SUPABASE_URL',                variable: 'SUPABASE_URL'),
-                        string(credentialsId: 'STG_PM_SUPABASE_SERVICE_KEY',        variable: 'SUPABASE_SERVICE_KEY'),
-                        string(credentialsId: 'STG_PM_HRIS_API_KEY',                variable: 'HRIS_API_KEY'),
-                        string(credentialsId: 'STG_PM_HRIS_ALLOWED_ORIGINS',        variable: 'HRIS_ALLOWED_ORIGINS')
+                        // ── HRIS proposal API ─────────────────────────
+                        string(credentialsId: 'STG_PM_SUPABASE_URL',                 variable: 'SUPABASE_URL'),
+                        string(credentialsId: 'STG_PM_SUPABASE_SERVICE_KEY',         variable: 'SUPABASE_SERVICE_KEY'),
+                        string(credentialsId: 'STG_PM_HRIS_API_KEY',                 variable: 'HRIS_API_KEY'),
+                        string(credentialsId: 'STG_PM_HRIS_ALLOWED_ORIGINS',         variable: 'HRIS_ALLOWED_ORIGINS')
                     ]) {
                         sh '''
                             ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST \

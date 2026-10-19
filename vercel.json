@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://proposal-builder.shomvob.com/$1",
+      "permanent": true
+    }
+  ]
+}

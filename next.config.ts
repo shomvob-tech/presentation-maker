@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
     "/api/export-pdf-device/route": ["./node_modules/playwright-core/browsers.json"],
     "/api/export-pdf-presentation/route": ["./node_modules/playwright-core/browsers.json"],
     "/api/export-pdf-combined/route": ["./node_modules/playwright-core/browsers.json"],
+    "/api/v1/hris/proposals/route": ["./node_modules/playwright-core/browsers.json"],
   },
 };
 

@@ -9,10 +9,12 @@
     "lint": "eslint",
     "pdf": "node scripts/export-pdf.mjs",
     "test:points": "npx --yes tsx scripts/test-point-selection.mts",
-    "audit:init": "npx --yes tsx scripts/init-audit-sheet.mts"
+    "audit:init": "npx --yes tsx scripts/init-audit-sheet.mts",
+    "test:hris-api": "npx --yes tsx scripts/test-hris-api.mts"
   },
   "dependencies": {
     "@sparticuz/chromium-min": "^149.0.0",
+    "@supabase/supabase-js": "^2.118.0",
     "@tiptap/extension-placeholder": "^3.29.2",
     "@tiptap/pm": "^3.29.2",
     "@tiptap/react": "^3.29.2",

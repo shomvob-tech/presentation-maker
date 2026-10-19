@@ -62,14 +62,18 @@ export function isOriginAllowed(origin: string | null): boolean {
   return origin === null || isListedOrigin(origin);
 }
 
-export function corsHeaders(origin: string | null): Record<string, string> {
+/** The defaults are the legacy route's; the document routes pass their own. */
+export type CorsOptions = { methods?: string; allowHeaders?: string; exposeHeaders?: string };
+
+export function corsHeaders(origin: string | null, opts: CorsOptions = {}): Record<string, string> {
   const headers: Record<string, string> = { Vary: "Origin" };
   if (origin && isListedOrigin(origin)) {
     // Echo the origin rather than sending `*`: same effect for this
     // credential-less API, and it works unchanged once the list is narrowed.
     headers["Access-Control-Allow-Origin"] = origin;
-    headers["Access-Control-Allow-Methods"] = "POST, OPTIONS";
-    headers["Access-Control-Allow-Headers"] = "Content-Type, X-API-Key";
+    headers["Access-Control-Allow-Methods"] = opts.methods ?? "POST, OPTIONS";
+    headers["Access-Control-Allow-Headers"] = opts.allowHeaders ?? "Content-Type, X-API-Key";
+    if (opts.exposeHeaders) headers["Access-Control-Expose-Headers"] = opts.exposeHeaders;
     headers["Access-Control-Max-Age"] = "600";
   }
   return headers;
@@ -99,30 +103,39 @@ export function clientIp(request: NextRequest): string {
   );
 }
 
+const MAX_TRACKED_KEYS = 10_000;
 const requestCounts = new Map<string, { count: number; resetAt: number }>();
 
-/**
- * Fixed-window limit per IP, in memory. Fine for the single container this
- * runs in; it resets on restart and isn't shared across instances.
- * Returns the seconds to wait when over the limit, or 0 when allowed.
- */
-export function rateLimitRetryAfter(ip: string): number {
-  const now = Date.now();
-
-  if (requestCounts.size > 10_000) {
-    for (const [key, entry] of requestCounts) {
-      if (entry.resetAt <= now) requestCounts.delete(key);
-    }
+/** Keeps the map bounded: drop expired windows, then the oldest entries. */
+function pruneRequestCounts(now: number): void {
+  if (requestCounts.size < MAX_TRACKED_KEYS) return;
+  for (const [key, entry] of requestCounts) {
+    if (entry.resetAt <= now) requestCounts.delete(key);
   }
+  // Map iteration is insertion order, so the first keys are the oldest.
+  for (const key of requestCounts.keys()) {
+    if (requestCounts.size < MAX_TRACKED_KEYS) break;
+    requestCounts.delete(key);
+  }
+}
 
-  const entry = requestCounts.get(ip);
+/**
+ * Fixed-window limit per key (an IP for the legacy route, `post:{clientId}`
+ * and the like for the document routes), in memory. Fine for the single
+ * container this runs in; it resets on restart and isn't shared across
+ * instances. Returns the seconds to wait when over the limit, or 0 when
+ * allowed.
+ */
+export function rateLimitRetryAfter(key: string, limit = RATE_LIMIT_MAX_REQUESTS): number {
+  const now = Date.now();
+  pruneRequestCounts(now);
+
+  const entry = requestCounts.get(key);
   if (!entry || entry.resetAt <= now) {
-    requestCounts.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    requestCounts.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
     return 0;
   }
 
   entry.count++;
-  return entry.count > RATE_LIMIT_MAX_REQUESTS
-    ? Math.ceil((entry.resetAt - now) / 1000)
-    : 0;
+  return entry.count > limit ? Math.ceil((entry.resetAt - now) / 1000) : 0;
 }
